@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Missing Uppercase Letters Caterpillar Game</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+<title>Missing Uppercase Letters</title>
 
 <style>
 
@@ -18,15 +20,19 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
-    touch-action:none;
+    font-family: Arial, sans-serif;
+    touch-action: manipulation;
 }
 
 body{
-    background:linear-gradient(to bottom,#87CEEB 0%, #dff6ff 45%, #b8e986 46%, #7ed957 100%);
+    background:linear-gradient(to bottom,
+    #8fd3ff 0%,
+    #ccefff 45%,
+    #a6e17a 46%,
+    #6bcf57 100%);
 }
 
-/* ================= INTRO ================= */
+/* ================= INTRO SCREEN ================= */
 
 #introScreen{
     position:fixed;
@@ -35,12 +41,13 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    z-index:9999;
+    z-index:99999;
 }
 
 #introScreen img{
-    width:240px;
-    max-width:75%;
+    width:260px;
+    max-width:80%;
+    object-fit:contain;
 }
 
 /* ================= GAME ================= */
@@ -53,29 +60,36 @@ body{
     overflow:hidden;
 }
 
-/* TITLE */
+/* ================= TITLE ================= */
 
 .gameTitle{
+    position:absolute;
+    top:12px;
+    width:100%;
     text-align:center;
-    color:white;
-    font-size:clamp(24px,5vw,42px);
-    padding-top:10px;
-    text-shadow:3px 3px 0 #2e7d32;
+    z-index:10;
+    font-size:clamp(28px,5vw,52px);
+    font-weight:bold;
+    color:#fff700;
+    text-shadow:
+    3px 3px 0 #2e7d32,
+    5px 5px 0 rgba(0,0,0,0.15);
+    pointer-events:none;
 }
 
 /* ================= CLOUD ================= */
 
 .cloud{
     position:absolute;
-    top:70px;
+    top:90px;
     left:50%;
     transform:translateX(-50%);
-    width:min(92vw,700px);
+    width:min(92vw,760px);
     background:white;
     border-radius:60px;
-    padding:18px;
+    padding:22px 20px;
     box-shadow:0 10px 20px rgba(0,0,0,0.2);
-    z-index:5;
+    z-index:4;
 }
 
 .cloud::before,
@@ -87,56 +101,55 @@ body{
 }
 
 .cloud::before{
-    width:100px;
-    height:100px;
-    top:-40px;
+    width:90px;
+    height:90px;
     left:40px;
+    top:-35px;
 }
 
 .cloud::after{
     width:120px;
     height:120px;
-    top:-50px;
     right:40px;
+    top:-55px;
 }
 
 .letters{
+    position:relative;
+    z-index:2;
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:12px;
-    position:relative;
-    z-index:2;
+    gap:14px;
 }
 
 .draggable{
-    width:clamp(52px,10vw,70px);
-    height:clamp(52px,10vw,70px);
+    width:68px;
+    height:68px;
     border-radius:50%;
     background:#ffeb3b;
     border:4px solid #ff9800;
     display:flex;
-    align-items:center;
     justify-content:center;
-    font-size:clamp(26px,5vw,36px);
+    align-items:center;
+    font-size:36px;
     font-weight:bold;
     color:#5d4037;
     cursor:pointer;
     user-select:none;
-    touch-action:none;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
     transition:transform 0.2s;
-    box-shadow:0 5px 10px rgba(0,0,0,0.2);
 }
 
 .draggable:active{
-    transform:scale(1.1);
+    transform:scale(1.15);
 }
 
 /* ================= CATERPILLAR ================= */
 
-.caterpillarWrapper{
+.caterpillarArea{
     position:absolute;
-    bottom:20px;
+    bottom:10px;
     width:100%;
     display:flex;
     justify-content:center;
@@ -144,15 +157,12 @@ body{
 }
 
 .caterpillar{
+    width:min(1200px,100%);
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:0;
-    max-width:1100px;
-    position:relative;
+    row-gap:18px;
 }
-
-/* CONNECTOR */
 
 .segment{
     position:relative;
@@ -162,54 +172,52 @@ body{
 .segment::before{
     content:'';
     position:absolute;
-    width:35px;
-    height:35px;
+    width:40px;
+    height:40px;
     background:#43a047;
-    left:-18px;
+    left:-16px;
     top:50%;
     transform:translateY(-50%);
-    z-index:0;
     border-radius:50%;
+    z-index:0;
 }
 
-/* CIRCLE */
+/* ================= BODY CIRCLES ================= */
 
 .circle{
-    width:clamp(62px,11vw,90px);
-    height:clamp(62px,11vw,90px);
+    width:82px;
+    height:82px;
     border-radius:50%;
     background:#7ed957;
     border:4px solid #388e3c;
     display:flex;
-    align-items:center;
     justify-content:center;
-    font-size:clamp(28px,5vw,42px);
-    font-weight:bold;
-    color:white;
+    align-items:center;
     position:relative;
     z-index:2;
+    color:white;
+    font-size:42px;
+    font-weight:bold;
     box-shadow:
-        inset 0 -8px rgba(0,0,0,0.08),
-        0 4px 8px rgba(0,0,0,0.2);
+    inset 0 -7px rgba(0,0,0,0.08),
+    0 5px 10px rgba(0,0,0,0.2);
 }
 
-/* HEAD */
+/* ================= HEAD ================= */
 
 .head{
-    width:clamp(78px,14vw,110px);
-    height:clamp(78px,14vw,110px);
+    width:95px;
+    height:95px;
     background:#4caf50;
 }
 
-/* EYES */
-
 .eye{
+    position:absolute;
     width:18px;
     height:18px;
-    background:white;
     border-radius:50%;
-    position:absolute;
-    top:20px;
+    background:white;
+    top:22px;
 }
 
 .eye.left{
@@ -225,20 +233,25 @@ body{
     height:8px;
     background:black;
     border-radius:50%;
-    position:absolute;
-    top:5px;
-    left:5px;
+    margin:5px;
 }
 
-/* ANTENNA */
+.smile{
+    position:absolute;
+    width:34px;
+    height:16px;
+    border-bottom:5px solid #2e7d32;
+    border-radius:0 0 30px 30px;
+    bottom:18px;
+}
 
 .antenna{
     position:absolute;
     width:4px;
-    height:24px;
+    height:28px;
     background:#2e7d32;
     top:-18px;
-    border-radius:5px;
+    border-radius:10px;
 }
 
 .antenna.left{
@@ -251,7 +264,7 @@ body{
     transform:rotate(25deg);
 }
 
-/* DROP ZONE */
+/* ================= DROP ZONES ================= */
 
 .drop-zone{
     background:#00c897;
@@ -268,7 +281,7 @@ body{
     animation:shake 0.3s;
 }
 
-/* SUCCESS */
+/* ================= SUCCESS ================= */
 
 #successMessage{
     position:fixed;
@@ -278,20 +291,26 @@ body{
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    z-index:99999;
+    z-index:999999;
     color:white;
     text-align:center;
 }
 
 #successMessage h1{
-    font-size:clamp(48px,10vw,100px);
+    font-size:clamp(50px,10vw,100px);
 }
 
 #successMessage p{
-    font-size:clamp(24px,5vw,40px);
+    font-size:clamp(24px,5vw,44px);
 }
 
-/* ANIMATIONS */
+/* ================= ANIMATIONS ================= */
+
+@keyframes bounce{
+    0%{transform:scale(0.6);}
+    50%{transform:scale(1.2);}
+    100%{transform:scale(1);}
+}
 
 @keyframes shake{
     0%{transform:translateX(0);}
@@ -301,31 +320,91 @@ body{
     100%{transform:translateX(0);}
 }
 
-@keyframes bounce{
-    0%{transform:scale(0.7);}
-    50%{transform:scale(1.2);}
-    100%{transform:scale(1);}
-}
+/* ================= MOBILE ================= */
 
-/* MOBILE */
-
-@media (max-width:700px){
+@media (max-width:900px){
 
     .cloud{
-        top:55px;
-        padding:15px;
+        top:90px;
+        padding:18px;
+    }
+
+    .draggable{
+        width:58px;
+        height:58px;
+        font-size:32px;
+    }
+
+    .circle{
+        width:68px;
+        height:68px;
+        font-size:34px;
+    }
+
+    .head{
+        width:82px;
+        height:82px;
+    }
+
+}
+
+@media (max-width:600px){
+
+    .gameTitle{
+        top:8px;
+        font-size:32px;
+    }
+
+    .cloud{
+        top:70px;
+        border-radius:40px;
+        padding:14px;
     }
 
     .letters{
         gap:8px;
     }
 
-    .caterpillarWrapper{
-        bottom:8px;
+    .draggable{
+        width:48px;
+        height:48px;
+        font-size:28px;
     }
 
-    .caterpillar{
-        max-width:100%;
+    .circle{
+        width:56px;
+        height:56px;
+        font-size:28px;
+    }
+
+    .head{
+        width:68px;
+        height:68px;
+    }
+
+    .eye{
+        width:14px;
+        height:14px;
+        top:16px;
+    }
+
+    .eye.left{
+        left:12px;
+    }
+
+    .eye.right{
+        right:12px;
+    }
+
+    .pupil{
+        width:6px;
+        height:6px;
+        margin:4px;
+    }
+
+    .smile{
+        width:24px;
+        bottom:12px;
     }
 
 }
@@ -335,17 +414,19 @@ body{
 
 <body>
 
-<!-- INTRO -->
+<!-- ================= INTRO ================= -->
 
 <div id="introScreen">
-    <img src="assets/innovine-logo.png" alt="Logo">
+    <img src="./assets/innovine-logo.png" alt="Logo">
 </div>
 
-<!-- GAME -->
+<!-- ================= GAME ================= -->
 
 <div id="gameContainer">
 
-    <h1 class="gameTitle">Find The Missing Letters</h1>
+    <div class="gameTitle">
+        Find The Missing Letters
+    </div>
 
     <!-- CLOUD -->
 
@@ -355,41 +436,43 @@ body{
 
     <!-- CATERPILLAR -->
 
-    <div class="caterpillarWrapper">
+    <div class="caterpillarArea">
         <div class="caterpillar" id="caterpillar"></div>
     </div>
 
 </div>
 
-<!-- SUCCESS -->
+<!-- ================= SUCCESS ================= -->
 
 <div id="successMessage">
-    <h1>🎉 WOW! 🎉</h1>
-    <p>You Finished The Caterpillar!</p>
+    <h1>🎉 GREAT JOB! 🎉</h1>
+    <p>You Completed The Caterpillar!</p>
 </div>
 
-<!-- AUDIO -->
+<!-- ================= AUDIO ================= -->
 
-<audio id="correctSound" src="assets/correct.mp3"></audio>
-<audio id="wrongSound" src="assets/wrong.mp3"></audio>
-<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
+<audio id="correctSound" src="./assets/correct.mp3"></audio>
+<audio id="wrongSound" src="./assets/wrong.mp3"></audio>
+<audio id="clapSound" src="./assets/freesound_community-claps-44774.mp3"></audio>
 
 <script>
 
 /* ================= INTRO ================= */
 
-setTimeout(() => {
+setTimeout(()=>{
+
     document.getElementById("introScreen").style.display = "none";
     document.getElementById("gameContainer").style.display = "block";
-}, 4000);
 
-/* ================= DATA ================= */
+},4000);
 
-const caterpillarData = [
+/* ================= LETTER DATA ================= */
+
+const caterpillarLetters = [
     "A","","C","","E","F","G","","I","","K","","M","","O","","Q","","","T","U","","W","","",""
 ];
 
-const missingLetters = [
+const answers = [
     "B","D","H","J","L","N","P","R","S","V","X","Y","Z"
 ];
 
@@ -400,7 +483,7 @@ const caterpillar = document.getElementById("caterpillar");
 let answerIndex = 0;
 let completed = 0;
 
-caterpillarData.forEach((letter,index)=>{
+caterpillarLetters.forEach((letter,index)=>{
 
     const segment = document.createElement("div");
     segment.className = "segment";
@@ -410,8 +493,10 @@ caterpillarData.forEach((letter,index)=>{
     if(index === 0){
 
         circle.className = "circle head";
+
         circle.innerHTML = `
             A
+
             <div class="antenna left"></div>
             <div class="antenna right"></div>
 
@@ -422,6 +507,8 @@ caterpillarData.forEach((letter,index)=>{
             <div class="eye right">
                 <div class="pupil"></div>
             </div>
+
+            <div class="smile"></div>
         `;
 
     }else{
@@ -430,7 +517,8 @@ caterpillarData.forEach((letter,index)=>{
 
             circle.className = "circle drop-zone";
 
-            const answer = missingLetters[answerIndex];
+            const answer = answers[answerIndex];
+
             circle.dataset.answer = answer;
 
             answerIndex++;
@@ -449,15 +537,15 @@ caterpillarData.forEach((letter,index)=>{
 
 });
 
-/* ================= LETTER CLOUD ================= */
-
-const lettersContainer = document.getElementById("lettersContainer");
+/* ================= CLOUD LETTERS ================= */
 
 const cloudLetters = [
     "B","D","H","J","L","N","P","R","S","V","X","Y","Z"
 ];
 
 cloudLetters.sort(()=>Math.random()-0.5);
+
+const lettersContainer = document.getElementById("lettersContainer");
 
 cloudLetters.forEach(letter=>{
 
@@ -467,7 +555,7 @@ cloudLetters.forEach(letter=>{
     div.textContent = letter;
     div.dataset.letter = letter;
 
-    div.addEventListener("click", ()=>{
+    div.addEventListener("click",()=>{
 
         selectedLetter = div;
 
@@ -475,7 +563,7 @@ cloudLetters.forEach(letter=>{
             el.style.transform = "scale(1)";
         });
 
-        div.style.transform = "scale(1.2)";
+        div.style.transform = "scale(1.15)";
     });
 
     lettersContainer.appendChild(div);
@@ -488,7 +576,7 @@ let selectedLetter = null;
 
 document.querySelectorAll(".drop-zone").forEach(zone=>{
 
-    zone.addEventListener("click", ()=>{
+    zone.addEventListener("click",()=>{
 
         if(!selectedLetter) return;
 
@@ -498,11 +586,13 @@ document.querySelectorAll(".drop-zone").forEach(zone=>{
         if(chosen === correct){
 
             zone.textContent = chosen;
+
             zone.classList.add("correct");
 
             document.getElementById("correctSound").play();
 
             selectedLetter.remove();
+
             selectedLetter = null;
 
             completed++;
@@ -512,8 +602,11 @@ document.querySelectorAll(".drop-zone").forEach(zone=>{
                 document.getElementById("clapSound").play();
 
                 setTimeout(()=>{
+
                     document.getElementById("successMessage").style.display = "flex";
+
                 },500);
+
             }
 
         }else{
@@ -532,9 +625,9 @@ document.querySelectorAll(".drop-zone").forEach(zone=>{
 
 });
 
-/* ================= TOUCH SUPPORT ================= */
+/* ================= PREVENT IOS ZOOM ================= */
 
-document.addEventListener('gesturestart', function (e) {
+document.addEventListener('gesturestart', function(e){
     e.preventDefault();
 });
 
