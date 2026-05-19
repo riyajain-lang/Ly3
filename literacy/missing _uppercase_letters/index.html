@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Missing Uppercase Letters Caterpillar Game</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    touch-action:none;
+}
+
+body{
+    background:linear-gradient(to bottom,#87CEEB 0%, #dff6ff 45%, #b8e986 46%, #7ed957 100%);
+}
+
+/* ================= INTRO ================= */
+
+#introScreen{
+    position:fixed;
+    inset:0;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+#introScreen img{
+    width:240px;
+    max-width:75%;
+}
+
+/* ================= GAME ================= */
+
+#gameContainer{
+    display:none;
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+}
+
+/* TITLE */
+
+.gameTitle{
+    text-align:center;
+    color:white;
+    font-size:clamp(24px,5vw,42px);
+    padding-top:10px;
+    text-shadow:3px 3px 0 #2e7d32;
+}
+
+/* ================= CLOUD ================= */
+
+.cloud{
+    position:absolute;
+    top:70px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(92vw,700px);
+    background:white;
+    border-radius:60px;
+    padding:18px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+    z-index:5;
+}
+
+.cloud::before,
+.cloud::after{
+    content:'';
+    position:absolute;
+    background:white;
+    border-radius:50%;
+}
+
+.cloud::before{
+    width:100px;
+    height:100px;
+    top:-40px;
+    left:40px;
+}
+
+.cloud::after{
+    width:120px;
+    height:120px;
+    top:-50px;
+    right:40px;
+}
+
+.letters{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    position:relative;
+    z-index:2;
+}
+
+.draggable{
+    width:clamp(52px,10vw,70px);
+    height:clamp(52px,10vw,70px);
+    border-radius:50%;
+    background:#ffeb3b;
+    border:4px solid #ff9800;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:clamp(26px,5vw,36px);
+    font-weight:bold;
+    color:#5d4037;
+    cursor:pointer;
+    user-select:none;
+    touch-action:none;
+    transition:transform 0.2s;
+    box-shadow:0 5px 10px rgba(0,0,0,0.2);
+}
+
+.draggable:active{
+    transform:scale(1.1);
+}
+
+/* ================= CATERPILLAR ================= */
+
+.caterpillarWrapper{
+    position:absolute;
+    bottom:20px;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    padding:0 10px;
+}
+
+.caterpillar{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:0;
+    max-width:1100px;
+    position:relative;
+}
+
+/* CONNECTOR */
+
+.segment{
+    position:relative;
+    margin-left:-10px;
+}
+
+.segment::before{
+    content:'';
+    position:absolute;
+    width:35px;
+    height:35px;
+    background:#43a047;
+    left:-18px;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:0;
+    border-radius:50%;
+}
+
+/* CIRCLE */
+
+.circle{
+    width:clamp(62px,11vw,90px);
+    height:clamp(62px,11vw,90px);
+    border-radius:50%;
+    background:#7ed957;
+    border:4px solid #388e3c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:clamp(28px,5vw,42px);
+    font-weight:bold;
+    color:white;
+    position:relative;
+    z-index:2;
+    box-shadow:
+        inset 0 -8px rgba(0,0,0,0.08),
+        0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* HEAD */
+
+.head{
+    width:clamp(78px,14vw,110px);
+    height:clamp(78px,14vw,110px);
+    background:#4caf50;
+}
+
+/* EYES */
+
+.eye{
+    width:18px;
+    height:18px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    top:20px;
+}
+
+.eye.left{
+    left:18px;
+}
+
+.eye.right{
+    right:18px;
+}
+
+.pupil{
+    width:8px;
+    height:8px;
+    background:black;
+    border-radius:50%;
+    position:absolute;
+    top:5px;
+    left:5px;
+}
+
+/* ANTENNA */
+
+.antenna{
+    position:absolute;
+    width:4px;
+    height:24px;
+    background:#2e7d32;
+    top:-18px;
+    border-radius:5px;
+}
+
+.antenna.left{
+    left:24px;
+    transform:rotate(-25deg);
+}
+
+.antenna.right{
+    right:24px;
+    transform:rotate(25deg);
+}
+
+/* DROP ZONE */
+
+.drop-zone{
+    background:#00c897;
+    border:4px dashed #ff9800;
+}
+
+.correct{
+    background:#00c853 !important;
+    animation:bounce 0.4s;
+}
+
+.wrong{
+    background:#ff5252 !important;
+    animation:shake 0.3s;
+}
+
+/* SUCCESS */
+
+#successMessage{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:99999;
+    color:white;
+    text-align:center;
+}
+
+#successMessage h1{
+    font-size:clamp(48px,10vw,100px);
+}
+
+#successMessage p{
+    font-size:clamp(24px,5vw,40px);
+}
+
+/* ANIMATIONS */
+
+@keyframes shake{
+    0%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    50%{transform:translateX(5px);}
+    75%{transform:translateX(-5px);}
+    100%{transform:translateX(0);}
+}
+
+@keyframes bounce{
+    0%{transform:scale(0.7);}
+    50%{transform:scale(1.2);}
+    100%{transform:scale(1);}
+}
+
+/* MOBILE */
+
+@media (max-width:700px){
+
+    .cloud{
+        top:55px;
+        padding:15px;
+    }
+
+    .letters{
+        gap:8px;
+    }
+
+    .caterpillarWrapper{
+        bottom:8px;
+    }
+
+    .caterpillar{
+        max-width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+
+<div id="introScreen">
+    <img src="assets/innovine-logo.png" alt="Logo">
+</div>
+
+<!-- GAME -->
+
+<div id="gameContainer">
+
+    <h1 class="gameTitle">Find The Missing Letters</h1>
+
+    <!-- CLOUD -->
+
+    <div class="cloud">
+        <div class="letters" id="lettersContainer"></div>
+    </div>
+
+    <!-- CATERPILLAR -->
+
+    <div class="caterpillarWrapper">
+        <div class="caterpillar" id="caterpillar"></div>
+    </div>
+
+</div>
+
+<!-- SUCCESS -->
+
+<div id="successMessage">
+    <h1>🎉 WOW! 🎉</h1>
+    <p>You Finished The Caterpillar!</p>
+</div>
+
+<!-- AUDIO -->
+
+<audio id="correctSound" src="assets/correct.mp3"></audio>
+<audio id="wrongSound" src="assets/wrong.mp3"></audio>
+<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
+
+<script>
+
+/* ================= INTRO ================= */
+
+setTimeout(() => {
+    document.getElementById("introScreen").style.display = "none";
+    document.getElementById("gameContainer").style.display = "block";
+}, 4000);
+
+/* ================= DATA ================= */
+
+const caterpillarData = [
+    "A","","C","","E","F","G","","I","","K","","M","","O","","Q","","","T","U","","W","","",""
+];
+
+const missingLetters = [
+    "B","D","H","J","L","N","P","R","S","V","X","Y","Z"
+];
+
+/* ================= BUILD CATERPILLAR ================= */
+
+const caterpillar = document.getElementById("caterpillar");
+
+let answerIndex = 0;
+let completed = 0;
+
+caterpillarData.forEach((letter,index)=>{
+
+    const segment = document.createElement("div");
+    segment.className = "segment";
+
+    const circle = document.createElement("div");
+
+    if(index === 0){
+
+        circle.className = "circle head";
+        circle.innerHTML = `
+            A
+            <div class="antenna left"></div>
+            <div class="antenna right"></div>
+
+            <div class="eye left">
+                <div class="pupil"></div>
+            </div>
+
+            <div class="eye right">
+                <div class="pupil"></div>
+            </div>
+        `;
+
+    }else{
+
+        if(letter === ""){
+
+            circle.className = "circle drop-zone";
+
+            const answer = missingLetters[answerIndex];
+            circle.dataset.answer = answer;
+
+            answerIndex++;
+
+        }else{
+
+            circle.className = "circle";
+            circle.textContent = letter;
+
+        }
+
+    }
+
+    segment.appendChild(circle);
+    caterpillar.appendChild(segment);
+
+});
+
+/* ================= LETTER CLOUD ================= */
+
+const lettersContainer = document.getElementById("lettersContainer");
+
+const cloudLetters = [
+    "B","D","H","J","L","N","P","R","S","V","X","Y","Z"
+];
+
+cloudLetters.sort(()=>Math.random()-0.5);
+
+cloudLetters.forEach(letter=>{
+
+    const div = document.createElement("div");
+
+    div.className = "draggable";
+    div.textContent = letter;
+    div.dataset.letter = letter;
+
+    div.addEventListener("click", ()=>{
+
+        selectedLetter = div;
+
+        document.querySelectorAll(".draggable").forEach(el=>{
+            el.style.transform = "scale(1)";
+        });
+
+        div.style.transform = "scale(1.2)";
+    });
+
+    lettersContainer.appendChild(div);
+
+});
+
+/* ================= GAME LOGIC ================= */
+
+let selectedLetter = null;
+
+document.querySelectorAll(".drop-zone").forEach(zone=>{
+
+    zone.addEventListener("click", ()=>{
+
+        if(!selectedLetter) return;
+
+        const chosen = selectedLetter.dataset.letter;
+        const correct = zone.dataset.answer;
+
+        if(chosen === correct){
+
+            zone.textContent = chosen;
+            zone.classList.add("correct");
+
+            document.getElementById("correctSound").play();
+
+            selectedLetter.remove();
+            selectedLetter = null;
+
+            completed++;
+
+            if(completed === 13){
+
+                document.getElementById("clapSound").play();
+
+                setTimeout(()=>{
+                    document.getElementById("successMessage").style.display = "flex";
+                },500);
+            }
+
+        }else{
+
+            zone.classList.add("wrong");
+
+            document.getElementById("wrongSound").play();
+
+            setTimeout(()=>{
+                zone.classList.remove("wrong");
+            },400);
+
+        }
+
+    });
+
+});
+
+/* ================= TOUCH SUPPORT ================= */
+
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+});
+
+</script>
+
+</body>
+</html>
