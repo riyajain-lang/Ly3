@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Shadow Matching Game</title>
+<title>Shadow Matching</title>
 
 <style>
 
@@ -20,19 +21,19 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:'Arial Rounded MT Bold',sans-serif;
+    font-family:Arial, sans-serif;
 }
 
-/* ---------------- GAME BACKGROUND ---------------- */
+/* ---------------- BACKGROUND ---------------- */
 
 body{
     background:
     linear-gradient(
         to bottom,
-        #8ed6ff 0%,
-        #8ed6ff 55%,
-        #74c043 55%,
-        #5fa333 100%
+        #8fd8ff 0%,
+        #8fd8ff 55%,
+        #73c04b 55%,
+        #5ca236 100%
     );
 }
 
@@ -40,77 +41,72 @@ body{
 
 #splash-screen{
     position:fixed;
-    inset:0;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
     background:white;
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     z-index:9999;
-    transition:opacity .5s ease;
+
+    transition:opacity 0.5s;
 }
 
 #splash-screen img{
-    width:240px;
-    max-width:70%;
+    width:220px;
+    max-width:80%;
+    object-fit:contain;
 }
 
 /* ---------------- MAIN GAME ---------------- */
 
 #game-container{
+    position:relative;
     width:100%;
     height:100%;
-    position:relative;
-    overflow:hidden;
 }
 
 /* ---------------- TITLE ---------------- */
 
-#game-title{
+#title{
     position:absolute;
     top:10px;
     left:50%;
     transform:translateX(-50%);
-    z-index:20;
 
-    background:#fff7c7;
+    background:#fff4c7;
 
-    padding:12px 28px;
+    border:4px solid #7b4b22;
 
-    border-radius:40px;
+    border-radius:30px;
 
-    border:4px solid #8b5a2b;
+    padding:10px 25px;
 
     font-size:2rem;
     font-weight:bold;
-    color:#7a3e10;
+    color:#7b4b22;
 
-    box-shadow:0 4px 0 #5a2c08;
-}
-
-/* ---------------- FARM GROUND ---------------- */
-
-#ground{
-    position:absolute;
-    bottom:0;
-    width:100%;
-    height:42%;
-    background:#6db63f;
+    z-index:100;
 }
 
 /* ---------------- FARM HOUSE ---------------- */
 
 #farmhouse{
     position:absolute;
-    bottom:170px;   /* FIXED TO GROUND */
-    right:20px;
+    right:15px;
+    bottom:170px;
 
-    width:150px;
-    height:140px;
+    width:140px;
+    height:130px;
 
     z-index:2;
 }
 
-/* Roof */
+/* roof */
 
 #roof{
     position:absolute;
@@ -120,54 +116,50 @@ body{
     width:0;
     height:0;
 
-    border-left:75px solid transparent;
-    border-right:75px solid transparent;
-    border-bottom:65px solid #7a2d16;
+    border-left:70px solid transparent;
+    border-right:70px solid transparent;
+    border-bottom:60px solid #7a2f16;
 }
 
-/* House */
+/* house body */
 
 #house-body{
     position:absolute;
     bottom:0;
 
-    width:150px;
-    height:90px;
+    width:140px;
+    height:85px;
 
-    background:#9b5a2e;
+    background:#a45d2b;
 
-    border:4px solid #5f3210;
-
-    border-radius:8px;
+    border:4px solid #5f3110;
 }
 
-/* Door */
+/* door */
 
 #door{
     position:absolute;
     bottom:0;
-    left:55px;
+    left:50px;
 
-    width:40px;
-    height:55px;
+    width:38px;
+    height:52px;
 
-    background:#5a2f0d;
-
-    border-radius:8px 8px 0 0;
+    background:#5a2d0a;
 }
 
-/* Windows */
+/* windows */
 
 .window{
     position:absolute;
-    top:18px;
+    top:15px;
 
-    width:25px;
-    height:25px;
+    width:24px;
+    height:24px;
 
-    background:#dff6ff;
+    background:#d9f2ff;
 
-    border:3px solid #5a2f0d;
+    border:3px solid #5a2d0a;
 }
 
 #window-left{
@@ -182,32 +174,29 @@ body{
 
 #target-area{
     position:absolute;
-    top:80px;
-    left:0;
+    top:70px;
     width:100%;
-    height:50%;
+    height:55%;
 }
 
 /* ---------------- SHADOWS ---------------- */
 
-.shadow-target{
+.shadow{
     position:absolute;
 
     object-fit:contain;
 
     filter:brightness(0);
 
-    opacity:.75;
+    opacity:0.75;
 }
 
-/* Properly placed on the grass */
-
 #shadow-Pig{
-    width:85px;
-    height:85px;
+    width:80px;
+    height:80px;
 
     left:5%;
-    bottom:35%;
+    top:20%;
 }
 
 #shadow-Horse{
@@ -215,31 +204,31 @@ body{
     height:110px;
 
     left:35%;
-    bottom:42%;
+    top:10%;
 }
 
 #shadow-Cow{
-    width:100px;
-    height:100px;
+    width:95px;
+    height:95px;
 
     left:10%;
-    bottom:0%;
+    top:48%;
 }
 
 #shadow-Hen{
     width:75px;
     height:75px;
 
-    left:40%;
-    bottom:5%;
+    left:38%;
+    top:60%;
 }
 
 #shadow-Duck{
     width:75px;
     height:75px;
 
-    left:58%;
-    bottom:3%;
+    left:57%;
+    top:62%;
 }
 
 #shadow-Sheep{
@@ -247,46 +236,42 @@ body{
     height:90px;
 
     left:72%;
-    bottom:10%;
+    top:50%;
 }
 
 .matched{
     filter:none !important;
     opacity:1 !important;
-    transform:scale(1.1);
-    transition:all .3s ease;
+    transform:scale(1.08);
+    transition:0.3s;
 }
 
 /* ---------------- DOCK AREA ---------------- */
 
-#dock-area{
+#dock{
     position:absolute;
     bottom:0;
-
     width:100%;
     height:170px;
 
-    background:rgba(255,255,255,.15);
+    background:rgba(255,255,255,0.15);
 
     border-top:4px dashed white;
 
     display:grid;
-
     grid-template-columns:repeat(3,1fr);
 
     gap:10px;
 
-    padding:15px;
+    padding:10px;
 
-    align-items:center;
     justify-items:center;
-
-    z-index:10;
+    align-items:center;
 }
 
-/* ---------------- ANIMAL CARDS ---------------- */
+/* ---------------- ANIMALS ---------------- */
 
-.animal-card{
+.animal{
     width:80px;
     height:80px;
 
@@ -294,44 +279,41 @@ body{
 
     touch-action:none;
 
-    cursor:grab;
-
-    transition:transform .2s ease;
-
     z-index:50;
-}
-
-.animal-card:active{
-    transform:scale(1.08);
 }
 
 /* ---------------- WIN SCREEN ---------------- */
 
-#winner-screen{
+#win-screen{
     position:absolute;
-    inset:0;
+    top:0;
+    left:0;
 
-    background:rgba(255,255,255,.9);
+    width:100%;
+    height:100%;
+
+    background:rgba(255,255,255,0.9);
 
     display:none;
 
-    flex-direction:column;
     justify-content:center;
     align-items:center;
+    flex-direction:column;
 
-    z-index:100;
+    z-index:999;
 }
 
-#winner-screen h1{
-    font-size:3rem;
-    color:#ff4b4b;
+#win-screen h1{
+    font-size:2.5rem;
+    color:#ff4747;
+
     margin-bottom:20px;
 }
 
-#winner-screen button{
-    padding:14px 34px;
+#win-screen button{
+    padding:15px 30px;
 
-    font-size:1.3rem;
+    font-size:1.2rem;
     font-weight:bold;
 
     border:none;
@@ -339,44 +321,35 @@ body{
 
     background:#2ecc71;
     color:white;
-
-    box-shadow:0 5px 0 #1f9d55;
 }
 
 /* ---------------- MOBILE ---------------- */
 
-@media (max-width:480px){
+@media(max-width:480px){
 
-    #game-title{
+    #title{
         font-size:1.5rem;
-        padding:10px 20px;
+    }
+
+    .animal{
+        width:70px;
+        height:70px;
     }
 
     #farmhouse{
-        width:120px;
+        width:110px;
         height:110px;
         bottom:180px;
     }
 
     #roof{
-        border-left:60px solid transparent;
-        border-right:60px solid transparent;
-        border-bottom:55px solid #7a2d16;
+        border-left:55px solid transparent;
+        border-right:55px solid transparent;
+        border-bottom:50px solid #7a2f16;
     }
 
     #house-body{
-        width:120px;
-        height:75px;
-    }
-
-    #door{
-        left:42px;
-        width:35px;
-        height:45px;
-    }
-
-    .animal-card{
-        width:70px;
+        width:110px;
         height:70px;
     }
 
@@ -387,53 +360,37 @@ body{
 
 <body>
 
-<!-- SPLASH -->
+<!-- SPLASH SCREEN -->
 
 <div id="splash-screen">
-    <img src="theme/animals/assets/innovine-logo.png">
+
+    <!-- IMPORTANT -->
+    <!-- CORRECT PATH -->
+
+    <img src="./assets/innovine-logo.png" alt="logo">
+
 </div>
 
 <!-- AUDIO -->
 
-<audio id="correct" src="theme/animals/assets/correct.mp3"></audio>
-<audio id="wrong" src="theme/animals/assets/wrong.mp3"></audio>
-<audio id="cheer" src="theme/animals/assets/freesound_community-claps-44774.mp3"></audio>
+<audio id="correct" src="./assets/correct.mp3"></audio>
 
-<!-- GAME -->
+<audio id="wrong" src="./assets/wrong.mp3"></audio>
+
+<audio id="cheer"
+src="./assets/freesound_community-claps-44774.mp3"></audio>
+
+<!-- MAIN GAME -->
 
 <div id="game-container">
 
     <!-- TITLE -->
 
-    <div id="game-title">
+    <div id="title">
         Shadow Matching
     </div>
 
-    <!-- TARGET AREA -->
-
-    <div id="target-area">
-
-        <img id="shadow-Pig" class="shadow-target"
-        src="theme/animals/assets/Pig.png">
-
-        <img id="shadow-Horse" class="shadow-target"
-        src="theme/animals/assets/Horse.png">
-
-        <img id="shadow-Cow" class="shadow-target"
-        src="theme/animals/assets/Cow.png">
-
-        <img id="shadow-Hen" class="shadow-target"
-        src="theme/animals/assets/Hen.png">
-
-        <img id="shadow-Duck" class="shadow-target"
-        src="theme/animals/assets/Duck.png">
-
-        <img id="shadow-Sheep" class="shadow-target"
-        src="theme/animals/assets/Sheep.png">
-
-    </div>
-
-    <!-- FARM HOUSE -->
+    <!-- FARMHOUSE -->
 
     <div id="farmhouse">
 
@@ -451,17 +408,55 @@ body{
 
     </div>
 
-    <!-- GROUND -->
+    <!-- TARGET AREA -->
 
-    <div id="ground"></div>
+    <div id="target-area">
+
+        <img
+        id="shadow-Pig"
+        class="shadow"
+        data-animal="Pig"
+        src="./assets/Pig.png">
+
+        <img
+        id="shadow-Horse"
+        class="shadow"
+        data-animal="Horse"
+        src="./assets/Horse.png">
+
+        <img
+        id="shadow-Cow"
+        class="shadow"
+        data-animal="Cow"
+        src="./assets/Cow.png">
+
+        <img
+        id="shadow-Hen"
+        class="shadow"
+        data-animal="Hen"
+        src="./assets/Hen.png">
+
+        <img
+        id="shadow-Duck"
+        class="shadow"
+        data-animal="Duck"
+        src="./assets/Duck.png">
+
+        <img
+        id="shadow-Sheep"
+        class="shadow"
+        data-animal="Sheep"
+        src="./assets/Sheep.png">
+
+    </div>
 
     <!-- DOCK -->
 
-    <div id="dock-area"></div>
+    <div id="dock"></div>
 
     <!-- WIN SCREEN -->
 
-    <div id="winner-screen">
+    <div id="win-screen">
 
         <h1>WELL DONE! 🎉</h1>
 
@@ -475,6 +470,8 @@ body{
 
 <script>
 
+/* ---------------- ANIMALS ---------------- */
+
 const animals = [
     'Cow',
     'Duck',
@@ -484,11 +481,11 @@ const animals = [
     'Sheep'
 ];
 
-let matchedCount = 0;
+let matched = 0;
 
 /* ---------------- SPLASH ---------------- */
 
-window.addEventListener('DOMContentLoaded',()=>{
+window.addEventListener('load',()=>{
 
     setTimeout(()=>{
 
@@ -502,7 +499,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 
     },3000);
 
-    setupGame();
+    createAnimals();
 
 });
 
@@ -518,19 +515,19 @@ function playSound(id){
 
 }
 
-/* ---------------- GAME SETUP ---------------- */
+/* ---------------- CREATE ANIMALS ---------------- */
 
-function setupGame(){
+function createAnimals(){
 
-    matchedCount = 0;
+    matched = 0;
 
-    document.getElementById('winner-screen').style.display = 'none';
+    document.getElementById('win-screen').style.display='none';
 
-    const dock = document.getElementById('dock-area');
+    const dock = document.getElementById('dock');
 
-    dock.innerHTML = '';
+    dock.innerHTML='';
 
-    document.querySelectorAll('.shadow-target').forEach(shadow=>{
+    document.querySelectorAll('.shadow').forEach(shadow=>{
 
         shadow.classList.remove('matched');
 
@@ -542,15 +539,15 @@ function setupGame(){
 
         const img = document.createElement('img');
 
-        img.src = `theme/animals/assets/${animal}.png`;
+        img.src = `./assets/${animal}.png`;
 
-        img.className = 'animal-card';
+        img.className='animal';
 
-        img.dataset.animal = animal;
+        img.dataset.animal=animal;
 
         dock.appendChild(img);
 
-        enableDrag(img);
+        dragElement(img);
 
     });
 
@@ -558,7 +555,7 @@ function setupGame(){
 
 /* ---------------- DRAG SYSTEM ---------------- */
 
-function enableDrag(el){
+function dragElement(el){
 
     let startX = 0;
     let startY = 0;
@@ -566,14 +563,14 @@ function enableDrag(el){
     let dragging = false;
 
     el.addEventListener('touchstart',startDrag,{passive:false});
-    el.addEventListener('touchmove',moveDrag,{passive:false});
+    el.addEventListener('touchmove',dragMove,{passive:false});
     el.addEventListener('touchend',endDrag,{passive:false});
 
     el.addEventListener('mousedown',startDrag);
 
     function startDrag(e){
 
-        dragging = true;
+        dragging=true;
 
         const touch = e.touches ? e.touches[0] : e;
 
@@ -582,14 +579,14 @@ function enableDrag(el){
         startX = touch.clientX;
         startY = touch.clientY;
 
-        el.style.position = 'fixed';
+        el.style.position='fixed';
 
         el.style.left = rect.left + 'px';
         el.style.top = rect.top + 'px';
 
         if(!e.touches){
 
-            window.addEventListener('mousemove',moveDrag);
+            window.addEventListener('mousemove',dragMove);
 
             window.addEventListener('mouseup',endDrag);
 
@@ -597,7 +594,7 @@ function enableDrag(el){
 
     }
 
-    function moveDrag(e){
+    function dragMove(e){
 
         if(!dragging) return;
 
@@ -611,9 +608,11 @@ function enableDrag(el){
         startX = touch.clientX;
         startY = touch.clientY;
 
-        el.style.left = (parseFloat(el.style.left)+dx)+'px';
+        el.style.left =
+        (parseFloat(el.style.left)+dx)+'px';
 
-        el.style.top = (parseFloat(el.style.top)+dy)+'px';
+        el.style.top =
+        (parseFloat(el.style.top)+dy)+'px';
 
     }
 
@@ -621,21 +620,21 @@ function enableDrag(el){
 
         if(!dragging) return;
 
-        dragging = false;
+        dragging=false;
 
         const animal = el.dataset.animal;
 
-        const target = document.getElementById(`shadow-${animal}`);
+        const target =
+        document.getElementById(`shadow-${animal}`);
 
-        const rect1 = el.getBoundingClientRect();
+        const r1 = el.getBoundingClientRect();
+        const r2 = target.getBoundingClientRect();
 
-        const rect2 = target.getBoundingClientRect();
+        const x1 = r1.left + r1.width/2;
+        const y1 = r1.top + r1.height/2;
 
-        const x1 = rect1.left + rect1.width/2;
-        const y1 = rect1.top + rect1.height/2;
-
-        const x2 = rect2.left + rect2.width/2;
-        const y2 = rect2.top + rect2.height/2;
+        const x2 = r2.left + r2.width/2;
+        const y2 = r2.top + r2.height/2;
 
         const dx = Math.abs(x1-x2);
         const dy = Math.abs(y1-y2);
@@ -648,15 +647,16 @@ function enableDrag(el){
 
             el.remove();
 
-            matchedCount++;
+            matched++;
 
-            if(matchedCount === animals.length){
+            if(matched === animals.length){
 
                 setTimeout(()=>{
 
                     playSound('cheer');
 
-                    document.getElementById('winner-screen').style.display='flex';
+                    document.getElementById('win-screen')
+                    .style.display='flex';
 
                 },500);
 
@@ -678,7 +678,7 @@ function enableDrag(el){
 
 function resetGame(){
 
-    setupGame();
+    createAnimals();
 
 }
 
