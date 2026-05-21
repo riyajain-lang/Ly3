@@ -3,191 +3,530 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Match the Compartment</title>
+<title>Missing Numbers Train Game</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#fff}
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:#fff;
+}
 
-.screen{width:100vw;height:100vh;display:none;position:relative;overflow:hidden}
+.screen{
+  width:100vw;
+  height:100vh;
+  display:none;
+  position:relative;
+  overflow:hidden;
+}
+
 .active{display:flex}
 
-#logoScreen{background:white;align-items:center;justify-content:center}
-#logoScreen img{width:55vw;max-width:320px}
+#logoScreen{
+  background:#fff;
+  align-items:center;
+  justify-content:center;
+}
 
-/* BACKGROUND */
+#logoScreen img{
+  width:55vw;
+  max-width:320px;
+}
+
+/* MAIN BACKGROUND */
+
 #gameScreen,#endScreen{
   flex-direction:column;
-  background:linear-gradient(#8edcff 0%,#c9f3ff 38%,#92d676 39%,#5fbe58 100%);
+  background:
+    linear-gradient(to bottom,#9eddf5 0%,#bfefff 36%,#8ed175 37%,#5fbb55 100%);
 }
+
+/* SKY */
 
 .sun{
-  position:absolute;right:6vw;top:6vh;width:75px;height:75px;
-  background:#ffd44a;border-radius:50%;
-  box-shadow:0 0 0 12px rgba(255,212,74,.25);
+  position:absolute;
+  right:5vw;
+  top:6vh;
+  width:76px;
+  height:76px;
+  background:#ffd447;
+  border-radius:50%;
+  box-shadow:0 0 0 14px rgba(255,212,71,.35);
+  z-index:1;
 }
+
 .cloud{
-  position:absolute;background:white;width:110px;height:38px;border-radius:40px;opacity:.95;
+  position:absolute;
+  background:#fff;
+  width:120px;
+  height:42px;
+  border-radius:50px;
+  opacity:.95;
+  z-index:1;
 }
-.cloud:before,.cloud:after{content:"";position:absolute;background:white;border-radius:50%}
-.cloud:before{width:48px;height:48px;left:14px;top:-18px}
-.cloud:after{width:58px;height:58px;right:12px;top:-27px}
-.c1{top:12vh;left:7vw}.c2{top:9vh;left:42vw}.c3{top:18vh;right:18vw}
 
-.mountain{
-  position:absolute;bottom:37vh;width:0;height:0;
-  border-left:180px solid transparent;border-right:180px solid transparent;
-  border-bottom:190px solid #78b7c8;opacity:.9;
+.cloud:before,.cloud:after{
+  content:"";
+  position:absolute;
+  background:#fff;
+  border-radius:50%;
 }
-.m1{left:5vw}.m2{right:4vw;border-bottom-color:#83c4b8}
+
+.cloud:before{
+  width:55px;
+  height:55px;
+  left:14px;
+  top:-22px;
+}
+
+.cloud:after{
+  width:65px;
+  height:65px;
+  right:10px;
+  top:-30px;
+}
+
+.c1{left:7vw;top:10vh}
+.c2{left:42vw;top:8vh}
+.c3{right:18vw;top:16vh}
+
+/* REALISTIC CLIPART LANDSCAPE */
+
+.bgMountain{
+  position:absolute;
+  bottom:33vh;
+  width:46vw;
+  height:30vh;
+  background:linear-gradient(135deg,#8cc7ce,#5ba6ba);
+  clip-path:polygon(50% 0%,100% 100%,0% 100%);
+  opacity:.95;
+  z-index:0;
+}
+
+.bgMountain:after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:50%;
+  width:50%;
+  height:100%;
+  background:rgba(255,255,255,.16);
+  clip-path:polygon(0 0,100% 100%,0 100%);
+}
+
+.m1{left:4vw}
+.m2{right:4vw;background:linear-gradient(135deg,#9acfc4,#63b89d)}
+
 .waterfall{
-  position:absolute;bottom:37vh;left:22vw;width:38px;height:145px;
-  background:linear-gradient(#dffaff,#73d7ff);border-radius:0 0 20px 20px;opacity:.9;
+  position:absolute;
+  bottom:33vh;
+  left:21.5vw;
+  width:38px;
+  height:130px;
+  background:linear-gradient(to bottom,#eaffff,#87ddff,#dff9ff);
+  border-radius:0 0 22px 22px;
+  opacity:.9;
+  z-index:1;
 }
-.river{
-  position:absolute;bottom:22vh;right:0;width:45vw;height:8vh;
-  background:linear-gradient(90deg,#72d7ff,#b9f4ff);
-  border-radius:60% 0 0 60%;opacity:.8;
-}
-.tree{
-  position:absolute;bottom:29vh;width:35px;height:80px;background:#8b5a2b;border-radius:8px;z-index:1;
-}
-.tree:before{
-  content:"";position:absolute;left:-28px;top:-52px;width:90px;height:75px;
-  background:#4caf50;border-radius:50%;
-}
-.t1{left:8vw}.t2{right:10vw}.t3{left:72vw}
 
-/* TITLE */
-.title{
-  z-index:5;text-align:center;padding:10px 8px 0;
-  font-family:Georgia,serif;font-style:italic;font-weight:bold;
-  color:#263238;text-shadow:2px 2px #ffffff;
-  font-size:clamp(22px,4.5vw,42px);
+.river{
+  position:absolute;
+  bottom:19vh;
+  right:-4vw;
+  width:52vw;
+  height:8vh;
+  background:linear-gradient(90deg,#b9f7ff,#6fd6ff);
+  border-radius:80% 0 0 80%;
+  opacity:.8;
+  z-index:1;
 }
+
+.tree{
+  position:absolute;
+  bottom:25vh;
+  width:42px;
+  height:95px;
+  background:#8b5a2b;
+  border-radius:10px;
+  z-index:2;
+}
+
+.tree:before{
+  content:"";
+  position:absolute;
+  left:-34px;
+  top:-62px;
+  width:110px;
+  height:90px;
+  background:radial-gradient(circle,#4fb24f 0%,#42a945 70%);
+  border-radius:50%;
+}
+
+.t1{left:8vw}
+.t2{right:9vw}
+.t3{left:73vw}
+
+/* HEADING */
+
+.title{
+  z-index:8;
+  text-align:center;
+  padding:8px 12px 0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-style:italic;
+  font-weight:900;
+  color:#1f2e35;
+  text-shadow:2px 2px 0 #fff;
+  font-size:clamp(21px,4.2vw,42px);
+}
+
 .instruction{
-  z-index:5;text-align:center;font-size:clamp(14px,2.6vw,21px);
-  color:#273238;margin-top:4px;font-weight:bold;
+  z-index:8;
+  text-align:center;
+  margin-top:4px;
+  color:#1f2e35;
+  font-weight:bold;
+  font-size:clamp(13px,2.5vw,20px);
 }
 
 /* TRACK */
+
 .track{
-  position:absolute;bottom:18vh;left:0;width:100%;height:48px;z-index:2;
-  background:repeating-linear-gradient(90deg,#8b5a2b 0 28px,#5b3518 28px 45px);
-  border-top:8px solid #444;border-bottom:8px solid #444;
+  position:absolute;
+  bottom:18vh;
+  left:0;
+  width:100%;
+  height:48px;
+  background:repeating-linear-gradient(90deg,#8b5a2b 0 28px,#5d3518 28px 45px);
+  border-top:8px solid #444;
+  border-bottom:8px solid #444;
+  z-index:4;
 }
+
 .track:before{
-  content:"";position:absolute;top:12px;left:0;width:100%;height:7px;background:#222;
+  content:"";
+  position:absolute;
+  left:0;
+  top:12px;
+  width:100%;
+  height:7px;
+  background:#222;
 }
 
 /* TRAIN */
-.trainWrap{
-  position:absolute;left:50%;bottom:23vh;transform:translateX(-50%);
-  width:max-content;height:26vh;z-index:4;display:flex;align-items:flex-end;gap:8px;
-  transition:transform 2.2s ease-in;
-}
-.trainWrap.leave{transform:translateX(120vw)}
 
-.engine,.coach,.missingBox,.optionCoach{
-  position:relative;width:105px;height:96px;border:5px solid #333;
-  display:flex;align-items:center;justify-content:center;
-  font-size:42px;font-weight:bold;color:white;text-shadow:2px 2px #333;
+.trainWrap{
+  position:absolute;
+  left:50%;
+  bottom:24vh;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  width:max-content;
+  z-index:7;
+  transition:transform 2.4s ease-in;
+}
+
+.trainWrap.leave{
+  transform:translateX(-150vw);
+}
+
+/* ENGINE */
+
+.engine{
+  position:relative;
+  width:125px;
+  height:90px;
+  background:#f4ca3f;
+  border:5px solid #333;
+  border-radius:18px 45px 16px 16px;
   box-shadow:0 6px 0 rgba(0,0,0,.25);
 }
-.engine{
-  width:120px;background:#2e78bd;border-radius:45px 18px 15px 15px;
-}
-.engine:before{
-  content:"";position:absolute;left:12px;top:-38px;width:38px;height:42px;
-  background:#2e78bd;border:5px solid #333;border-radius:10px 10px 0 0;
-}
-.engine:after{
-  content:"";position:absolute;left:18px;top:-22px;width:48px;height:38px;
-  background:#ffd04a;border:4px solid #333;border-radius:22px 22px 5px 5px;
-}
-.engineWindow{
-  position:absolute;right:16px;top:18px;width:35px;height:35px;
-  background:#b8f3ff;border:4px solid #333;border-radius:10px;
+
+.engineBody{
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:78px;
+  height:72px;
+  background:#e84835;
+  border-right:5px solid #333;
+  border-radius:15px 12px 10px 10px;
 }
 
-.coach,.missingBox{
-  border-radius:22px;
+.engineCab{
+  position:absolute;
+  right:10px;
+  bottom:18px;
+  width:48px;
+  height:48px;
+  background:#0aa6b7;
+  border:4px solid #333;
+  border-radius:8px;
 }
-.coach:before,.missingBox:before,.optionCoach:before{
-  content:"";position:absolute;top:13px;right:13px;width:28px;height:28px;
-  background:#c8f6ff;border:4px solid #fff;border-radius:8px;
+
+.engineWindow{
+  position:absolute;
+  right:16px;
+  bottom:25px;
+  width:34px;
+  height:32px;
+  background:#e9fbff;
+  border:4px solid #fff;
+  border-radius:6px;
 }
-.missingBox{
-  background:rgba(255,255,255,.85);color:#333;text-shadow:none;border:5px dashed #333;
+
+.chimney{
+  position:absolute;
+  left:10px;
+  top:-42px;
+  width:32px;
+  height:42px;
+  background:#202020;
+  border:4px solid #333;
+  border-radius:8px 8px 0 0;
 }
-.connector{
-  position:absolute;left:-14px;top:48%;width:18px;height:8px;background:#333;
-}
-.wheel{
-  position:absolute;bottom:-24px;width:32px;height:32px;background:#222;border-radius:50%;
-  border:5px solid #666;
-}
-.w1{left:16px}.w2{right:16px}
 
 .smoke{
-  position:absolute;left:4px;top:-65px;width:25px;height:25px;border-radius:50%;
-  background:white;opacity:0;
+  position:absolute;
+  left:8px;
+  top:-72px;
+  width:25px;
+  height:25px;
+  background:white;
+  border-radius:50%;
+  opacity:0;
 }
-.trainWrap.run .smoke{animation:smoke 1s infinite}
+
+.trainWrap.run .smoke{
+  animation:smoke 1s infinite;
+}
+
 @keyframes smoke{
   0%{opacity:.9;transform:translate(0,0) scale(.6)}
-  100%{opacity:0;transform:translate(-35px,-50px) scale(1.8)}
+  100%{opacity:0;transform:translate(-35px,-55px) scale(1.8)}
 }
+
+/* COACH */
+
+.coach,.missingBox{
+  position:relative;
+  width:110px;
+  height:90px;
+  border:5px solid #333;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:42px;
+  font-weight:bold;
+  color:#fff;
+  text-shadow:2px 2px 0 #333;
+  box-shadow:0 6px 0 rgba(0,0,0,.25);
+}
+
+.coach:before{
+  content:"";
+  position:absolute;
+  top:-14px;
+  left:8px;
+  right:8px;
+  height:18px;
+  background:#f5d36b;
+  border:4px solid #333;
+  border-bottom:none;
+  border-radius:16px 16px 0 0;
+}
+
+.coachWindow{
+  position:absolute;
+  left:12px;
+  top:20px;
+  width:30px;
+  height:32px;
+  background:#ecfbff;
+  border:4px solid #fff;
+  border-radius:6px;
+}
+
+.connector{
+  position:absolute;
+  left:-15px;
+  top:48%;
+  width:18px;
+  height:8px;
+  background:#333;
+}
+
+/* MISSING BOX */
+
+.missingBox{
+  background:rgba(255,255,255,.88);
+  border:5px dashed #333;
+  color:#333;
+  text-shadow:none;
+}
+
+/* WHEELS */
+
+.wheel{
+  position:absolute;
+  bottom:-24px;
+  width:33px;
+  height:33px;
+  background:#202020;
+  border:6px solid #666;
+  border-radius:50%;
+}
+
+.w1{left:15px}
+.w2{right:15px}
 
 /* OPTIONS */
+
 .options{
-  position:absolute;bottom:2vh;left:0;width:100%;z-index:6;
-  display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:8px;
+  position:absolute;
+  bottom:2.2vh;
+  left:0;
+  width:100%;
+  z-index:9;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:8px;
 }
+
 .optionCoach{
-  width:86px;height:64px;border-radius:18px;background:#ffd45a;
-  color:white;font-size:30px;cursor:pointer;
+  position:relative;
+  width:92px;
+  height:62px;
+  border:5px solid #333;
+  border-radius:18px;
+  font-size:31px;
+  font-weight:bold;
+  color:#fff;
+  text-shadow:2px 2px 0 #333;
+  box-shadow:0 6px 0 rgba(0,0,0,.25);
+  cursor:pointer;
 }
+
 .optionCoach:before{
-  width:20px;height:20px;top:8px;right:8px;border-width:3px;
+  content:"";
+  position:absolute;
+  top:-11px;
+  left:8px;
+  right:8px;
+  height:14px;
+  background:#f5d36b;
+  border:3px solid #333;
+  border-bottom:none;
+  border-radius:12px 12px 0 0;
 }
-.optionCoach:active{transform:scale(.95)}
+
+.optionCoach:active{
+  transform:scale(.95);
+}
+
+/* MESSAGE */
 
 #message{
-  position:absolute;z-index:10;top:45%;left:50%;transform:translate(-50%,-50%);
-  background:white;padding:14px 24px;border-radius:22px;
-  font-size:clamp(22px,5vw,38px);font-weight:bold;display:none;
+  position:absolute;
+  top:46%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  z-index:20;
+  display:none;
+  background:#fff;
+  padding:14px 24px;
+  border-radius:22px;
+  font-size:clamp(22px,5vw,38px);
+  font-weight:bold;
   box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
-/* END */
-#endScreen{align-items:center;justify-content:center;text-align:center}
-#endScreen h1{
-  z-index:5;background:white;padding:25px;border-radius:25px;
-  font-size:clamp(32px,7vw,60px);color:#333;
-}
-button{
-  z-index:5;margin-top:18px;padding:13px 26px;border:none;border-radius:18px;
-  background:#333;color:white;font-size:20px;
-}
-.confetti{
-  position:absolute;width:12px;height:14px;top:-20px;animation:fall 3s linear infinite;
-}
-@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+/* END SCREEN */
 
-@media(max-width:750px){
+#endScreen{
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+#endScreen h1{
+  z-index:10;
+  background:white;
+  padding:25px;
+  border-radius:25px;
+  font-size:clamp(32px,7vw,60px);
+  color:#333;
+}
+
+button{
+  z-index:10;
+  margin-top:18px;
+  padding:13px 26px;
+  border:none;
+  border-radius:18px;
+  background:#333;
+  color:white;
+  font-size:20px;
+}
+
+.confetti{
+  position:absolute;
+  width:12px;
+  height:14px;
+  top:-20px;
+  animation:fall 3s linear infinite;
+}
+
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg)}
+}
+
+/* MOBILE */
+
+@media(max-width:760px){
   .trainWrap{gap:5px}
-  .engine,.coach,.missingBox{width:72px;height:72px;font-size:30px;border-width:4px}
-  .engine{width:82px}
-  .engineWindow{width:24px;height:24px;right:8px;top:15px}
-  .coach:before,.missingBox:before{width:18px;height:18px;top:8px;right:7px;border-width:3px}
-  .wheel{width:23px;height:23px;bottom:-18px;border-width:4px}
-  .optionCoach{width:62px;height:52px;font-size:25px}
+  .engine{width:82px;height:70px}
+  .engineBody{width:50px;height:55px}
+  .engineCab{width:34px;height:34px;right:5px;bottom:15px}
+  .engineWindow{width:24px;height:23px;right:10px;bottom:20px;border-width:3px}
+  .chimney{width:24px;height:32px;top:-32px}
+
+  .coach,.missingBox{
+    width:72px;
+    height:68px;
+    font-size:30px;
+    border-width:4px;
+  }
+
+  .coachWindow{display:none}
+  .coach:before{height:13px;top:-11px}
+
+  .wheel{
+    width:24px;
+    height:24px;
+    bottom:-18px;
+    border-width:4px;
+  }
+
+  .optionCoach{
+    width:66px;
+    height:50px;
+    font-size:25px;
+    border-width:4px;
+  }
+
+  .title{font-size:clamp(20px,5vw,30px)}
 }
 
 @media(max-height:620px){
-  .title{font-size:24px}
-  .instruction{font-size:15px}
   .trainWrap{bottom:25vh}
   .track{bottom:19vh}
 }
@@ -205,11 +544,20 @@ button{
 </div>
 
 <div id="gameScreen" class="screen">
+
   <div class="sun"></div>
-  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
-  <div class="mountain m1"></div><div class="mountain m2"></div>
-  <div class="waterfall"></div><div class="river"></div>
-  <div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+
+  <div class="bgMountain m1"></div>
+  <div class="bgMountain m2"></div>
+  <div class="waterfall"></div>
+  <div class="river"></div>
+
+  <div class="tree t1"></div>
+  <div class="tree t2"></div>
+  <div class="tree t3"></div>
 
   <div class="title">Match the Compartment with the Correct Missing Number</div>
   <div class="instruction">Tap the correct number to complete the train.</div>
@@ -218,15 +566,23 @@ button{
   <div class="trainWrap" id="train"></div>
   <div class="options" id="options"></div>
   <div id="message"></div>
+
 </div>
 
 <div id="endScreen" class="screen">
+
   <div class="sun"></div>
-  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
-  <div class="mountain m1"></div><div class="mountain m2"></div>
-  <div class="waterfall"></div><div class="river"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+  <div class="bgMountain m1"></div>
+  <div class="bgMountain m2"></div>
+  <div class="waterfall"></div>
+  <div class="river"></div>
+
   <h1>Great Job! 🎉</h1>
   <button onclick="location.reload()">Play Again</button>
+
 </div>
 
 <script>
@@ -235,19 +591,28 @@ const wrongSound=document.getElementById("wrongSound");
 const clapSound=document.getElementById("clapSound");
 
 const questions=[
-  {seq:[1,null,3,4], missing:[2], options:[2,5,8,10]},
-  {seq:[5,6,null,8], missing:[7], options:[4,7,9,11]},
-  {seq:[9,null,11,12], missing:[10], options:[6,10,13,15]},
-  {seq:[13,14,null,16], missing:[15], options:[12,15,18,20]},
-  {seq:[2,null,4,null], missing:[3,5], options:[3,5,8,9]},
-  {seq:[6,null,8,null], missing:[7,9], options:[4,7,9,12]},
-  {seq:[10,null,12,null], missing:[11,13], options:[11,13,15,17]},
-  {seq:[14,null,16,null], missing:[15,17], options:[12,15,17,20]},
-  {seq:[16,null,18,19], missing:[17], options:[14,17,20,12]},
-  {seq:[17,18,null,20], missing:[19], options:[15,16,19,11]}
+  {seq:[1,null,3,4],missing:[2],options:[2,5,8,10]},
+  {seq:[5,6,null,8],missing:[7],options:[4,7,9,11]},
+  {seq:[9,null,11,12],missing:[10],options:[6,10,13,15]},
+  {seq:[13,14,null,16],missing:[15],options:[12,15,18,20]},
+  {seq:[2,null,4,null],missing:[3,5],options:[3,5,8,9]},
+  {seq:[6,null,8,null],missing:[7,9],options:[4,7,9,12]},
+  {seq:[10,null,12,null],missing:[11,13],options:[11,13,15,17]},
+  {seq:[14,null,16,null],missing:[15,17],options:[12,15,17,20]},
+  {seq:[16,null,18,19],missing:[17],options:[14,17,20,12]},
+  {seq:[17,18,null,20],missing:[19],options:[15,16,19,11]}
 ];
 
-const coachColours=["#f5a6c8","#ffd45a","#91d46b","#79c7e8","#b996e8","#f3a65a"];
+const coachColours=[
+  "#e94b35",
+  "#08a9bd",
+  "#f5d34c",
+  "#8bd35b",
+  "#d987b4",
+  "#c58adf",
+  "#f3a24b"
+];
+
 let qIndex=0;
 let selectedMissing=0;
 
@@ -271,6 +636,7 @@ function showMessage(text){
 
 function loadQuestion(){
   selectedMissing=0;
+
   const q=questions[qIndex];
   const train=document.getElementById("train");
   const options=document.getElementById("options");
@@ -281,7 +647,15 @@ function loadQuestion(){
 
   const engine=document.createElement("div");
   engine.className="engine";
-  engine.innerHTML="<div class='smoke'></div><div class='engineWindow'></div><div class='wheel w1'></div><div class='wheel w2'></div>";
+  engine.innerHTML=`
+    <div class="smoke"></div>
+    <div class="chimney"></div>
+    <div class="engineBody"></div>
+    <div class="engineCab"></div>
+    <div class="engineWindow"></div>
+    <div class="wheel w1"></div>
+    <div class="wheel w2"></div>
+  `;
   train.appendChild(engine);
 
   q.seq.forEach((num,i)=>{
@@ -289,11 +663,17 @@ function loadQuestion(){
 
     if(num===null){
       div.className="missingBox";
-      div.innerHTML="?<div class='connector'></div><div class='wheel w1'></div><div class='wheel w2'></div>";
+      div.innerHTML=`?<div class="connector"></div><div class="wheel w1"></div><div class="wheel w2"></div>`;
     }else{
       div.className="coach";
       div.style.background=coachColours[(num+i)%coachColours.length];
-      div.innerHTML=num+"<div class='connector'></div><div class='wheel w1'></div><div class='wheel w2'></div>";
+      div.innerHTML=`
+        <div class="coachWindow"></div>
+        ${num}
+        <div class="connector"></div>
+        <div class="wheel w1"></div>
+        <div class="wheel w2"></div>
+      `;
     }
 
     train.appendChild(div);
@@ -319,7 +699,13 @@ function checkAnswer(num,btn){
     const empty=document.querySelector(".missingBox");
     empty.className="coach";
     empty.style.background=coachColours[num%coachColours.length];
-    empty.innerHTML=num+"<div class='connector'></div><div class='wheel w1'></div><div class='wheel w2'></div>";
+    empty.innerHTML=`
+      <div class="coachWindow"></div>
+      ${num}
+      <div class="connector"></div>
+      <div class="wheel w1"></div>
+      <div class="wheel w2"></div>
+    `;
 
     btn.style.visibility="hidden";
     selectedMissing++;
@@ -328,10 +714,11 @@ function checkAnswer(num,btn){
     if(selectedMissing===q.missing.length){
       setTimeout(runTrain,800);
     }
+
   }else{
     playSound(wrongSound);
     showMessage("Try again!");
-    if(navigator.vibrate) navigator.vibrate(120);
+    if(navigator.vibrate)navigator.vibrate(120);
   }
 }
 
@@ -340,16 +727,19 @@ function runTrain(){
   train.classList.add("run");
   playTrainSound();
 
-  setTimeout(()=>train.classList.add("leave"),600);
+  setTimeout(()=>{
+    train.classList.add("leave");
+  },600);
 
   setTimeout(()=>{
     qIndex++;
+
     if(qIndex>=questions.length){
       showEnd();
     }else{
       loadQuestion();
     }
-  },2900);
+  },3000);
 }
 
 function playTrainSound(){
@@ -357,16 +747,22 @@ function playTrainSound(){
     const AudioContext=window.AudioContext||window.webkitAudioContext;
     const ctx=new AudioContext();
     let count=0;
+
     const timer=setInterval(()=>{
       const osc=ctx.createOscillator();
       const gain=ctx.createGain();
-      osc.frequency.value=90;
+
+      osc.frequency.value=95;
       gain.gain.value=.12;
+
       osc.connect(gain);
       gain.connect(ctx.destination);
+
       osc.start();
       osc.stop(ctx.currentTime+.08);
+
       count++;
+
       if(count>14){
         clearInterval(timer);
         setTimeout(()=>ctx.close(),500);
@@ -384,6 +780,7 @@ function showEnd(){
 
 function createConfetti(){
   const colours=["#f8362d","#356ae8","#f8cf2f","#6ed46e","#d27cc2"];
+
   for(let i=0;i<90;i++){
     const c=document.createElement("div");
     c.className="confetti";
