@@ -6,305 +6,757 @@
 <title>Primary Colours Game</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;font-family:Arial, sans-serif}
-body{background:#fff}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:#fff;
+}
 
 .screen{
-  width:100vw;height:100vh;display:none;position:relative;overflow:hidden;
+  width:100vw;
+  height:100vh;
+  display:none;
+  position:relative;
+  overflow:hidden;
 }
-.active{display:flex}
+
+.active{
+  display:flex;
+}
+
+/* ---------------- LOGO SCREEN ---------------- */
 
 #logoScreen{
-  background:white;align-items:center;justify-content:center;
+  background:#fff;
+  align-items:center;
+  justify-content:center;
 }
-#logoScreen img{max-width:55vw;max-height:45vh}
 
-#gameScreen,#endScreen{
+#logoScreen img{
+  width:55vw;
+  max-width:320px;
+}
+
+/* ---------------- GAME + END SCREEN ---------------- */
+
+#gameScreen,
+#endScreen{
   flex-direction:column;
-  background:#f7eadc;
+  background:#f4e7d9;
 }
-#gameScreen::before,#endScreen::before{
-  content:"";position:absolute;inset:0;z-index:0;
+
+#gameScreen::before,
+#endScreen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
   background:
-  radial-gradient(circle at 20% 20%,rgba(255,70,70,.35),transparent 22%),
-  radial-gradient(circle at 75% 35%,rgba(255,190,30,.35),transparent 24%),
-  radial-gradient(circle at 45% 10%,rgba(60,100,220,.25),transparent 20%);
+  radial-gradient(circle at 20% 20%, rgba(255,80,80,.25), transparent 25%),
+  radial-gradient(circle at 80% 30%, rgba(255,220,0,.25), transparent 25%),
+  radial-gradient(circle at 50% 10%, rgba(80,120,255,.2), transparent 20%);
 }
+
 .curve{
-  position:absolute;border:10px solid;border-radius:50%;opacity:.8;z-index:0;
+  position:absolute;
+  border:10px solid;
+  border-radius:50%;
+  opacity:.8;
+  z-index:0;
 }
-.c1{width:240px;height:90px;border-color:#ef4b3f;left:-70px;top:35px;transform:rotate(-25deg)}
-.c2{width:260px;height:110px;border-color:#4b5fad;right:-80px;top:20px;transform:rotate(20deg)}
-.c3{width:230px;height:100px;border-color:#f5b737;right:-30px;bottom:80px;transform:rotate(-30deg)}
-.c4{width:250px;height:100px;border-color:#c56bb7;left:-100px;bottom:130px;transform:rotate(15deg)}
+
+.c1{
+  width:260px;
+  height:90px;
+  border-color:#ef5a50;
+  top:20px;
+  left:-80px;
+  transform:rotate(-20deg);
+}
+
+.c2{
+  width:280px;
+  height:100px;
+  border-color:#596dc0;
+  top:15px;
+  right:-90px;
+  transform:rotate(20deg);
+}
+
+.c3{
+  width:240px;
+  height:90px;
+  border-color:#d27cc2;
+  bottom:120px;
+  left:-100px;
+  transform:rotate(15deg);
+}
+
+.c4{
+  width:250px;
+  height:100px;
+  border-color:#f5bc37;
+  bottom:70px;
+  right:-70px;
+  transform:rotate(-25deg);
+}
+
+/* ---------------- HEADER ---------------- */
 
 .header{
-  z-index:2;text-align:center;padding:8px;font-size:clamp(18px,4vw,30px);
-  font-weight:bold;color:#333;
+  z-index:2;
+  text-align:center;
+  padding-top:10px;
+  font-size:clamp(24px,5vw,42px);
+  font-weight:bold;
+  color:#333;
 }
+
 .instruction{
-  z-index:2;text-align:center;font-size:clamp(13px,3vw,18px);color:#444;margin-bottom:4px;
+  z-index:2;
+  text-align:center;
+  margin-top:8px;
+  font-size:clamp(14px,3vw,22px);
+  color:#444;
 }
+
+/* ---------------- OBJECTS ---------------- */
 
 .objects{
-  z-index:2;height:48vh;width:100%;display:grid;
-  grid-template-columns:repeat(5,1fr);gap:6px;padding:8px 12px;
-  align-items:center;justify-items:center;
+  z-index:2;
+  width:100%;
+  height:48vh;
+
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+
+  padding:12px;
+  justify-items:center;
+  align-items:center;
 }
+
 .obj{
-  width:min(15vw,78px);height:min(15vw,78px);
-  object-fit:contain;background:white;border-radius:18px;padding:7px;
-  box-shadow:0 5px 10px rgba(0,0,0,.15);
-  cursor:pointer;animation:jump 1.4s infinite ease-in-out;
-  border:3px solid transparent;
+  width:min(16vw,90px);
+  height:min(16vw,90px);
+
+  background:#fff;
+  border-radius:20px;
+  padding:8px;
+
+  object-fit:contain;
+
+  box-shadow:0 5px 12px rgba(0,0,0,.15);
+
+  animation:jump 1.3s infinite ease-in-out;
+  cursor:pointer;
+  border:4px solid transparent;
 }
-.obj.selected{border:4px solid #222;transform:scale(1.12)}
-.obj.done{visibility:hidden}
+
+.obj.selected{
+  border:4px solid #222;
+  transform:scale(1.1);
+}
+
+.obj.done{
+  visibility:hidden;
+}
+
 @keyframes jump{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-9px)}
+  0%,100%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-10px);
+  }
 }
+
+/* ---------------- BASKETS ---------------- */
 
 .baskets{
-  z-index:2;height:36vh;width:100%;display:grid;
-  grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 10px 14px;
+  z-index:2;
+  width:100%;
+  height:34vh;
+
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+
+  gap:10px;
+  padding:10px;
 }
+
 .basketBox{
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
-  border-radius:22px;background:rgba(255,255,255,.55);padding:6px;
+  background:rgba(255,255,255,.4);
+  border-radius:24px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+
+  padding:10px;
 }
+
 .basket{
-  width:90%;height:78%;border-radius:0 0 35px 35px;
-  border:6px solid #333;cursor:pointer;position:relative;
+  width:95%;
+  height:75%;
+
+  border-radius:0 0 40px 40px;
+  border:6px solid #333;
+
+  position:relative;
+  cursor:pointer;
 }
+
 .basket::before{
-  content:"";position:absolute;left:12%;right:12%;top:-22px;height:35px;
-  border:6px solid #333;border-bottom:none;border-radius:50px 50px 0 0;
+  content:"";
+  position:absolute;
+
+  left:12%;
+  right:12%;
+  top:-22px;
+
+  height:35px;
+
+  border:6px solid #333;
+  border-bottom:none;
+
+  border-radius:50px 50px 0 0;
 }
-.red{background:#ef3b32}
-.blue{background:#2f6df6}
-.yellow{background:#ffd12f}
+
+.red{
+  background:#f8362d;
+}
+
+.blue{
+  background:#356ae8;
+}
+
+.yellow{
+  background:#f8cf2f;
+}
+
 .label{
-  margin-top:5px;font-weight:bold;font-size:clamp(15px,3.5vw,22px);color:#222;
+  margin-top:6px;
+  font-size:clamp(18px,3vw,30px);
+  font-weight:bold;
+  color:#222;
 }
+
+/* ---------------- MESSAGE ---------------- */
 
 #message{
-  position:absolute;z-index:5;top:45%;left:50%;transform:translate(-50%,-50%);
-  background:white;padding:14px 22px;border-radius:20px;
-  font-size:clamp(18px,5vw,32px);font-weight:bold;display:none;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  position:absolute;
+  top:42%;
+  left:50%;
+  transform:translate(-50%,-50%);
+
+  z-index:5;
+
+  background:#fff;
+  padding:15px 25px;
+
+  border-radius:20px;
+
+  font-size:clamp(22px,5vw,40px);
+  font-weight:bold;
+
+  display:none;
+
+  box-shadow:0 8px 20px rgba(0,0,0,.2);
 }
+
+/* ---------------- END SCREEN ---------------- */
 
 #endScreen{
-  align-items:center;justify-content:center;text-align:center;
-}
-#endScreen h1{
-  z-index:2;background:white;padding:22px;border-radius:25px;
-  font-size:clamp(28px,7vw,52px);color:#333;
-}
-button{
-  z-index:2;margin-top:18px;padding:12px 24px;font-size:20px;border:none;
-  border-radius:18px;background:#333;color:white;
-}
-.confetti{
-  position:absolute;width:10px;height:14px;top:-20px;animation:fall 3s linear infinite;
-}
-@keyframes fall{
-  to{transform:translateY(110vh) rotate(360deg)}
+  justify-content:center;
+  align-items:center;
 }
 
-@media(max-height:600px){
-  .objects{height:46vh}
-  .baskets{height:37vh}
-  .obj{width:min(13vw,62px);height:min(13vw,62px)}
+#endScreen h1{
+  z-index:2;
+  background:#fff;
+  padding:25px;
+  border-radius:25px;
+  font-size:clamp(30px,7vw,60px);
+  color:#333;
+}
+
+button{
+  z-index:2;
+
+  margin-top:20px;
+
+  padding:14px 26px;
+
+  border:none;
+  border-radius:18px;
+
+  background:#333;
+  color:#fff;
+
+  font-size:20px;
+
+  cursor:pointer;
+}
+
+/* ---------------- CONFETTI ---------------- */
+
+.confetti{
+  position:absolute;
+  width:12px;
+  height:14px;
+  top:-20px;
+
+  animation:fall 3s linear infinite;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+  }
+}
+
+/* ---------------- MOBILE ---------------- */
+
+@media(max-height:650px){
+
+  .objects{
+    height:45vh;
+  }
+
+  .baskets{
+    height:38vh;
+  }
+
+  .obj{
+    width:min(14vw,70px);
+    height:min(14vw,70px);
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- AUDIO -->
+
 <audio id="correctSound" src="assets/correct.mp3" preload="auto"></audio>
 <audio id="wrongSound" src="assets/wrong.mp3" preload="auto"></audio>
 <audio id="clapSound" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
+
+<!-- LOGO SCREEN -->
 
 <div id="logoScreen" class="screen active">
   <img src="assets/innovine-logo.png" alt="Logo">
 </div>
 
+<!-- GAME SCREEN -->
+
 <div id="gameScreen" class="screen">
-  <div class="curve c1"></div><div class="curve c2"></div><div class="curve c3"></div><div class="curve c4"></div>
+
+  <div class="curve c1"></div>
+  <div class="curve c2"></div>
+  <div class="curve c3"></div>
+  <div class="curve c4"></div>
 
   <div class="header">Primary Colours</div>
-  <div class="instruction">Tap an object. Then tap the matching colour basket.</div>
+
+  <div class="instruction">
+    Tap an object. Then tap the matching colour basket.
+  </div>
 
   <div class="objects" id="objects"></div>
 
   <div class="baskets">
+
     <div class="basketBox">
       <div class="basket red" data-colour="red"></div>
       <div class="label">Red</div>
     </div>
+
     <div class="basketBox">
       <div class="basket blue" data-colour="blue"></div>
       <div class="label">Blue</div>
     </div>
+
     <div class="basketBox">
       <div class="basket yellow" data-colour="yellow"></div>
       <div class="label">Yellow</div>
     </div>
+
   </div>
 
   <div id="message"></div>
+
 </div>
 
+<!-- END SCREEN -->
+
 <div id="endScreen" class="screen">
-  <div class="curve c1"></div><div class="curve c2"></div><div class="curve c3"></div><div class="curve c4"></div>
+
+  <div class="curve c1"></div>
+  <div class="curve c2"></div>
+  <div class="curve c3"></div>
+  <div class="curve c4"></div>
+
   <h1>Great Job! 🎉</h1>
-  <button onclick="location.reload()">Play Again</button>
+
+  <button onclick="location.reload()">
+    Play Again
+  </button>
+
 </div>
 
 <script>
+
+/* ---------------- AUDIO ---------------- */
+
 const correctSound = document.getElementById("correctSound");
 const wrongSound = document.getElementById("wrongSound");
 const clapSound = document.getElementById("clapSound");
 
+/* ---------------- OBJECTS ---------------- */
+
 const items = [
-  {file:"apple.png", colour:"red"},
-  {file:"balloon.png", colour:"red"},
-  {file:"car.png", colour:"red"},
-  {file:"socks.png", colour:"red"},
 
-  {file:"banana.jpg", colour:"yellow"},
-  {file:"pineapple.png", colour:"yellow"},
-  {file:"star.jpg", colour:"yellow"},
-  {file:"crayon.png", colour:"yellow"},
+  /* RED */
 
-  {file:"blueberry.png", colour:"blue"},
-  {file:"cap.png", colour:"blue"},
-  {file:"whale.png", colour:"blue"},
-  {file:"butterfly.png", colour:"blue"}
+  {
+    file:"apple.png",
+    colour:"red"
+  },
+
+  {
+    file:"balloon.png",
+    colour:"red"
+  },
+
+  {
+    file:"car.png",
+    colour:"red"
+  },
+
+  {
+    file:"socks.png",
+    colour:"red"
+  },
+
+  /* YELLOW */
+
+  {
+    file:"banana.jpg",
+    colour:"yellow"
+  },
+
+  {
+    file:"pineapple.png",
+    colour:"yellow"
+  },
+
+  {
+    file:"star.jpg",
+    colour:"yellow"
+  },
+
+  {
+    file:"crayon.png",
+    colour:"yellow"
+  },
+
+  /* BLUE */
+
+  {
+    file:"blueberry.png",
+    colour:"blue"
+  },
+
+  {
+    file:"cap.png",
+    colour:"red"
+  },
+
+  {
+    file:"whale.png",
+    colour:"blue"
+  },
+
+  {
+    file:"butterfly.png",
+    colour:"blue"
+  }
+
 ];
+
+/* ---------------- VARIABLES ---------------- */
 
 let selected = null;
 let completed = 0;
 
+/* ---------------- LOGO SCREEN ---------------- */
+
 setTimeout(() => {
-  document.getElementById("logoScreen").classList.remove("active");
-  document.getElementById("gameScreen").classList.add("active");
-}, 2000);
+
+  document
+  .getElementById("logoScreen")
+  .classList
+  .remove("active");
+
+  document
+  .getElementById("gameScreen")
+  .classList
+  .add("active");
+
+},2000);
+
+/* ---------------- PLAY SOUND ---------------- */
 
 function playSound(sound){
+
   sound.currentTime = 0;
-  sound.play().catch(() => {});
+
+  sound.play().catch(()=>{});
+
 }
 
-function shuffle(arr){
-  return arr.sort(() => Math.random() - 0.5);
+/* ---------------- SHUFFLE ---------------- */
+
+function shuffle(array){
+
+  return array.sort(() => Math.random() - 0.5);
+
 }
+
+/* ---------------- LOAD OBJECTS ---------------- */
 
 function loadObjects(){
-  const box = document.getElementById("objects");
-  shuffle(items).forEach((item, index) => {
+
+  const container = document.getElementById("objects");
+
+  shuffle(items).forEach((item,index)=>{
+
     const img = document.createElement("img");
+
     img.src = "assets/" + item.file;
+
     img.className = "obj";
+
     img.dataset.colour = item.colour;
-    img.alt = item.colour + " object";
+
+    img.style.animationDelay = (index * 0.1) + "s";
+
     img.onclick = () => selectObject(img);
-    img.style.animationDelay = (index * 0.12) + "s";
-    box.appendChild(img);
+
+    container.appendChild(img);
+
   });
+
 }
+
+/* ---------------- SELECT OBJECT ---------------- */
 
 function selectObject(img){
+
   if(img.classList.contains("done")) return;
-  document.querySelectorAll(".obj").forEach(o => o.classList.remove("selected"));
+
+  document
+  .querySelectorAll(".obj")
+  .forEach(o => o.classList.remove("selected"));
+
   img.classList.add("selected");
+
   selected = img;
+
 }
 
+/* ---------------- BASKET CLICK ---------------- */
+
 document.querySelectorAll(".basket").forEach(basket => {
+
   basket.onclick = () => {
+
     if(!selected){
-      showMsg("Pick an object first!");
+
+      showMessage("Pick an object!");
+
       return;
     }
 
-    if(selected.dataset.colour === basket.dataset.colour){
+    const objectColour = selected.dataset.colour;
+
+    const basketColour = basket.dataset.colour;
+
+    if(objectColour === basketColour){
+
       playSound(correctSound);
-      moveToBasket(selected, basket);
-    } else {
+
+      moveToBasket(selected,basket);
+
+    }else{
+
       playSound(wrongSound);
-      showMsg("Try again!");
-      if(navigator.vibrate) navigator.vibrate(120);
+
+      showMessage("Try again!");
+
+      if(navigator.vibrate){
+
+        navigator.vibrate(120);
+
+      }
     }
   };
+
 });
 
-function moveToBasket(obj, basket){
-  const o = obj.getBoundingClientRect();
-  const b = basket.getBoundingClientRect();
+/* ---------------- MOVE OBJECT ---------------- */
+
+function moveToBasket(obj,basket){
+
+  const objRect = obj.getBoundingClientRect();
+
+  const basketRect = basket.getBoundingClientRect();
 
   const clone = obj.cloneNode(true);
+
   clone.style.position = "fixed";
-  clone.style.left = o.left + "px";
-  clone.style.top = o.top + "px";
-  clone.style.width = o.width + "px";
-  clone.style.height = o.height + "px";
-  clone.style.zIndex = 10;
-  clone.style.transition = "all .6s ease";
+
+  clone.style.left = objRect.left + "px";
+
+  clone.style.top = objRect.top + "px";
+
+  clone.style.width = objRect.width + "px";
+
+  clone.style.height = objRect.height + "px";
+
+  clone.style.zIndex = "20";
+
+  clone.style.transition = "all .7s ease";
+
   document.body.appendChild(clone);
 
   obj.classList.add("done");
+
   obj.classList.remove("selected");
+
   selected = null;
 
-  setTimeout(() => {
-    clone.style.left = (b.left + b.width/2 - o.width/2) + "px";
-    clone.style.top = (b.top + b.height/2 - o.height/2) + "px";
-    clone.style.transform = "scale(.7)";
-  }, 30);
+  setTimeout(()=>{
 
-  setTimeout(() => {
+    clone.style.left =
+    (basketRect.left + basketRect.width/2 - objRect.width/2) + "px";
+
+    clone.style.top =
+    (basketRect.top + basketRect.height/2 - objRect.height/2) + "px";
+
+    clone.style.transform = "scale(.7)";
+
+  },30);
+
+  setTimeout(()=>{
+
     clone.remove();
+
     completed++;
-    showMsg("Good job!");
+
+    showMessage("Good job!");
 
     if(completed === items.length){
-      setTimeout(showEnd, 900);
+
+      setTimeout(showEndScreen,1000);
+
     }
-  }, 650);
+
+  },750);
+
 }
 
-function showMsg(text){
-  const m = document.getElementById("message");
-  m.textContent = text;
-  m.style.display = "block";
-  setTimeout(() => m.style.display = "none", 700);
+/* ---------------- MESSAGE ---------------- */
+
+function showMessage(text){
+
+  const message = document.getElementById("message");
+
+  message.innerText = text;
+
+  message.style.display = "block";
+
+  setTimeout(()=>{
+
+    message.style.display = "none";
+
+  },700);
+
 }
 
-function showEnd(){
-  document.getElementById("gameScreen").classList.remove("active");
-  document.getElementById("endScreen").classList.add("active");
+/* ---------------- END SCREEN ---------------- */
+
+function showEndScreen(){
+
+  document
+  .getElementById("gameScreen")
+  .classList
+  .remove("active");
+
+  document
+  .getElementById("endScreen")
+  .classList
+  .add("active");
+
   playSound(clapSound);
-  makeConfetti();
+
+  createConfetti();
+
 }
 
-function makeConfetti(){
-  const colours = ["#ef3b32","#2f6df6","#ffd12f","#7bd66f","#c56bb7"];
-  for(let i=0;i<70;i++){
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random()*100 + "vw";
-    c.style.background = colours[Math.floor(Math.random()*colours.length)];
-    c.style.animationDelay = Math.random()*2 + "s";
-    c.style.animationDuration = (2 + Math.random()*2) + "s";
-    document.getElementById("endScreen").appendChild(c);
+/* ---------------- CONFETTI ---------------- */
+
+function createConfetti(){
+
+  const colours = [
+    "#f8362d",
+    "#356ae8",
+    "#f8cf2f",
+    "#6ed46e",
+    "#d27cc2"
+  ];
+
+  for(let i=0;i<80;i++){
+
+    const confetti = document.createElement("div");
+
+    confetti.className = "confetti";
+
+    confetti.style.left = Math.random()*100 + "vw";
+
+    confetti.style.background =
+    colours[Math.floor(Math.random()*colours.length)];
+
+    confetti.style.animationDelay =
+    Math.random()*2 + "s";
+
+    confetti.style.animationDuration =
+    (2 + Math.random()*2) + "s";
+
+    document
+    .getElementById("endScreen")
+    .appendChild(confetti);
+
   }
+
 }
+
+/* ---------------- START ---------------- */
 
 loadObjects();
+
 </script>
 
 </body>
