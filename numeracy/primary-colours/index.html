@@ -6,6 +6,7 @@
 <title>Primary Colours Game</title>
 
 <style>
+
 *{
   margin:0;
   padding:0;
@@ -32,7 +33,7 @@ html,body{
   display:flex;
 }
 
-/* ---------------- LOGO SCREEN ---------------- */
+/* LOGO SCREEN */
 
 #logoScreen{
   background:#fff;
@@ -45,7 +46,7 @@ html,body{
   max-width:320px;
 }
 
-/* ---------------- GAME + END SCREEN ---------------- */
+/* GAME + END SCREEN */
 
 #gameScreen,
 #endScreen{
@@ -59,11 +60,14 @@ html,body{
   position:absolute;
   inset:0;
   z-index:0;
+
   background:
   radial-gradient(circle at 20% 20%, rgba(255,80,80,.25), transparent 25%),
   radial-gradient(circle at 80% 30%, rgba(255,220,0,.25), transparent 25%),
   radial-gradient(circle at 50% 10%, rgba(80,120,255,.2), transparent 20%);
 }
+
+/* DECORATIVE CURVES */
 
 .curve{
   position:absolute;
@@ -109,7 +113,7 @@ html,body{
   transform:rotate(-25deg);
 }
 
-/* ---------------- HEADER ---------------- */
+/* HEADER */
 
 .header{
   z-index:2;
@@ -128,18 +132,21 @@ html,body{
   color:#444;
 }
 
-/* ---------------- OBJECTS ---------------- */
+/* OBJECTS */
 
 .objects{
   z-index:2;
+
   width:100%;
   height:48vh;
 
   display:grid;
   grid-template-columns:repeat(4,1fr);
+
   gap:10px;
 
   padding:12px;
+
   justify-items:center;
   align-items:center;
 }
@@ -157,7 +164,9 @@ html,body{
   box-shadow:0 5px 12px rgba(0,0,0,.15);
 
   animation:jump 1.3s infinite ease-in-out;
+
   cursor:pointer;
+
   border:4px solid transparent;
 }
 
@@ -171,18 +180,21 @@ html,body{
 }
 
 @keyframes jump{
+
   0%,100%{
     transform:translateY(0);
   }
+
   50%{
     transform:translateY(-10px);
   }
 }
 
-/* ---------------- BASKETS ---------------- */
+/* BASKETS */
 
 .baskets{
   z-index:2;
+
   width:100%;
   height:34vh;
 
@@ -190,15 +202,18 @@ html,body{
   grid-template-columns:repeat(3,1fr);
 
   gap:10px;
+
   padding:10px;
 }
 
 .basketBox{
   background:rgba(255,255,255,.4);
+
   border-radius:24px;
 
   display:flex;
   flex-direction:column;
+
   justify-content:flex-end;
   align-items:center;
 
@@ -213,11 +228,13 @@ html,body{
   border:6px solid #333;
 
   position:relative;
+
   cursor:pointer;
 }
 
 .basket::before{
   content:"";
+
   position:absolute;
 
   left:12%;
@@ -246,22 +263,27 @@ html,body{
 
 .label{
   margin-top:6px;
+
   font-size:clamp(18px,3vw,30px);
   font-weight:bold;
+
   color:#222;
 }
 
-/* ---------------- MESSAGE ---------------- */
+/* MESSAGE */
 
 #message{
   position:absolute;
+
   top:42%;
   left:50%;
+
   transform:translate(-50%,-50%);
 
   z-index:5;
 
   background:#fff;
+
   padding:15px 25px;
 
   border-radius:20px;
@@ -274,7 +296,7 @@ html,body{
   box-shadow:0 8px 20px rgba(0,0,0,.2);
 }
 
-/* ---------------- END SCREEN ---------------- */
+/* END SCREEN */
 
 #endScreen{
   justify-content:center;
@@ -283,10 +305,15 @@ html,body{
 
 #endScreen h1{
   z-index:2;
+
   background:#fff;
+
   padding:25px;
+
   border-radius:25px;
+
   font-size:clamp(30px,7vw,60px);
+
   color:#333;
 }
 
@@ -298,6 +325,7 @@ button{
   padding:14px 26px;
 
   border:none;
+
   border-radius:18px;
 
   background:#333;
@@ -308,24 +336,27 @@ button{
   cursor:pointer;
 }
 
-/* ---------------- CONFETTI ---------------- */
+/* CONFETTI */
 
 .confetti{
   position:absolute;
+
   width:12px;
   height:14px;
+
   top:-20px;
 
   animation:fall 3s linear infinite;
 }
 
 @keyframes fall{
+
   to{
     transform:translateY(110vh) rotate(360deg);
   }
 }
 
-/* ---------------- MOBILE ---------------- */
+/* MOBILE */
 
 @media(max-height:650px){
 
@@ -342,6 +373,7 @@ button{
     height:min(14vw,70px);
   }
 }
+
 </style>
 </head>
 
@@ -356,7 +388,9 @@ button{
 <!-- LOGO SCREEN -->
 
 <div id="logoScreen" class="screen active">
+
   <img src="assets/innovine-logo.png" alt="Logo">
+
 </div>
 
 <!-- GAME SCREEN -->
@@ -368,7 +402,9 @@ button{
   <div class="curve c3"></div>
   <div class="curve c4"></div>
 
-  <div class="header">Primary Colours</div>
+  <div class="header">
+    Primary Colours
+  </div>
 
   <div class="instruction">
     Tap an object. Then tap the matching colour basket.
@@ -379,18 +415,27 @@ button{
   <div class="baskets">
 
     <div class="basketBox">
+
       <div class="basket red" data-colour="red"></div>
+
       <div class="label">Red</div>
+
     </div>
 
     <div class="basketBox">
+
       <div class="basket blue" data-colour="blue"></div>
+
       <div class="label">Blue</div>
+
     </div>
 
     <div class="basketBox">
+
       <div class="basket yellow" data-colour="yellow"></div>
+
       <div class="label">Yellow</div>
+
     </div>
 
   </div>
@@ -418,13 +463,13 @@ button{
 
 <script>
 
-/* ---------------- AUDIO ---------------- */
+/* AUDIO */
 
 const correctSound = document.getElementById("correctSound");
 const wrongSound = document.getElementById("wrongSound");
 const clapSound = document.getElementById("clapSound");
 
-/* ---------------- OBJECTS ---------------- */
+/* OBJECTS */
 
 const items = [
 
@@ -436,17 +481,17 @@ const items = [
   },
 
   {
-    file:"balloon.png",
-    colour:"red"
-  },
-
-  {
     file:"car.png",
     colour:"red"
   },
 
   {
     file:"socks.png",
+    colour:"red"
+  },
+
+  {
+    file:"cap.png",
     colour:"red"
   },
 
@@ -468,7 +513,7 @@ const items = [
   },
 
   {
-    file:"crayon.png",
+    file:"balloon.png",
     colour:"yellow"
   },
 
@@ -480,11 +525,6 @@ const items = [
   },
 
   {
-    file:"cap.png",
-    colour:"red"
-  },
-
-  {
     file:"whale.png",
     colour:"blue"
   },
@@ -492,16 +532,21 @@ const items = [
   {
     file:"butterfly.png",
     colour:"blue"
+  },
+
+  {
+    file:"crayon.png",
+    colour:"blue"
   }
 
 ];
 
-/* ---------------- VARIABLES ---------------- */
+/* VARIABLES */
 
 let selected = null;
 let completed = 0;
 
-/* ---------------- LOGO SCREEN ---------------- */
+/* LOGO SCREEN */
 
 setTimeout(() => {
 
@@ -517,7 +562,7 @@ setTimeout(() => {
 
 },2000);
 
-/* ---------------- PLAY SOUND ---------------- */
+/* PLAY SOUND */
 
 function playSound(sound){
 
@@ -527,7 +572,7 @@ function playSound(sound){
 
 }
 
-/* ---------------- SHUFFLE ---------------- */
+/* SHUFFLE */
 
 function shuffle(array){
 
@@ -535,7 +580,7 @@ function shuffle(array){
 
 }
 
-/* ---------------- LOAD OBJECTS ---------------- */
+/* LOAD OBJECTS */
 
 function loadObjects(){
 
@@ -561,7 +606,7 @@ function loadObjects(){
 
 }
 
-/* ---------------- SELECT OBJECT ---------------- */
+/* SELECT OBJECT */
 
 function selectObject(img){
 
@@ -577,7 +622,7 @@ function selectObject(img){
 
 }
 
-/* ---------------- BASKET CLICK ---------------- */
+/* BASKET CLICK */
 
 document.querySelectorAll(".basket").forEach(basket => {
 
@@ -616,7 +661,7 @@ document.querySelectorAll(".basket").forEach(basket => {
 
 });
 
-/* ---------------- MOVE OBJECT ---------------- */
+/* MOVE OBJECT */
 
 function moveToBasket(obj,basket){
 
@@ -678,7 +723,7 @@ function moveToBasket(obj,basket){
 
 }
 
-/* ---------------- MESSAGE ---------------- */
+/* MESSAGE */
 
 function showMessage(text){
 
@@ -696,7 +741,7 @@ function showMessage(text){
 
 }
 
-/* ---------------- END SCREEN ---------------- */
+/* END SCREEN */
 
 function showEndScreen(){
 
@@ -716,7 +761,7 @@ function showEndScreen(){
 
 }
 
-/* ---------------- CONFETTI ---------------- */
+/* CONFETTI */
 
 function createConfetti(){
 
@@ -753,7 +798,7 @@ function createConfetti(){
 
 }
 
-/* ---------------- START ---------------- */
+/* START GAME */
 
 loadObjects();
 
