@@ -9,128 +9,165 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#fff}
 
-.screen{
-  width:100vw;height:100vh;display:none;position:relative;overflow:hidden;
-}
+.screen{width:100vw;height:100vh;display:none;position:relative;overflow:hidden}
 .active{display:flex}
 
-#logoScreen{
-  background:#fff;align-items:center;justify-content:center;
-}
+#logoScreen{background:white;align-items:center;justify-content:center}
 #logoScreen img{width:55vw;max-width:320px}
 
+/* BACKGROUND */
 #gameScreen,#endScreen{
   flex-direction:column;
-  background:linear-gradient(#9fe3ff 0%,#bdefff 45%,#7fcf70 46%,#5dbb57 100%);
+  background:linear-gradient(#8edcff 0%,#c9f3ff 38%,#92d676 39%,#5fbe58 100%);
 }
 
 .sun{
-  position:absolute;right:5vw;top:4vh;width:70px;height:70px;
-  background:#ffd54a;border-radius:50%;box-shadow:0 0 0 8px rgba(255,213,74,.25);
+  position:absolute;right:6vw;top:6vh;width:75px;height:75px;
+  background:#ffd44a;border-radius:50%;
+  box-shadow:0 0 0 12px rgba(255,212,74,.25);
 }
 .cloud{
-  position:absolute;background:white;border-radius:40px;width:100px;height:35px;opacity:.95;
+  position:absolute;background:white;width:110px;height:38px;border-radius:40px;opacity:.95;
 }
-.cloud:before,.cloud:after{
-  content:"";position:absolute;background:white;border-radius:50%;
-}
-.cloud:before{width:45px;height:45px;left:15px;top:-18px}
-.cloud:after{width:55px;height:55px;right:10px;top:-25px}
-.c1{top:10vh;left:6vw}
-.c2{top:17vh;right:20vw}
-.c3{top:8vh;left:38vw}
+.cloud:before,.cloud:after{content:"";position:absolute;background:white;border-radius:50%}
+.cloud:before{width:48px;height:48px;left:14px;top:-18px}
+.cloud:after{width:58px;height:58px;right:12px;top:-27px}
+.c1{top:12vh;left:7vw}.c2{top:9vh;left:42vw}.c3{top:18vh;right:18vw}
 
-.hill{
-  position:absolute;bottom:24vh;width:42vw;height:22vh;background:#61b86c;
-  border-radius:60% 60% 0 0;
+.mountain{
+  position:absolute;bottom:37vh;width:0;height:0;
+  border-left:180px solid transparent;border-right:180px solid transparent;
+  border-bottom:190px solid #78b7c8;opacity:.9;
 }
-.h1{left:-5vw}.h2{right:-5vw;background:#70c879}
+.m1{left:5vw}.m2{right:4vw;border-bottom-color:#83c4b8}
+.waterfall{
+  position:absolute;bottom:37vh;left:22vw;width:38px;height:145px;
+  background:linear-gradient(#dffaff,#73d7ff);border-radius:0 0 20px 20px;opacity:.9;
+}
+.river{
+  position:absolute;bottom:22vh;right:0;width:45vw;height:8vh;
+  background:linear-gradient(90deg,#72d7ff,#b9f4ff);
+  border-radius:60% 0 0 60%;opacity:.8;
+}
+.tree{
+  position:absolute;bottom:29vh;width:35px;height:80px;background:#8b5a2b;border-radius:8px;z-index:1;
+}
+.tree:before{
+  content:"";position:absolute;left:-28px;top:-52px;width:90px;height:75px;
+  background:#4caf50;border-radius:50%;
+}
+.t1{left:8vw}.t2{right:10vw}.t3{left:72vw}
 
+/* TITLE */
 .title{
-  z-index:3;text-align:center;font-weight:bold;color:#263238;
-  font-size:clamp(21px,4vw,38px);padding-top:10px;
+  z-index:5;text-align:center;padding:10px 8px 0;
+  font-family:Georgia,serif;font-style:italic;font-weight:bold;
+  color:#263238;text-shadow:2px 2px #ffffff;
+  font-size:clamp(22px,4.5vw,42px);
 }
 .instruction{
-  z-index:3;text-align:center;color:#333;font-size:clamp(13px,2.7vw,20px);
-  margin-top:5px;padding:0 8px;
+  z-index:5;text-align:center;font-size:clamp(14px,2.6vw,21px);
+  color:#273238;margin-top:4px;font-weight:bold;
 }
 
+/* TRACK */
 .track{
-  position:absolute;bottom:14vh;left:0;width:100%;height:42px;
-  background:repeating-linear-gradient(90deg,#8b5a2b 0 28px,#5d351a 28px 45px);
-  border-top:7px solid #555;border-bottom:7px solid #555;z-index:2;
+  position:absolute;bottom:18vh;left:0;width:100%;height:48px;z-index:2;
+  background:repeating-linear-gradient(90deg,#8b5a2b 0 28px,#5b3518 28px 45px);
+  border-top:8px solid #444;border-bottom:8px solid #444;
 }
 .track:before{
-  content:"";position:absolute;top:10px;left:0;width:100%;height:6px;background:#333;
+  content:"";position:absolute;top:12px;left:0;width:100%;height:7px;background:#222;
 }
 
+/* TRAIN */
 .trainWrap{
-  position:absolute;left:3vw;bottom:20vh;width:94vw;height:26vh;
-  z-index:4;display:flex;align-items:flex-end;gap:6px;
-  transition:transform 2s ease-in;
+  position:absolute;left:50%;bottom:23vh;transform:translateX(-50%);
+  width:max-content;height:26vh;z-index:4;display:flex;align-items:flex-end;gap:8px;
+  transition:transform 2.2s ease-in;
 }
-.trainWrap.leave{transform:translateX(125vw)}
+.trainWrap.leave{transform:translateX(120vw)}
 
-.engine,.coach,.missingBox{
-  position:relative;height:105px;min-width:115px;border:5px solid #333;
-  border-radius:18px 18px 12px 12px;display:flex;align-items:center;justify-content:center;
-  font-size:48px;font-weight:bold;color:white;text-shadow:2px 2px #333;
+.engine,.coach,.missingBox,.optionCoach{
+  position:relative;width:105px;height:96px;border:5px solid #333;
+  display:flex;align-items:center;justify-content:center;
+  font-size:42px;font-weight:bold;color:white;text-shadow:2px 2px #333;
   box-shadow:0 6px 0 rgba(0,0,0,.25);
 }
 .engine{
-  min-width:125px;background:#2f75bd;border-radius:45px 20px 12px 12px;
+  width:120px;background:#2e78bd;border-radius:45px 18px 15px 15px;
 }
 .engine:before{
-  content:"";position:absolute;left:12px;top:-35px;width:40px;height:38px;
-  background:#224e82;border:5px solid #333;border-radius:10px 10px 0 0;
+  content:"";position:absolute;left:12px;top:-38px;width:38px;height:42px;
+  background:#2e78bd;border:5px solid #333;border-radius:10px 10px 0 0;
 }
 .engine:after{
-  content:"";position:absolute;right:18px;top:-22px;width:38px;height:28px;
-  background:#f4c542;border:4px solid #333;border-radius:20px 20px 6px 6px;
+  content:"";position:absolute;left:18px;top:-22px;width:48px;height:38px;
+  background:#ffd04a;border:4px solid #333;border-radius:22px 22px 5px 5px;
 }
-.coach{background:#ffd45a;color:#fff}
+.engineWindow{
+  position:absolute;right:16px;top:18px;width:35px;height:35px;
+  background:#b8f3ff;border:4px solid #333;border-radius:10px;
+}
+
+.coach,.missingBox{
+  border-radius:22px;
+}
+.coach:before,.missingBox:before,.optionCoach:before{
+  content:"";position:absolute;top:13px;right:13px;width:28px;height:28px;
+  background:#c8f6ff;border:4px solid #fff;border-radius:8px;
+}
 .missingBox{
-  background:rgba(255,255,255,.8);border:5px dashed #333;color:#333;
+  background:rgba(255,255,255,.85);color:#333;text-shadow:none;border:5px dashed #333;
+}
+.connector{
+  position:absolute;left:-14px;top:48%;width:18px;height:8px;background:#333;
 }
 .wheel{
   position:absolute;bottom:-24px;width:32px;height:32px;background:#222;border-radius:50%;
   border:5px solid #666;
 }
-.w1{left:18px}.w2{right:18px}
+.w1{left:16px}.w2{right:16px}
 
 .smoke{
-  position:absolute;left:10px;top:-55px;width:24px;height:24px;border-radius:50%;
-  background:white;opacity:0;animation:none;
+  position:absolute;left:4px;top:-65px;width:25px;height:25px;border-radius:50%;
+  background:white;opacity:0;
 }
 .trainWrap.run .smoke{animation:smoke 1s infinite}
 @keyframes smoke{
   0%{opacity:.9;transform:translate(0,0) scale(.6)}
-  100%{opacity:0;transform:translate(-30px,-45px) scale(1.6)}
+  100%{opacity:0;transform:translate(-35px,-50px) scale(1.8)}
 }
 
+/* OPTIONS */
 .options{
-  position:absolute;bottom:2vh;left:0;width:100%;z-index:5;
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:8px;
+  position:absolute;bottom:2vh;left:0;width:100%;z-index:6;
+  display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:8px;
 }
-.option{
-  width:70px;height:58px;border-radius:18px;border:4px solid #333;background:#fff;
-  font-size:30px;font-weight:bold;color:#333;box-shadow:0 5px 0 #999;
+.optionCoach{
+  width:86px;height:64px;border-radius:18px;background:#ffd45a;
+  color:white;font-size:30px;cursor:pointer;
 }
-.option:active{transform:translateY(4px);box-shadow:0 1px 0 #999}
+.optionCoach:before{
+  width:20px;height:20px;top:8px;right:8px;border-width:3px;
+}
+.optionCoach:active{transform:scale(.95)}
 
 #message{
-  position:absolute;z-index:10;top:43%;left:50%;transform:translate(-50%,-50%);
-  background:#fff;padding:14px 24px;border-radius:22px;font-size:clamp(22px,5vw,38px);
-  font-weight:bold;display:none;box-shadow:0 8px 20px rgba(0,0,0,.25);
+  position:absolute;z-index:10;top:45%;left:50%;transform:translate(-50%,-50%);
+  background:white;padding:14px 24px;border-radius:22px;
+  font-size:clamp(22px,5vw,38px);font-weight:bold;display:none;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
+/* END */
 #endScreen{align-items:center;justify-content:center;text-align:center}
 #endScreen h1{
-  z-index:3;background:white;padding:25px;border-radius:25px;
-  font-size:clamp(30px,7vw,58px);color:#333;
+  z-index:5;background:white;padding:25px;border-radius:25px;
+  font-size:clamp(32px,7vw,60px);color:#333;
 }
 button{
-  z-index:3;margin-top:18px;padding:13px 26px;border:none;border-radius:18px;
+  z-index:5;margin-top:18px;padding:13px 26px;border:none;border-radius:18px;
   background:#333;color:white;font-size:20px;
 }
 .confetti{
@@ -138,20 +175,21 @@ button{
 }
 @keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
 
-@media(max-width:700px){
-  .engine,.coach,.missingBox{min-width:72px;height:78px;font-size:34px;border-width:4px}
-  .engine{min-width:82px}
-  .engine:before{width:28px;height:28px;top:-28px}
-  .engine:after{width:28px;height:22px;top:-18px}
-  .wheel{width:24px;height:24px;bottom:-19px}
-  .trainWrap{gap:4px;bottom:22vh}
-  .option{width:58px;height:50px;font-size:25px}
+@media(max-width:750px){
+  .trainWrap{gap:5px}
+  .engine,.coach,.missingBox{width:72px;height:72px;font-size:30px;border-width:4px}
+  .engine{width:82px}
+  .engineWindow{width:24px;height:24px;right:8px;top:15px}
+  .coach:before,.missingBox:before{width:18px;height:18px;top:8px;right:7px;border-width:3px}
+  .wheel{width:23px;height:23px;bottom:-18px;border-width:4px}
+  .optionCoach{width:62px;height:52px;font-size:25px}
 }
 
 @media(max-height:620px){
-  .trainWrap{bottom:22vh}
-  .engine,.coach,.missingBox{height:68px;min-width:68px;font-size:30px}
-  .engine{min-width:78px}
+  .title{font-size:24px}
+  .instruction{font-size:15px}
+  .trainWrap{bottom:25vh}
+  .track{bottom:19vh}
 }
 </style>
 </head>
@@ -168,11 +206,10 @@ button{
 
 <div id="gameScreen" class="screen">
   <div class="sun"></div>
-  <div class="cloud c1"></div>
-  <div class="cloud c2"></div>
-  <div class="cloud c3"></div>
-  <div class="hill h1"></div>
-  <div class="hill h2"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <div class="mountain m1"></div><div class="mountain m2"></div>
+  <div class="waterfall"></div><div class="river"></div>
+  <div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div>
 
   <div class="title">Match the Compartment with the Correct Missing Number</div>
   <div class="instruction">Tap the correct number to complete the train.</div>
@@ -185,11 +222,9 @@ button{
 
 <div id="endScreen" class="screen">
   <div class="sun"></div>
-  <div class="cloud c1"></div>
-  <div class="cloud c2"></div>
-  <div class="cloud c3"></div>
-  <div class="hill h1"></div>
-  <div class="hill h2"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <div class="mountain m1"></div><div class="mountain m2"></div>
+  <div class="waterfall"></div><div class="river"></div>
   <h1>Great Job! 🎉</h1>
   <button onclick="location.reload()">Play Again</button>
 </div>
@@ -212,7 +247,7 @@ const questions=[
   {seq:[17,18,null,20], missing:[19], options:[15,16,19,11]}
 ];
 
-const colours=["#ffd45a","#b996e8","#91d46b","#f5a6c8","#79c7e8"];
+const coachColours=["#f5a6c8","#ffd45a","#91d46b","#79c7e8","#b996e8","#f3a65a"];
 let qIndex=0;
 let selectedMissing=0;
 
@@ -246,26 +281,28 @@ function loadQuestion(){
 
   const engine=document.createElement("div");
   engine.className="engine";
-  engine.innerHTML=`<div class="smoke"></div><div class="wheel w1"></div><div class="wheel w2"></div>`;
+  engine.innerHTML="<div class='smoke'></div><div class='engineWindow'></div><div class='wheel w1'></div><div class='wheel w2'></div>";
   train.appendChild(engine);
 
   q.seq.forEach((num,i)=>{
     const div=document.createElement("div");
+
     if(num===null){
       div.className="missingBox";
-      div.dataset.index=i;
-      div.innerHTML="?<div class='wheel w1'></div><div class='wheel w2'></div>";
+      div.innerHTML="?<div class='connector'></div><div class='wheel w1'></div><div class='wheel w2'></div>";
     }else{
       div.className="coach";
-      div.style.background=colours[(num+i)%colours.length];
-      div.innerHTML=`${num}<div class='wheel w1'></div><div class='wheel w2'></div>`;
+      div.style.background=coachColours[(num+i)%coachColours.length];
+      div.innerHTML=num+"<div class='connector'></div><div class='wheel w1'></div><div class='wheel w2'></div>";
     }
+
     train.appendChild(div);
   });
 
-  shuffle([...q.options]).forEach(n=>{
+  shuffle([...q.options]).forEach((n,i)=>{
     const btn=document.createElement("button");
-    btn.className="option";
+    btn.className="optionCoach";
+    btn.style.background=coachColours[i%coachColours.length];
     btn.innerText=n;
     btn.onclick=()=>checkAnswer(n,btn);
     options.appendChild(btn);
@@ -281,8 +318,8 @@ function checkAnswer(num,btn){
 
     const empty=document.querySelector(".missingBox");
     empty.className="coach";
-    empty.style.background=colours[num%colours.length];
-    empty.innerHTML=`${num}<div class='wheel w1'></div><div class='wheel w2'></div>`;
+    empty.style.background=coachColours[num%coachColours.length];
+    empty.innerHTML=num+"<div class='connector'></div><div class='wheel w1'></div><div class='wheel w2'></div>";
 
     btn.style.visibility="hidden";
     selectedMissing++;
@@ -303,9 +340,7 @@ function runTrain(){
   train.classList.add("run");
   playTrainSound();
 
-  setTimeout(()=>{
-    train.classList.add("leave");
-  },600);
+  setTimeout(()=>train.classList.add("leave"),600);
 
   setTimeout(()=>{
     qIndex++;
@@ -314,7 +349,7 @@ function runTrain(){
     }else{
       loadQuestion();
     }
-  },2800);
+  },2900);
 }
 
 function playTrainSound(){
@@ -332,11 +367,11 @@ function playTrainSound(){
       osc.start();
       osc.stop(ctx.currentTime+.08);
       count++;
-      if(count>12){
+      if(count>14){
         clearInterval(timer);
         setTimeout(()=>ctx.close(),500);
       }
-    },130);
+    },120);
   }catch(e){}
 }
 
