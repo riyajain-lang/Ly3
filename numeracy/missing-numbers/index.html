@@ -12,92 +12,111 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;ba
 .screen{width:100vw;height:100vh;display:none;position:relative;overflow:hidden}
 .active{display:flex}
 
-#logoScreen{background:white;align-items:center;justify-content:center}
+#logoScreen{background:#fff;align-items:center;justify-content:center}
 #logoScreen img{width:55vw;max-width:320px}
 
-/* PAPERCRAFT BACKGROUND */
+/* BACKGROUND */
 #gameScreen,#endScreen{
   flex-direction:column;
-  background:#9eddf7;
-}
-
-.skyPaper{
-  position:absolute;inset:0;
-  background:linear-gradient(#91d9f6,#c9f4ff 46%,#87d36f 47%,#58b84e);
-  z-index:0;
+  background:linear-gradient(#93dcf6 0%,#c9f4ff 43%,#89d36f 44%,#59b850 100%);
 }
 
 .sun{
-  position:absolute;right:7vw;top:7vh;width:78px;height:78px;
+  position:absolute;right:7vw;top:7vh;width:72px;height:72px;
   background:#ffd64a;border-radius:50%;
-  box-shadow:0 8px 0 rgba(0,0,0,.12),0 0 0 16px rgba(255,233,140,.55);
+  box-shadow:0 0 0 14px rgba(255,230,130,.5);
   z-index:1;
 }
 
 .cloud{
-  position:absolute;background:#fff;width:120px;height:42px;border-radius:50px;
+  position:absolute;background:#fff;width:115px;height:40px;border-radius:50px;
   box-shadow:0 6px 0 rgba(0,0,0,.08);z-index:1;
 }
 .cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
-.cloud:before{width:55px;height:55px;left:14px;top:-22px}
-.cloud:after{width:65px;height:65px;right:10px;top:-30px}
-.c1{left:7vw;top:11vh}.c2{left:41vw;top:8vh}.c3{right:18vw;top:16vh}
+.cloud:before{width:54px;height:54px;left:15px;top:-22px}
+.cloud:after{width:62px;height:62px;right:10px;top:-29px}
+.c1{left:7vw;top:10vh}.c2{left:42vw;top:8vh}.c3{right:18vw;top:16vh}
 
 .hill{
-  position:absolute;bottom:31vh;width:60vw;height:25vh;border-radius:60% 60% 0 0;
-  box-shadow:0 -5px 0 rgba(255,255,255,.15),0 8px 0 rgba(0,0,0,.08);
-  z-index:1;
+  position:absolute;bottom:31vh;width:60vw;height:24vh;border-radius:60% 60% 0 0;
+  box-shadow:0 -4px 0 rgba(255,255,255,.18),0 8px 0 rgba(0,0,0,.08);
+  z-index:0;
 }
-.h1{left:-9vw;background:#79c95e}
-.h2{right:-10vw;background:#6fc35d}
-.h3{left:24vw;bottom:35vh;background:#a2dd83;z-index:0}
+.h1{left:-10vw;background:#77c95e}
+.h2{right:-10vw;background:#6fc45d}
+.h3{left:22vw;bottom:35vh;background:#a3dd82}
 
-.palm{
-  position:absolute;bottom:27vh;width:36px;height:120px;background:#9c6a2f;
-  border-radius:20px;box-shadow:5px 5px 0 rgba(0,0,0,.12);z-index:3;
+/* CHANGED TREE SHAPE */
+.tree{
+  position:absolute;bottom:27vh;width:38px;height:110px;background:#9b6b35;
+  border-radius:18px 18px 8px 8px;
+  box-shadow:5px 5px 0 rgba(0,0,0,.12);
+  z-index:3;
 }
-.palm:before{
-  content:"";position:absolute;left:-54px;top:-54px;width:145px;height:98px;
-  background:#35aa43;
-  clip-path:polygon(50% 50%,0 5%,30% 44%,8% 75%,43% 59%,50% 100%,57% 59%,92% 75%,70% 44%,100% 5%);
-  filter:drop-shadow(3px 4px 0 rgba(0,0,0,.12));
+.tree:before{
+  content:"";position:absolute;left:-42px;top:-58px;width:122px;height:82px;
+  background:#2fa84a;border-radius:60% 60% 50% 50%;
+  box-shadow:
+    -20px 12px 0 #37b653,
+    20px 10px 0 #3abc55,
+    0 -16px 0 #45c75e;
 }
-.p1{left:8vw}.p2{right:10vw}.p3{left:72vw;transform:scale(.86)}
+.t1{left:8vw}.t2{right:9vw}.t3{left:73vw;transform:scale(.85)}
 
 .track{
   position:absolute;bottom:17vh;left:0;width:100%;height:52px;
   background:repeating-linear-gradient(90deg,#8b5728 0 30px,#5b3518 30px 47px);
   border-top:8px solid #333;border-bottom:8px solid #333;
-  box-shadow:0 -5px 0 rgba(255,255,255,.22),0 8px 0 rgba(0,0,0,.18);
   z-index:5;
 }
 .track:before{
   content:"";position:absolute;top:12px;left:0;width:100%;height:7px;background:#222;
 }
 
+/* REDUCED HEADER SIZE */
 .title{
-  z-index:10;text-align:center;padding:10px 12px 0;
-  font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:900;
-  color:#263238;text-shadow:2px 2px 0 white,4px 4px 0 rgba(0,0,0,.16);
-  font-size:clamp(22px,4.2vw,42px);
+  z-index:10;text-align:center;
+  margin:8px auto 0;
+  padding:6px 16px;
+  width:max-content;
+  max-width:92vw;
+  background:rgba(255,255,255,.45);
+  border-radius:20px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-style:italic;font-weight:900;
+  color:#263238;
+  text-shadow:2px 2px 0 white;
+  font-size:clamp(19px,3.4vw,34px);
 }
 .instruction{
-  z-index:10;text-align:center;margin-top:5px;
-  font-size:clamp(14px,2.5vw,20px);
+  z-index:10;text-align:center;margin-top:4px;
+  font-size:clamp(13px,2.3vw,18px);
   color:#1f2e35;font-weight:bold;
 }
 
-/* TRAIN */
+/* TRAIN MOVEMENT */
 .trainWrap{
-  position:absolute;left:50%;bottom:24vh;
-  transform:translateX(-50%);
-  display:flex;align-items:flex-end;gap:7px;width:max-content;z-index:8;
-  transition:transform 2.6s ease-in;
+  position:absolute;
+  left:50%;
+  bottom:24vh;
+  transform:translateX(120vw);
+  display:flex;
+  align-items:flex-end;
+  gap:7px;
+  width:max-content;
+  z-index:8;
+  transition:transform 2.4s ease-in-out;
 }
 
-/* corrected: train exits towards LEFT */
-.trainWrap.leave{transform:translateX(-170vw)}
+.trainWrap.entered{
+  transform:translateX(-50%);
+}
 
+.trainWrap.leave{
+  transform:translateX(-180vw);
+}
+
+/* TRAIN LOOK */
 .engine{
   position:relative;width:130px;height:92px;background:#f8cf45;
   border:5px solid #303030;border-radius:48px 20px 18px 18px;
@@ -153,7 +172,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;ba
 }
 .w1{left:15px}.w2{right:15px}
 
-/* OPTIONS AS PAPERCRAFT COMPARTMENTS */
+/* OPTIONS */
 .options{
   position:absolute;bottom:2vh;left:0;width:100%;z-index:10;
   display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:8px;
@@ -220,11 +239,10 @@ button{
 </div>
 
 <div id="gameScreen" class="screen">
-  <div class="skyPaper"></div>
   <div class="sun"></div>
   <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
   <div class="hill h3"></div><div class="hill h1"></div><div class="hill h2"></div>
-  <div class="palm p1"></div><div class="palm p2"></div><div class="palm p3"></div>
+  <div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div>
 
   <div class="title">Match the Compartment with the Correct Missing Number</div>
   <div class="instruction">Tap the correct number to complete the train.</div>
@@ -236,7 +254,6 @@ button{
 </div>
 
 <div id="endScreen" class="screen">
-  <div class="skyPaper"></div>
   <div class="sun"></div>
   <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
   <div class="hill h3"></div><div class="hill h1"></div><div class="hill h2"></div>
@@ -286,6 +303,7 @@ function showMessage(text){
 
 function loadQuestion(){
   selectedMissing=0;
+
   const q=questions[qIndex];
   const train=document.getElementById("train");
   const options=document.getElementById("options");
@@ -309,6 +327,7 @@ function loadQuestion(){
 
   q.seq.forEach((num,i)=>{
     const div=document.createElement("div");
+
     if(num===null){
       div.className="missingBox";
       div.innerHTML=`?<div class="connector"></div><div class="wheel w1"></div><div class="wheel w2"></div>`;
@@ -317,8 +336,13 @@ function loadQuestion(){
       div.style.background=coachColours[(num+i)%coachColours.length];
       div.innerHTML=`${num}<div class="connector"></div><div class="wheel w1"></div><div class="wheel w2"></div>`;
     }
+
     train.appendChild(div);
   });
+
+  setTimeout(()=>{
+    train.classList.add("entered");
+  },80);
 
   shuffle([...q.options]).forEach((n,i)=>{
     const btn=document.createElement("button");
@@ -361,7 +385,10 @@ function runTrain(){
   train.classList.add("run");
   playTrainSound();
 
-  setTimeout(()=>train.classList.add("leave"),600);
+  setTimeout(()=>{
+    train.classList.remove("entered");
+    train.classList.add("leave");
+  },500);
 
   setTimeout(()=>{
     qIndex++;
@@ -370,7 +397,7 @@ function runTrain(){
     }else{
       loadQuestion();
     }
-  },3100);
+  },3200);
 }
 
 function playTrainSound(){
@@ -405,6 +432,7 @@ function showEnd(){
 
 function createConfetti(){
   const colours=["#f8362d","#356ae8","#f8cf2f","#6ed46e","#d27cc2"];
+
   for(let i=0;i<90;i++){
     const c=document.createElement("div");
     c.className="confetti";
