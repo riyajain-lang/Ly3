@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Patterning Game</title>
+<title>Pattern Chain Adventure</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -14,7 +14,7 @@ html,body{
   overflow:hidden;
   font-family:Arial,sans-serif;
   touch-action:none;
-  background:white;
+  background:#fff;
 }
 
 :root{--vh:1vh}
@@ -29,6 +29,7 @@ html,body{
 
 .active{display:flex}
 
+/* LOGO SCREEN */
 #logoScreen{
   background:white;
   align-items:center;
@@ -40,8 +41,9 @@ html,body{
   max-width:320px;
 }
 
-/* BACKGROUND */
-#gameScreen,#endScreen{
+/* BLUE BACKGROUND */
+#gameScreen,
+#endScreen{
   flex-direction:column;
   align-items:center;
   background:
@@ -52,7 +54,8 @@ html,body{
     linear-gradient(135deg,#184fff 0%,#3f7cff 45%,#a8d9ff 100%);
 }
 
-#gameScreen::before,#endScreen::before{
+#gameScreen::before,
+#endScreen::before{
   content:"";
   position:absolute;
   inset:-10%;
@@ -62,7 +65,8 @@ html,body{
   z-index:0;
 }
 
-#gameScreen::after,#endScreen::after{
+#gameScreen::after,
+#endScreen::after{
   content:"";
   position:absolute;
   inset:0;
@@ -74,42 +78,44 @@ html,body{
 .title{
   z-index:5;
   margin-top:8px;
-  padding:7px 18px;
+  padding:8px 20px;
   max-width:92vw;
-  background:rgba(255,255,255,.88);
-  border-radius:22px;
+  background:rgba(255,255,255,.90);
+  border-radius:24px;
   text-align:center;
   font-family:Georgia,serif;
   font-style:italic;
   font-weight:900;
-  color:#123c2c;
-  font-size:clamp(22px,5vw,38px);
+  color:#173628;
+  font-size:clamp(22px,5vw,40px);
   line-height:1.05;
-  box-shadow:0 5px 0 rgba(0,0,0,.14);
+  box-shadow:0 5px 0 rgba(0,0,0,.16);
 }
 
 .instruction{
   z-index:5;
-  margin-top:6px;
+  margin-top:7px;
   background:white;
-  border-radius:18px;
-  padding:7px 16px;
+  border-radius:20px;
+  padding:8px 16px;
   font-weight:bold;
   color:#20332d;
   text-align:center;
-  font-size:clamp(13px,3.2vw,18px);
+  font-size:clamp(13px,3vw,18px);
   max-width:92vw;
+  box-shadow:0 3px 0 rgba(0,0,0,.12);
 }
 
 .levelTag{
   z-index:5;
-  margin-top:6px;
-  background:#fff3a8;
-  color:#3b3212;
-  border-radius:18px;
-  padding:5px 16px;
+  margin-top:7px;
+  background:#fff1a3;
+  color:#473600;
+  border-radius:20px;
+  padding:7px 18px;
   font-weight:900;
   font-size:clamp(14px,3vw,18px);
+  box-shadow:0 3px 0 rgba(0,0,0,.14);
 }
 
 /* PATTERN AREA */
@@ -132,38 +138,42 @@ html,body{
   width:100%;
 }
 
-.card,.blank{
-  width:112px;
-  height:112px;
-  background:rgba(255,255,255,.95);
+.card,
+.blank{
+  width:120px;
+  height:120px;
+  background:rgba(255,255,255,.96);
   border-radius:28px;
   border:5px solid white;
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 9px 0 rgba(0,0,0,.18),0 0 18px rgba(255,255,255,.35);
+  box-shadow:
+    0 10px 0 rgba(0,0,0,.18),
+    0 0 20px rgba(255,255,255,.35);
   position:relative;
 }
 
-.card img,.option img{
-  max-width:92%;
-  max-height:92%;
+.card img,
+.option img{
+  max-width:94%;
+  max-height:94%;
   object-fit:contain;
   pointer-events:none;
   user-select:none;
-  filter:drop-shadow(0 5px 4px rgba(0,0,0,.22));
+  filter:drop-shadow(0 6px 4px rgba(0,0,0,.25));
 }
 
 .blank{
   border:5px dashed #173b31;
-  background:rgba(255,255,255,.72);
+  background:rgba(255,255,255,.75);
   color:#173b31;
-  font-size:46px;
+  font-size:52px;
   font-weight:900;
 }
 
 .arrow{
-  font-size:32px;
+  font-size:34px;
   font-weight:900;
   color:white;
   text-shadow:2px 2px 0 #123c6b;
@@ -173,22 +183,22 @@ html,body{
 .optionsBox{
   z-index:10;
   width:100%;
-  min-height:128px;
-  padding:10px 8px calc(env(safe-area-inset-bottom) + 12px);
+  min-height:135px;
+  padding:12px 10px calc(env(safe-area-inset-bottom) + 12px);
   display:flex;
   justify-content:center;
   align-items:center;
   gap:18px;
-  background:rgba(255,255,255,.58);
+  background:rgba(255,255,255,.62);
   backdrop-filter:blur(5px);
 }
 
 .option{
-  width:112px;
-  height:96px;
+  width:120px;
+  height:100px;
   background:white;
-  border:4px solid #22382d;
-  border-radius:24px;
+  border:4px solid #20362c;
+  border-radius:26px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -209,9 +219,9 @@ html,body{
   left:50%;
   transform:translate(-50%,-50%);
   background:white;
-  padding:15px 26px;
-  border-radius:24px;
-  font-size:clamp(24px,6vw,44px);
+  padding:16px 28px;
+  border-radius:26px;
+  font-size:clamp(24px,6vw,46px);
   font-weight:900;
   color:#1e3b2b;
   display:none;
@@ -227,7 +237,7 @@ html,body{
   transform:scale(1.08);
 }
 
-/* END */
+/* END SCREEN */
 #endScreen{
   align-items:center;
   justify-content:center;
@@ -238,64 +248,50 @@ html,body{
 #endScreen h1{
   z-index:5;
   background:white;
-  padding:25px 42px;
+  padding:26px 42px;
   border-radius:28px;
-  font-size:clamp(36px,8vw,64px);
+  font-size:clamp(36px,8vw,66px);
   color:#22422e;
   box-shadow:0 8px 0 rgba(0,0,0,.18);
 }
 
 #endScreen button{
   z-index:5;
-  margin-top:20px;
+  margin-top:22px;
   border:none;
   border-radius:18px;
-  padding:14px 30px;
+  padding:14px 32px;
   background:#24382b;
   color:white;
   font-size:21px;
   font-weight:bold;
+  box-shadow:0 6px 0 rgba(0,0,0,.18);
 }
 
 /* MOBILE */
 @media(max-width:760px){
-  .title{
-    font-size:20px;
-    margin-top:7px;
-  }
+  .title{font-size:20px;margin-top:7px}
+  .instruction{font-size:13px;padding:6px 10px}
+  .levelTag{font-size:13px;margin-top:5px}
 
-  .instruction{
-    font-size:13px;
-    padding:6px 10px;
-  }
+  .patternArea{padding:2px}
+  .chain{gap:5px}
 
-  .levelTag{
-    font-size:13px;
-    margin-top:5px;
-  }
-
-  .patternArea{
-    padding:2px;
-  }
-
-  .chain{
-    gap:5px;
-  }
-
-  .card,.blank{
-    width:62px;
-    height:62px;
-    border-radius:16px;
+  .card,
+  .blank{
+    width:64px;
+    height:64px;
+    border-radius:18px;
     border-width:3px;
   }
 
   .blank{
     border-width:4px;
-    font-size:28px;
+    font-size:30px;
   }
 
   .arrow{
-    font-size:17px;
+    font-size:18px;
   }
 
   .optionsBox{
@@ -305,9 +301,9 @@ html,body{
   }
 
   .option{
-    width:82px;
-    height:72px;
-    border-radius:19px;
+    width:84px;
+    height:74px;
+    border-radius:20px;
     border-width:3px;
   }
 }
@@ -316,15 +312,16 @@ html,body{
   .title{font-size:18px}
   .instruction{font-size:12px}
 
-  .card,.blank{
-    width:54px;
-    height:54px;
+  .card,
+  .blank{
+    width:56px;
+    height:56px;
   }
 
   .arrow{font-size:15px}
 
   .option{
-    width:72px;
+    width:74px;
     height:64px;
   }
 
@@ -346,6 +343,7 @@ html,body{
 </div>
 
 <div id="gameScreen" class="screen">
+
   <div class="title">Pattern Chain Adventure</div>
 
   <div class="instruction">
@@ -359,7 +357,9 @@ html,body{
   </div>
 
   <div class="optionsBox" id="optionsBox"></div>
+
   <div id="message"></div>
+
 </div>
 
 <div id="endScreen" class="screen">
@@ -372,6 +372,7 @@ function setVH(){
   document.documentElement.style.setProperty("--vh", window.innerHeight * 0.01 + "px");
 }
 setVH();
+
 window.addEventListener("resize", setVH);
 window.addEventListener("orientationchange", setVH);
 
@@ -407,42 +408,36 @@ const levels=[
     answer:"cat",
     options:["cat","boots","koala"]
   },
-
   {
     tag:"Phase 1 • Level 2",
     chain:["rainbow","cloud","rainbow",null],
     answer:"cloud",
     options:["cloud","boots","penguin"]
   },
-
   {
     tag:"Phase 1 • Level 3",
     chain:["boots","umbrella","boots",null],
     answer:"umbrella",
     options:["purpleFlower","avocado","umbrella"]
   },
-
   {
     tag:"Phase 2 • Level 4",
     chain:["koala","bear","giraffe","koala","bear",null],
     answer:"giraffe",
     options:["orangeFlower","giraffe","umbrella"]
   },
-
   {
     tag:"Phase 2 • Level 5",
     chain:["blueFlower","purpleFlower","orangeFlower","blueFlower","purpleFlower",null],
     answer:"orangeFlower",
     options:["orangeFlower","cloud","avocado"]
   },
-
   {
     tag:"Phase 2 • Level 6",
     chain:["carrot","avocado","pear","carrot","avocado",null],
     answer:"pear",
     options:["pear","penguin","boots"]
   },
-
   {
     tag:"Phase 2 • Level 7",
     chain:["penguin","girl","boy","penguin","girl",null],
@@ -488,7 +483,6 @@ function loadLevel(){
   optionsBox.innerHTML="";
 
   level.chain.forEach((item,index)=>{
-
     if(index>0){
       const arrow=document.createElement("div");
       arrow.className="arrow";
@@ -497,7 +491,6 @@ function loadLevel(){
     }
 
     const box=document.createElement("div");
-
     box.className=item ? "card" : "blank";
 
     if(item){
@@ -510,38 +503,28 @@ function loadLevel(){
   });
 
   shuffle([...level.options]).forEach(item=>{
-
     const op=document.createElement("div");
-
     op.className="option";
     op.dataset.item=item;
-
     op.innerHTML=`<img src="${img[item]}" alt="">`;
-
     op.addEventListener("pointerdown",startDrag);
-
     optionsBox.appendChild(op);
   });
 }
 
 function startDrag(e){
-
   e.preventDefault();
 
   dragged=e.currentTarget;
-
   dragged.setPointerCapture(e.pointerId);
 
   dragClone=dragged.cloneNode(true);
-
   dragClone.classList.add("dragging");
-
   document.body.appendChild(dragClone);
 
   moveClone(e.clientX,e.clientY);
 
   document.addEventListener("pointermove",moveDrag);
-
   document.addEventListener("pointerup",endDrag,{once:true});
 }
 
@@ -550,7 +533,6 @@ function moveDrag(e){
 }
 
 function moveClone(x,y){
-
   if(!dragClone)return;
 
   dragClone.style.left=(x-dragClone.offsetWidth/2)+"px";
@@ -558,11 +540,9 @@ function moveClone(x,y){
 }
 
 function endDrag(e){
-
   document.removeEventListener("pointermove",moveDrag);
 
   const blank=document.querySelector(".blank");
-
   const rect=blank.getBoundingClientRect();
 
   const inside=
@@ -582,28 +562,22 @@ function endDrag(e){
   }
 
   checkAnswer(dragged.dataset.item);
-
   dragged=null;
 }
 
 function checkAnswer(item){
-
   const level=levels[current];
 
   if(item===level.answer){
-
     playSound(correctSound);
 
     const blank=document.querySelector(".blank");
-
     blank.className="card";
-
     blank.innerHTML=`<img src="${img[item]}" alt="">`;
 
     showMessage("Correct! 🌟");
 
     setTimeout(()=>{
-
       current++;
 
       if(current>=levels.length){
@@ -611,11 +585,9 @@ function checkAnswer(item){
       }else{
         loadLevel();
       }
-
     },1100);
 
   }else{
-
     playSound(wrongSound);
 
     if(navigator.vibrate){
@@ -627,11 +599,8 @@ function checkAnswer(item){
 }
 
 function showEnd(){
-
   document.getElementById("gameScreen").classList.remove("active");
-
   document.getElementById("endScreen").classList.add("active");
-
   playSound(clapSound);
 }
 
