@@ -14,11 +14,14 @@ html,body{
   overflow:hidden;
   font-family:Arial,sans-serif;
   background:#fff;
+  touch-action:manipulation;
 }
+
+:root{--vh:1vh;}
 
 .screen{
   width:100vw;
-  height:100vh;
+  height:calc(var(--vh) * 100);
   display:none;
   position:relative;
   overflow:hidden;
@@ -38,7 +41,6 @@ html,body{
 }
 
 /* BACKGROUND */
-
 #gameScreen,#endScreen{
   flex-direction:column;
   background:linear-gradient(#93dcf6 0%,#c9f4ff 43%,#89d36f 44%,#59b850 100%);
@@ -46,10 +48,10 @@ html,body{
 
 .sun{
   position:absolute;
-  right:7vw;
-  top:7vh;
-  width:72px;
-  height:72px;
+  right:6vw;
+  top:8vh;
+  width:64px;
+  height:64px;
   background:#ffd64a;
   border-radius:50%;
   box-shadow:0 0 0 14px rgba(255,230,130,.5);
@@ -59,8 +61,8 @@ html,body{
 .cloud{
   position:absolute;
   background:#fff;
-  width:115px;
-  height:40px;
+  width:110px;
+  height:38px;
   border-radius:50px;
   box-shadow:0 6px 0 rgba(0,0,0,.08);
   z-index:1;
@@ -74,22 +76,22 @@ html,body{
 }
 
 .cloud:before{
-  width:54px;
-  height:54px;
+  width:52px;
+  height:52px;
   left:15px;
   top:-22px;
 }
 
 .cloud:after{
-  width:62px;
-  height:62px;
+  width:60px;
+  height:60px;
   right:10px;
-  top:-29px;
+  top:-28px;
 }
 
-.c1{left:7vw;top:10vh}
-.c2{left:42vw;top:8vh}
-.c3{right:18vw;top:16vh}
+.c1{left:7vw;top:12vh}
+.c2{left:43vw;top:10vh}
+.c3{right:18vw;top:17vh}
 
 .hill{
   position:absolute;
@@ -107,12 +109,11 @@ html,body{
 
 .tree{
   position:absolute;
-  bottom:27vh;
-  width:38px;
-  height:110px;
+  bottom:24vh;
+  width:36px;
+  height:105px;
   background:#9b6b35;
   border-radius:18px 18px 8px 8px;
-  box-shadow:5px 5px 0 rgba(0,0,0,.12);
   z-index:3;
 }
 
@@ -124,7 +125,7 @@ html,body{
   width:122px;
   height:82px;
   background:#2fa84a;
-  border-radius:60% 60% 50% 50%;
+  border-radius:60%;
   box-shadow:-20px 12px 0 #37b653,20px 10px 0 #3abc55,0 -16px 0 #45c75e;
 }
 
@@ -134,84 +135,75 @@ html,body{
 
 .track{
   position:absolute;
-  bottom:17vh;
+  bottom:16vh;
   left:0;
   width:100%;
-  height:52px;
+  height:48px;
   background:repeating-linear-gradient(90deg,#8b5728 0 30px,#5b3518 30px 47px);
-  border-top:8px solid #333;
-  border-bottom:8px solid #333;
+  border-top:7px solid #333;
+  border-bottom:7px solid #333;
   z-index:5;
 }
 
 .track:before{
   content:"";
   position:absolute;
-  top:12px;
+  top:11px;
   left:0;
   width:100%;
-  height:7px;
+  height:6px;
   background:#222;
 }
 
 /* HEADER */
-
 .title{
   z-index:10;
   text-align:center;
-  margin:8px auto 0;
-  padding:6px 16px;
-  width:max-content;
+  margin:6px auto 0;
+  padding:5px 12px;
   max-width:92vw;
   background:rgba(255,255,255,.45);
-  border-radius:20px;
+  border-radius:18px;
   font-family:Georgia,"Times New Roman",serif;
   font-style:italic;
   font-weight:900;
   color:#263238;
   text-shadow:2px 2px 0 white;
-  font-size:clamp(19px,3.4vw,34px);
+  font-size:clamp(17px,4.8vw,32px);
+  line-height:1.1;
 }
 
 .instruction{
   z-index:10;
   text-align:center;
-  margin-top:4px;
-  font-size:clamp(13px,2.3vw,18px);
+  margin:4px auto 0;
+  padding:6px 10px;
+  width:max-content;
+  max-width:90vw;
+  background:white;
+  border-radius:16px;
+  font-size:clamp(12px,3.2vw,18px);
   color:#1f2e35;
   font-weight:bold;
 }
 
-/* TRAIN MOVEMENT */
-
+/* TRAIN */
 .trainWrap{
   position:absolute;
   left:50%;
-  bottom:24vh;
+  bottom:23vh;
   display:flex;
   align-items:flex-end;
-  gap:7px;
+  gap:6px;
   width:max-content;
   z-index:8;
   transform:translateX(260vw);
 }
 
-.trainWrap.entering{
-  transition:transform 2.4s ease-in-out;
-  transform:translateX(-50%);
-}
-
-.trainWrap.leaving{
-  transition:transform 2.6s ease-in;
-  transform:translateX(-280vw);
-}
-
-/* TRAIN */
-
 .engine{
   position:relative;
-  width:130px;
-  height:92px;
+  width:120px;
+  height:88px;
   background:#f8cf45;
   border:5px solid #303030;
   border-radius:20px 48px 18px 18px;
@@ -222,8 +214,8 @@ html,body{
   position:absolute;
   left:0;
   bottom:0;
-  width:74px;
-  height:70px;
+  width:70px;
+  height:66px;
   background:#e84b38;
   border-right:5px solid #303030;
   border-radius:18px 10px 12px 12px;
@@ -233,8 +225,8 @@ html,body{
   position:absolute;
   right:8px;
   bottom:18px;
-  width:48px;
-  height:48px;
+  width:46px;
+  height:46px;
   background:#0fa9bc;
   border:4px solid #303030;
   border-radius:8px;
@@ -242,10 +234,10 @@ html,body{
 
 .engineWindow{
   position:absolute;
-  right:16px;
+  right:15px;
   bottom:27px;
-  width:32px;
-  height:30px;
+  width:31px;
+  height:29px;
   background:#eaffff;
   border:4px solid white;
   border-radius:6px;
@@ -254,9 +246,9 @@ html,body{
 .chimney{
   position:absolute;
   left:14px;
-  top:-42px;
-  width:34px;
-  height:43px;
+  top:-40px;
+  width:32px;
+  height:41px;
   background:#202020;
   border:4px solid #303030;
   border-radius:8px 8px 0 0;
@@ -273,9 +265,7 @@ html,body{
   opacity:0;
 }
 
-.trainWrap.run .smoke{
-  animation:smoke 1s infinite;
-}
+.trainWrap.run .smoke{animation:smoke 1s infinite}
 
 @keyframes smoke{
   0%{opacity:.9;transform:translate(0,0) scale(.6)}
@@ -284,14 +274,14 @@ html,body{
 
 .coach,.missingBox{
   position:relative;
-  width:108px;
-  height:88px;
+  width:100px;
+  height:84px;
   border:5px solid #303030;
   border-radius:20px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:42px;
+  font-size:40px;
   font-weight:bold;
   color:white;
   text-shadow:2px 2px 0 #333;
@@ -329,69 +319,68 @@ html,body{
 
 .wheel{
   position:absolute;
-  bottom:-24px;
-  width:33px;
-  height:33px;
+  bottom:-23px;
+  width:32px;
+  height:32px;
   background:#202020;
   border:6px solid #666;
   border-radius:50%;
 }
 
-.w1{left:15px}
-.w2{right:15px}
+.w1{left:14px}
+.w2{right:14px}
 
-/* OPTIONS */
-
+/* OPTIONS - PHONE FRIENDLY */
 .options{
   position:absolute;
-  bottom:2vh;
   left:0;
+  bottom:calc(env(safe-area-inset-bottom) + 8px);
   width:100%;
-  z-index:10;
+  z-index:20;
   display:flex;
   justify-content:center;
-  gap:12px;
-  flex-wrap:wrap;
-  padding:8px;
+  align-items:center;
+  gap:8px;
+  flex-wrap:nowrap;
+  padding:6px 8px;
 }
 
 .optionCoach{
   position:relative;
-  width:92px;
-  height:62px;
-  border:5px solid #303030;
-  border-radius:18px;
-  font-size:31px;
+  width:72px;
+  height:52px;
+  border:4px solid #303030;
+  border-radius:16px;
+  font-size:26px;
   font-weight:bold;
   color:white;
   text-shadow:2px 2px 0 #333;
-  box-shadow:0 7px 0 rgba(0,0,0,.25);
+  box-shadow:0 6px 0 rgba(0,0,0,.25);
   cursor:pointer;
+  flex:0 0 auto;
 }
 
 .optionCoach:before{
   content:"";
   position:absolute;
-  top:-11px;
+  top:-10px;
   left:8px;
   right:8px;
-  height:14px;
+  height:13px;
   background:#f6d46d;
   border:3px solid #303030;
   border-bottom:none;
   border-radius:12px 12px 0 0;
 }
 
-.optionCoach:active{
-  transform:scale(.95);
-}
+.optionCoach:active{transform:scale(.95)}
 
 #message{
   position:absolute;
   top:46%;
   left:50%;
   transform:translate(-50%,-50%);
-  z-index:20;
+  z-index:30;
   background:white;
   padding:14px 24px;
   border-radius:22px;
@@ -402,7 +391,6 @@ html,body{
 }
 
 /* END */
-
 #endScreen{
   align-items:center;
   justify-content:center;
@@ -443,66 +431,133 @@ button{
 }
 
 /* MOBILE */
-
 @media(max-width:760px){
-  .trainWrap{gap:5px}
+  .sun{width:58px;height:58px;top:9vh}
+  .cloud{transform:scale(.82)}
+  .c1{left:4vw;top:13vh}
+  .c2{left:40vw;top:11vh}
+  .c3{right:8vw;top:18vh}
+
+  .tree{bottom:25vh;transform:scale(.82)}
+  .t3{display:none}
+
+  .track{
+    bottom:16vh;
+    height:42px;
+  }
+
+  .trainWrap{
+    bottom:23vh;
+    gap:4px;
+  }
 
   .engine{
-    width:82px;
-    height:70px;
+    width:74px;
+    height:62px;
+    border-width:4px;
   }
 
   .engineFront{
-    width:48px;
-    height:54px;
+    width:42px;
+    height:48px;
+    border-right-width:4px;
   }
 
   .engineCab{
-    width:34px;
-    height:34px;
-    right:5px;
-    bottom:15px;
+    width:30px;
+    height:30px;
+    right:4px;
+    bottom:14px;
+    border-width:3px;
   }
 
   .engineWindow{
-    width:24px;
-    height:23px;
-    right:10px;
-    bottom:20px;
+    width:21px;
+    height:20px;
+    right:8px;
+    bottom:19px;
     border-width:3px;
   }
 
   .chimney{
-    width:24px;
-    height:32px;
-    top:-32px;
+    width:22px;
+    height:30px;
+    left:12px;
+    top:-31px;
+    border-width:3px;
   }
 
   .coach,.missingBox{
-    width:72px;
-    height:68px;
-    font-size:30px;
+    width:62px;
+    height:58px;
+    font-size:27px;
     border-width:4px;
+    border-radius:16px;
   }
 
   .coach:before,.missingBox:before{
-    height:13px;
-    top:-11px;
+    height:12px;
+    top:-10px;
+    left:8px;
+    right:8px;
+    border-width:3px;
+    border-bottom:none;
+  }
+
+  .connector{
+    left:-11px;
+    width:12px;
+    height:7px;
   }
 
   .wheel{
-    width:24px;
-    height:24px;
-    bottom:-18px;
+    width:22px;
+    height:22px;
+    bottom:-16px;
     border-width:4px;
   }
 
+  .w1{left:8px}
+  .w2{right:8px}
+
+  .options{
+    bottom:calc(env(safe-area-inset-bottom) + 6px);
+    gap:7px;
+  }
+
   .optionCoach{
-    width:66px;
-    height:50px;
-    font-size:25px;
+    width:58px;
+    height:44px;
+    font-size:23px;
     border-width:4px;
   }
+}
+
+/* EXTRA SMALL PHONES */
+@media(max-width:390px){
+  .title{font-size:16px}
+  .instruction{font-size:12px;padding:5px 8px}
+
+  .trainWrap{bottom:24vh;gap:3px}
+
+  .engine{
+    width:66px;
+    height:58px;
+  }
+
+  .coach,.missingBox{
+    width:55px;
+    height:54px;
+    font-size:24px;
+  }
+
+  .optionCoach{
+    width:52px;
+    height:40px;
+    font-size:21px;
+  }
+
+  .options{gap:6px}
 }
 </style>
 </head>
@@ -518,7 +573,6 @@ button{
 </div>
 
 <div id="gameScreen" class="screen">
-
   <div class="sun"></div>
   <div class="cloud c1"></div>
   <div class="cloud c2"></div>
@@ -539,26 +593,29 @@ button{
   <div class="trainWrap" id="train"></div>
   <div class="options" id="options"></div>
   <div id="message"></div>
-
 </div>
 
 <div id="endScreen" class="screen">
-
   <div class="sun"></div>
   <div class="cloud c1"></div>
   <div class="cloud c2"></div>
   <div class="cloud c3"></div>
-
   <div class="hill h3"></div>
   <div class="hill h1"></div>
   <div class="hill h2"></div>
 
   <h1>Great Job! 🎉</h1>
   <button onclick="location.reload()">Play Again</button>
-
 </div>
 
 <script>
+function setVH(){
+  document.documentElement.style.setProperty("--vh", window.innerHeight * 0.01 + "px");
+}
+setVH();
+window.addEventListener("resize", setVH);
+window.addEventListener("orientationchange", setVH);
+
 const correctSound=document.getElementById("correctSound");
 const wrongSound=document.getElementById("wrongSound");
 const clapSound=document.getElementById("clapSound");
@@ -596,10 +653,7 @@ function showMessage(text){
   const m=document.getElementById("message");
   m.innerText=text;
   m.style.display="block";
-
-  setTimeout(()=>{
-    m.style.display="none";
-  },700);
+  setTimeout(()=>{m.style.display="none";},700);
 }
 
 function loadQuestion(){
