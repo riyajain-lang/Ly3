@@ -3,14 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Pattern Chain Adventure</title>
+<title>Patterning Game</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 html,body{
   width:100%;
@@ -18,12 +14,10 @@ html,body{
   overflow:hidden;
   font-family:Arial,sans-serif;
   touch-action:none;
-  background:#fff;
+  background:white;
 }
 
-:root{
-  --vh:1vh;
-}
+:root{--vh:1vh}
 
 .screen{
   width:100vw;
@@ -33,11 +27,7 @@ html,body{
   overflow:hidden;
 }
 
-.active{
-  display:flex;
-}
-
-/* LOGO SCREEN */
+.active{display:flex}
 
 #logoScreen{
   background:white;
@@ -50,77 +40,79 @@ html,body{
   max-width:320px;
 }
 
-/* GAME BACKGROUND */
-
-#gameScreen,
-#endScreen{
+/* BACKGROUND */
+#gameScreen,#endScreen{
   flex-direction:column;
   align-items:center;
   background:
-    linear-gradient(rgba(255,255,255,.18),rgba(255,255,255,.08)),
-    url("download (2)(2).jpg");
-
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
+    radial-gradient(circle at 12% 20%, #e9f4ff 0 9%, transparent 10%),
+    radial-gradient(circle at 80% 18%, #d8ecff 0 12%, transparent 13%),
+    radial-gradient(circle at 30% 70%, #b8d9ff 0 18%, transparent 19%),
+    radial-gradient(circle at 75% 75%, #9fc9ff 0 20%, transparent 21%),
+    linear-gradient(135deg,#184fff 0%,#3f7cff 45%,#a8d9ff 100%);
 }
 
-#gameScreen::before,
-#endScreen::before{
+#gameScreen::before,#endScreen::before{
   content:"";
   position:absolute;
-  inset:0;
-  background:rgba(255,255,255,.10);
+  inset:-10%;
+  background:
+    repeating-radial-gradient(circle at 30% 40%, transparent 0 65px, rgba(255,255,255,.85) 66px 84px, transparent 85px 145px);
+  opacity:.55;
   z-index:0;
 }
 
-/* TITLE */
+#gameScreen::after,#endScreen::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,rgba(255,255,255,.45),rgba(255,255,255,.08));
+  z-index:0;
+}
 
+/* HEADER */
 .title{
   z-index:5;
   margin-top:8px;
-  padding:8px 20px;
+  padding:7px 18px;
   max-width:92vw;
-  background:rgba(255,255,255,.90);
-  border-radius:24px;
+  background:rgba(255,255,255,.88);
+  border-radius:22px;
   text-align:center;
   font-family:Georgia,serif;
   font-style:italic;
   font-weight:900;
-  color:#173628;
-  font-size:clamp(22px,5vw,40px);
+  color:#123c2c;
+  font-size:clamp(22px,5vw,38px);
   line-height:1.05;
-  box-shadow:0 5px 0 rgba(0,0,0,.16);
+  box-shadow:0 5px 0 rgba(0,0,0,.14);
 }
 
 .instruction{
   z-index:5;
-  margin-top:7px;
+  margin-top:6px;
   background:white;
-  border-radius:20px;
-  padding:8px 16px;
+  border-radius:18px;
+  padding:7px 16px;
   font-weight:bold;
   color:#20332d;
   text-align:center;
-  font-size:clamp(13px,3vw,18px);
+  font-size:clamp(13px,3.2vw,18px);
   max-width:92vw;
-  box-shadow:0 3px 0 rgba(0,0,0,.12);
 }
 
 .levelTag{
   z-index:5;
-  margin-top:7px;
-  background:#fff1a3;
-  color:#473600;
-  border-radius:20px;
-  padding:7px 18px;
+  margin-top:6px;
+  background:#fff3a8;
+  color:#3b3212;
+  border-radius:18px;
+  padding:5px 16px;
   font-weight:900;
   font-size:clamp(14px,3vw,18px);
-  box-shadow:0 3px 0 rgba(0,0,0,.14);
 }
 
 /* PATTERN AREA */
-
 .patternArea{
   z-index:5;
   width:96vw;
@@ -140,71 +132,63 @@ html,body{
   width:100%;
 }
 
-/* CARDS */
-
-.card,
-.blank{
-  width:120px;
-  height:120px;
-  background:rgba(255,255,255,.96);
+.card,.blank{
+  width:112px;
+  height:112px;
+  background:rgba(255,255,255,.95);
   border-radius:28px;
   border:5px solid white;
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:
-    0 10px 0 rgba(0,0,0,.18),
-    0 0 20px rgba(255,255,255,.35);
-
+  box-shadow:0 9px 0 rgba(0,0,0,.18),0 0 18px rgba(255,255,255,.35);
   position:relative;
 }
 
-.card img,
-.option img{
-  max-width:94%;
-  max-height:94%;
+.card img,.option img{
+  max-width:92%;
+  max-height:92%;
   object-fit:contain;
   pointer-events:none;
   user-select:none;
-  filter:drop-shadow(0 6px 4px rgba(0,0,0,.25));
+  filter:drop-shadow(0 5px 4px rgba(0,0,0,.22));
 }
 
 .blank{
   border:5px dashed #173b31;
-  background:rgba(255,255,255,.75);
+  background:rgba(255,255,255,.72);
   color:#173b31;
-  font-size:52px;
+  font-size:46px;
   font-weight:900;
 }
 
 .arrow{
-  font-size:34px;
+  font-size:32px;
   font-weight:900;
   color:white;
-  text-shadow:2px 2px 0 #4b3500;
+  text-shadow:2px 2px 0 #123c6b;
 }
 
 /* OPTIONS */
-
 .optionsBox{
   z-index:10;
   width:100%;
-  min-height:135px;
-  padding:12px 10px calc(env(safe-area-inset-bottom) + 12px);
+  min-height:128px;
+  padding:10px 8px calc(env(safe-area-inset-bottom) + 12px);
   display:flex;
   justify-content:center;
   align-items:center;
   gap:18px;
-  background:rgba(255,255,255,.62);
+  background:rgba(255,255,255,.58);
   backdrop-filter:blur(5px);
 }
 
 .option{
-  width:120px;
-  height:100px;
+  width:112px;
+  height:96px;
   background:white;
-  border:4px solid #20362c;
-  border-radius:26px;
+  border:4px solid #22382d;
+  border-radius:24px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -218,8 +202,6 @@ html,body{
   transform:scale(.96);
 }
 
-/* MESSAGE */
-
 #message{
   position:absolute;
   z-index:50;
@@ -227,9 +209,9 @@ html,body{
   left:50%;
   transform:translate(-50%,-50%);
   background:white;
-  padding:16px 28px;
-  border-radius:26px;
-  font-size:clamp(24px,6vw,46px);
+  padding:15px 26px;
+  border-radius:24px;
+  font-size:clamp(24px,6vw,44px);
   font-weight:900;
   color:#1e3b2b;
   display:none;
@@ -245,8 +227,7 @@ html,body{
   transform:scale(1.08);
 }
 
-/* END SCREEN */
-
+/* END */
 #endScreen{
   align-items:center;
   justify-content:center;
@@ -257,30 +238,27 @@ html,body{
 #endScreen h1{
   z-index:5;
   background:white;
-  padding:26px 42px;
+  padding:25px 42px;
   border-radius:28px;
-  font-size:clamp(36px,8vw,66px);
+  font-size:clamp(36px,8vw,64px);
   color:#22422e;
   box-shadow:0 8px 0 rgba(0,0,0,.18);
 }
 
 #endScreen button{
   z-index:5;
-  margin-top:22px;
+  margin-top:20px;
   border:none;
   border-radius:18px;
-  padding:14px 32px;
+  padding:14px 30px;
   background:#24382b;
   color:white;
   font-size:21px;
   font-weight:bold;
-  box-shadow:0 6px 0 rgba(0,0,0,.18);
 }
 
 /* MOBILE */
-
 @media(max-width:760px){
-
   .title{
     font-size:20px;
     margin-top:7px;
@@ -304,21 +282,20 @@ html,body{
     gap:5px;
   }
 
-  .card,
-  .blank{
-    width:64px;
-    height:64px;
-    border-radius:18px;
+  .card,.blank{
+    width:62px;
+    height:62px;
+    border-radius:16px;
     border-width:3px;
   }
 
   .blank{
     border-width:4px;
-    font-size:30px;
+    font-size:28px;
   }
 
   .arrow{
-    font-size:18px;
+    font-size:17px;
   }
 
   .optionsBox{
@@ -328,35 +305,26 @@ html,body{
   }
 
   .option{
-    width:84px;
-    height:74px;
-    border-radius:20px;
+    width:82px;
+    height:72px;
+    border-radius:19px;
     border-width:3px;
   }
 }
 
 @media(max-width:380px){
+  .title{font-size:18px}
+  .instruction{font-size:12px}
 
-  .title{
-    font-size:18px;
+  .card,.blank{
+    width:54px;
+    height:54px;
   }
 
-  .instruction{
-    font-size:12px;
-  }
-
-  .card,
-  .blank{
-    width:56px;
-    height:56px;
-  }
-
-  .arrow{
-    font-size:15px;
-  }
+  .arrow{font-size:15px}
 
   .option{
-    width:74px;
+    width:72px;
     height:64px;
   }
 
@@ -373,59 +341,37 @@ html,body{
 <audio id="wrongSound" src="assets/wrong.mp3" preload="auto"></audio>
 <audio id="clapSound" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
 
-<!-- LOGO SCREEN -->
-
 <div id="logoScreen" class="screen active">
   <img src="assets/innovine-logo.png" alt="Innovine Logo">
 </div>
 
-<!-- GAME SCREEN -->
-
 <div id="gameScreen" class="screen">
-
   <div class="title">Pattern Chain Adventure</div>
 
   <div class="instruction">
     Drag the correct picture into the empty box to complete the pattern.
   </div>
 
-  <div class="levelTag" id="levelTag">
-    Phase 1 • Level 1
-  </div>
+  <div class="levelTag" id="levelTag">Phase 1 • Level 1</div>
 
   <div class="patternArea">
     <div class="chain" id="chain"></div>
   </div>
 
   <div class="optionsBox" id="optionsBox"></div>
-
   <div id="message"></div>
-
 </div>
 
-<!-- END SCREEN -->
-
 <div id="endScreen" class="screen">
-
   <h1>Great Job! 🎉</h1>
-
-  <button onclick="location.reload()">
-    Play Again
-  </button>
-
+  <button onclick="location.reload()">Play Again</button>
 </div>
 
 <script>
-
 function setVH(){
-  document.documentElement.style.setProperty(
-    "--vh",
-    window.innerHeight * 0.01 + "px"
-  );
+  document.documentElement.style.setProperty("--vh", window.innerHeight * 0.01 + "px");
 }
-
 setVH();
-
 window.addEventListener("resize", setVH);
 window.addEventListener("orientationchange", setVH);
 
@@ -455,91 +401,74 @@ const img={
 };
 
 const levels=[
+  {
+    tag:"Phase 1 • Level 1",
+    chain:["dog","cat","dog",null],
+    answer:"cat",
+    options:["cat","boots","koala"]
+  },
 
-{
-tag:"Phase 1 • Level 1",
-chain:["dog","cat","dog",null],
-answer:"cat",
-options:["cat","boots","koala"]
-},
+  {
+    tag:"Phase 1 • Level 2",
+    chain:["rainbow","cloud","rainbow",null],
+    answer:"cloud",
+    options:["cloud","boots","penguin"]
+  },
 
-{
-tag:"Phase 1 • Level 2",
-chain:["rainbow","cloud","rainbow",null],
-answer:"cloud",
-options:["cloud","boots","penguin"]
-},
+  {
+    tag:"Phase 1 • Level 3",
+    chain:["boots","umbrella","boots",null],
+    answer:"umbrella",
+    options:["purpleFlower","avocado","umbrella"]
+  },
 
-{
-tag:"Phase 1 • Level 3",
-chain:["boots","umbrella","boots",null],
-answer:"umbrella",
-options:["purpleFlower","avocado","umbrella"]
-},
+  {
+    tag:"Phase 2 • Level 4",
+    chain:["koala","bear","giraffe","koala","bear",null],
+    answer:"giraffe",
+    options:["orangeFlower","giraffe","umbrella"]
+  },
 
-{
-tag:"Phase 2 • Level 4",
-chain:["koala","bear","giraffe","koala","bear",null],
-answer:"giraffe",
-options:["orangeFlower","giraffe","umbrella"]
-},
+  {
+    tag:"Phase 2 • Level 5",
+    chain:["blueFlower","purpleFlower","orangeFlower","blueFlower","purpleFlower",null],
+    answer:"orangeFlower",
+    options:["orangeFlower","cloud","avocado"]
+  },
 
-{
-tag:"Phase 2 • Level 5",
-chain:["blueFlower","purpleFlower","orangeFlower","blueFlower","purpleFlower",null],
-answer:"orangeFlower",
-options:["orangeFlower","cloud","avocado"]
-},
+  {
+    tag:"Phase 2 • Level 6",
+    chain:["carrot","avocado","pear","carrot","avocado",null],
+    answer:"pear",
+    options:["pear","penguin","boots"]
+  },
 
-{
-tag:"Phase 2 • Level 6",
-chain:["carrot","avocado","pear","carrot","avocado",null],
-answer:"pear",
-options:["pear","penguin","boots"]
-},
-
-{
-tag:"Phase 2 • Level 7",
-chain:["penguin","girl","boy","penguin","girl",null],
-answer:"boy",
-options:["blueFlower","boy","boots"]
-}
-
+  {
+    tag:"Phase 2 • Level 7",
+    chain:["penguin","girl","boy","penguin","girl",null],
+    answer:"boy",
+    options:["blueFlower","boy","boots"]
+  }
 ];
 
 let current=0;
 let dragged=null;
 let dragClone=null;
 
-/* START GAME */
-
 setTimeout(()=>{
-
-  document.getElementById("logoScreen")
-    .classList.remove("active");
-
-  document.getElementById("gameScreen")
-    .classList.add("active");
-
+  document.getElementById("logoScreen").classList.remove("active");
+  document.getElementById("gameScreen").classList.add("active");
   loadLevel();
-
 },2000);
-
-/* SOUND */
 
 function playSound(sound){
   sound.currentTime=0;
   sound.play().catch(()=>{});
 }
 
-/* MESSAGE */
-
 function showMessage(text){
-
   const m=document.getElementById("message");
-
   m.innerText=text;
-
   m.style.display="block";
 
   setTimeout(()=>{
@@ -547,14 +476,10 @@ function showMessage(text){
   },850);
 }
 
-/* LOAD LEVEL */
-
 function loadLevel(){
-
   const level=levels[current];
 
-  document.getElementById("levelTag")
-    .innerText=level.tag;
+  document.getElementById("levelTag").innerText=level.tag;
 
   const chain=document.getElementById("chain");
   const optionsBox=document.getElementById("optionsBox");
@@ -565,13 +490,9 @@ function loadLevel(){
   level.chain.forEach((item,index)=>{
 
     if(index>0){
-
       const arrow=document.createElement("div");
-
       arrow.className="arrow";
-
       arrow.innerText="➜";
-
       chain.appendChild(arrow);
     }
 
@@ -580,11 +501,8 @@ function loadLevel(){
     box.className=item ? "card" : "blank";
 
     if(item){
-
       box.innerHTML=`<img src="${img[item]}" alt="">`;
-
     }else{
-
       box.innerText="?";
     }
 
@@ -596,7 +514,6 @@ function loadLevel(){
     const op=document.createElement("div");
 
     op.className="option";
-
     op.dataset.item=item;
 
     op.innerHTML=`<img src="${img[item]}" alt="">`;
@@ -606,8 +523,6 @@ function loadLevel(){
     optionsBox.appendChild(op);
   });
 }
-
-/* DRAG */
 
 function startDrag(e){
 
@@ -627,11 +542,7 @@ function startDrag(e){
 
   document.addEventListener("pointermove",moveDrag);
 
-  document.addEventListener(
-    "pointerup",
-    endDrag,
-    {once:true}
-  );
+  document.addEventListener("pointerup",endDrag,{once:true});
 }
 
 function moveDrag(e){
@@ -642,21 +553,13 @@ function moveClone(x,y){
 
   if(!dragClone)return;
 
-  dragClone.style.left=
-    (x-dragClone.offsetWidth/2)+"px";
-
-  dragClone.style.top=
-    (y-dragClone.offsetHeight/2)+"px";
+  dragClone.style.left=(x-dragClone.offsetWidth/2)+"px";
+  dragClone.style.top=(y-dragClone.offsetHeight/2)+"px";
 }
-
-/* DROP */
 
 function endDrag(e){
 
-  document.removeEventListener(
-    "pointermove",
-    moveDrag
-  );
+  document.removeEventListener("pointermove",moveDrag);
 
   const blank=document.querySelector(".blank");
 
@@ -669,16 +572,12 @@ function endDrag(e){
     e.clientY<=rect.bottom;
 
   if(dragClone){
-
     dragClone.remove();
-
     dragClone=null;
   }
 
   if(!inside){
-
     dragged=null;
-
     return;
   }
 
@@ -686,8 +585,6 @@ function endDrag(e){
 
   dragged=null;
 }
-
-/* ANSWER */
 
 function checkAnswer(item){
 
@@ -701,8 +598,7 @@ function checkAnswer(item){
 
     blank.className="card";
 
-    blank.innerHTML=
-      `<img src="${img[item]}" alt="">`;
+    blank.innerHTML=`<img src="${img[item]}" alt="">`;
 
     showMessage("Correct! 🌟");
 
@@ -711,11 +607,8 @@ function checkAnswer(item){
       current++;
 
       if(current>=levels.length){
-
         showEnd();
-
       }else{
-
         loadLevel();
       }
 
@@ -733,25 +626,18 @@ function checkAnswer(item){
   }
 }
 
-/* END */
-
 function showEnd(){
 
-  document.getElementById("gameScreen")
-    .classList.remove("active");
+  document.getElementById("gameScreen").classList.remove("active");
 
-  document.getElementById("endScreen")
-    .classList.add("active");
+  document.getElementById("endScreen").classList.add("active");
 
   playSound(clapSound);
 }
 
-/* SHUFFLE */
-
 function shuffle(arr){
   return arr.sort(()=>Math.random()-.5);
 }
-
 </script>
 
 </body>
