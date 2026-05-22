@@ -7,6 +7,7 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
 html,body{
   width:100%;
   height:100%;
@@ -15,6 +16,7 @@ html,body{
   touch-action:none;
   background:white;
 }
+
 :root{--vh:1vh}
 
 .screen{
@@ -24,6 +26,7 @@ html,body{
   position:relative;
   overflow:hidden;
 }
+
 .active{display:flex}
 
 #logoScreen{
@@ -31,57 +34,58 @@ html,body{
   align-items:center;
   justify-content:center;
 }
+
 #logoScreen img{
   width:55vw;
   max-width:320px;
 }
 
-/* GAME BACKGROUNDS */
-#gameScreen{
+/* BEAUTIFUL BLUE ABSTRACT BACKGROUND */
+#gameScreen,#endScreen{
   flex-direction:column;
   align-items:center;
-  background:linear-gradient(#b9f5df 0%,#68d29e 48%,#9ee650 100%);
+  background:
+    radial-gradient(circle at 12% 20%, #e9f4ff 0 9%, transparent 10%),
+    radial-gradient(circle at 80% 18%, #d8ecff 0 12%, transparent 13%),
+    radial-gradient(circle at 30% 70%, #b8d9ff 0 18%, transparent 19%),
+    radial-gradient(circle at 75% 75%, #9fc9ff 0 20%, transparent 21%),
+    linear-gradient(135deg,#184fff 0%,#3f7cff 45%,#a8d9ff 100%);
 }
 
-.bgLeaves:before,.bgLeaves:after{
+#gameScreen::before,#endScreen::before{
   content:"";
   position:absolute;
-  top:-30px;
-  width:230px;
-  height:230px;
-  border-radius:50%;
-  background:radial-gradient(circle,#156b28 0 35%,transparent 36%);
+  inset:-10%;
+  background:
+    repeating-radial-gradient(circle at 30% 40%, transparent 0 65px, rgba(255,255,255,.85) 66px 84px, transparent 85px 145px);
   opacity:.55;
   z-index:0;
 }
-.bgLeaves:before{left:-90px}
-.bgLeaves:after{right:-90px}
 
-.ground{
+#gameScreen::after,#endScreen::after{
+  content:"";
   position:absolute;
-  bottom:-7vh;
-  width:120vw;
-  height:28vh;
-  background:radial-gradient(ellipse at center,#baff24 0%,#81d938 55%,#37a849 100%);
-  border-radius:50% 50% 0 0;
+  inset:0;
+  background:linear-gradient(to bottom,rgba(255,255,255,.45),rgba(255,255,255,.08));
   z-index:0;
 }
 
+/* HEADER */
 .title{
   z-index:5;
   margin-top:8px;
   padding:7px 18px;
   max-width:92vw;
-  background:rgba(255,255,255,.72);
+  background:rgba(255,255,255,.88);
   border-radius:22px;
   text-align:center;
   font-family:Georgia,serif;
   font-style:italic;
   font-weight:900;
   color:#123c2c;
-  font-size:clamp(20px,5vw,36px);
+  font-size:clamp(22px,5vw,38px);
   line-height:1.05;
-  box-shadow:0 5px 0 rgba(0,0,0,.08);
+  box-shadow:0 5px 0 rgba(0,0,0,.14);
 }
 
 .instruction{
@@ -89,12 +93,12 @@ html,body{
   margin-top:6px;
   background:white;
   border-radius:18px;
-  padding:7px 14px;
+  padding:7px 16px;
   font-weight:bold;
   color:#20332d;
   text-align:center;
-  font-size:clamp(13px,3.4vw,18px);
-  max-width:90vw;
+  font-size:clamp(13px,3.2vw,18px);
+  max-width:92vw;
 }
 
 .levelTag{
@@ -103,11 +107,12 @@ html,body{
   background:#fff3a8;
   color:#3b3212;
   border-radius:18px;
-  padding:5px 14px;
+  padding:5px 16px;
   font-weight:900;
-  font-size:clamp(13px,3vw,17px);
+  font-size:clamp(14px,3vw,18px);
 }
 
+/* PATTERN AREA */
 .patternArea{
   z-index:5;
   width:96vw;
@@ -122,70 +127,72 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
+  gap:10px;
   flex-wrap:nowrap;
   width:100%;
 }
 
 .card,.blank{
-  width:92px;
-  height:92px;
-  background:rgba(255,255,255,.88);
-  border-radius:24px;
-  border:4px solid white;
+  width:112px;
+  height:112px;
+  background:rgba(255,255,255,.95);
+  border-radius:28px;
+  border:5px solid white;
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 8px 0 rgba(0,0,0,.15);
+  box-shadow:0 9px 0 rgba(0,0,0,.18),0 0 18px rgba(255,255,255,.35);
   position:relative;
 }
 
 .card img,.option img{
-  max-width:78%;
-  max-height:78%;
+  max-width:92%;
+  max-height:92%;
   object-fit:contain;
   pointer-events:none;
   user-select:none;
+  filter:drop-shadow(0 5px 4px rgba(0,0,0,.22));
 }
 
 .blank{
-  border:5px dashed #2f3b31;
-  background:rgba(255,255,255,.65);
-  color:#333;
-  font-size:40px;
+  border:5px dashed #173b31;
+  background:rgba(255,255,255,.72);
+  color:#173b31;
+  font-size:46px;
   font-weight:900;
 }
 
 .arrow{
-  font-size:28px;
+  font-size:32px;
   font-weight:900;
-  color:#194b33;
-  text-shadow:1px 1px white;
+  color:white;
+  text-shadow:2px 2px 0 #123c6b;
 }
 
+/* OPTIONS */
 .optionsBox{
   z-index:10;
   width:100%;
-  min-height:112px;
-  padding:8px 8px calc(env(safe-area-inset-bottom) + 10px);
+  min-height:128px;
+  padding:10px 8px calc(env(safe-area-inset-bottom) + 12px);
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:14px;
-  background:rgba(255,255,255,.45);
-  backdrop-filter:blur(4px);
+  gap:18px;
+  background:rgba(255,255,255,.58);
+  backdrop-filter:blur(5px);
 }
 
 .option{
-  width:94px;
-  height:82px;
+  width:112px;
+  height:96px;
   background:white;
-  border:4px solid #2e3d34;
-  border-radius:22px;
+  border:4px solid #22382d;
+  border-radius:24px;
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 7px 0 rgba(0,0,0,.2);
+  box-shadow:0 8px 0 rgba(0,0,0,.22);
   cursor:grab;
   touch-action:none;
 }
@@ -217,7 +224,7 @@ html,body{
   z-index:1000!important;
   pointer-events:none;
   opacity:.95;
-  transform:scale(1.05);
+  transform:scale(1.08);
 }
 
 /* END */
@@ -226,87 +233,103 @@ html,body{
   justify-content:center;
   flex-direction:column;
   text-align:center;
-  background:linear-gradient(#b9f5df,#8de65c);
 }
 
 #endScreen h1{
   z-index:5;
   background:white;
-  padding:25px;
+  padding:25px 42px;
   border-radius:28px;
-  font-size:clamp(32px,8vw,58px);
+  font-size:clamp(36px,8vw,64px);
   color:#22422e;
-  box-shadow:0 8px 0 rgba(0,0,0,.15);
+  box-shadow:0 8px 0 rgba(0,0,0,.18);
 }
 
 #endScreen button{
   z-index:5;
-  margin-top:18px;
+  margin-top:20px;
   border:none;
   border-radius:18px;
-  padding:13px 26px;
+  padding:14px 30px;
   background:#24382b;
   color:white;
-  font-size:20px;
+  font-size:21px;
   font-weight:bold;
 }
 
 /* MOBILE */
 @media(max-width:760px){
-  .title{font-size:19px;margin-top:7px}
-  .instruction{font-size:13px;padding:6px 10px}
-  .levelTag{font-size:13px;margin-top:5px}
+  .title{
+    font-size:20px;
+    margin-top:7px;
+  }
+
+  .instruction{
+    font-size:13px;
+    padding:6px 10px;
+  }
+
+  .levelTag{
+    font-size:13px;
+    margin-top:5px;
+  }
 
   .patternArea{
-    align-items:center;
     padding:2px;
   }
 
   .chain{
-    gap:4px;
+    gap:5px;
   }
 
   .card,.blank{
-    width:54px;
-    height:54px;
-    border-radius:15px;
+    width:62px;
+    height:62px;
+    border-radius:16px;
     border-width:3px;
   }
 
   .blank{
     border-width:4px;
-    font-size:26px;
+    font-size:28px;
   }
 
   .arrow{
-    font-size:16px;
+    font-size:17px;
   }
 
   .optionsBox{
-    min-height:92px;
-    gap:10px;
+    min-height:100px;
+    gap:12px;
     padding-bottom:calc(env(safe-area-inset-bottom) + 8px);
   }
 
   .option{
-    width:72px;
-    height:64px;
-    border-radius:18px;
+    width:82px;
+    height:72px;
+    border-radius:19px;
     border-width:3px;
   }
 }
 
 @media(max-width:380px){
-  .title{font-size:17px}
+  .title{font-size:18px}
   .instruction{font-size:12px}
+
   .card,.blank{
-    width:48px;
-    height:48px;
+    width:54px;
+    height:54px;
   }
-  .arrow{font-size:14px}
+
+  .arrow{font-size:15px}
+
   .option{
-    width:64px;
-    height:58px;
+    width:72px;
+    height:64px;
+  }
+
+  .optionsBox{
+    gap:8px;
   }
 }
 </style>
@@ -322,12 +345,10 @@ html,body{
   <img src="assets/innovine-logo.png" alt="Innovine Logo">
 </div>
 
-<div id="gameScreen" class="screen bgLeaves">
-  <div class="ground"></div>
-
+<div id="gameScreen" class="screen">
   <div class="title">Pattern Chain Adventure</div>
-  <div class="instruction">Drag the correct picture into the empty box.</div>
-  <div class="levelTag" id="levelTag">Level 1</div>
+  <div class="instruction">Drag the correct picture into the empty box to complete the pattern.</div>
+  <div class="levelTag" id="levelTag">Phase 1 • Level 1</div>
 
   <div class="patternArea">
     <div class="chain" id="chain"></div>
@@ -337,9 +358,8 @@ html,body{
   <div id="message"></div>
 </div>
 
-<div id="endScreen" class="screen bgLeaves">
-  <div class="ground"></div>
-  <h1>Great Patterning! 🎉</h1>
+<div id="endScreen" class="screen">
+  <h1>Great Job! 🎉</h1>
   <button onclick="location.reload()">Play Again</button>
 </div>
 
@@ -377,48 +397,13 @@ const img={
 };
 
 const levels=[
-  {
-    tag:"Phase 1 • Level 1 • AB AB",
-    chain:["dog","cat","dog",null],
-    answer:"cat",
-    options:["cat","boots","koala"]
-  },
-  {
-    tag:"Phase 1 • Level 2 • AB AB",
-    chain:["rainbow","cloud","rainbow",null],
-    answer:"cloud",
-    options:["cloud","boots","penguin"]
-  },
-  {
-    tag:"Phase 1 • Level 3 • AB AB",
-    chain:["boots","umbrella","boots",null],
-    answer:"umbrella",
-    options:["purpleFlower","avocado","umbrella"]
-  },
-  {
-    tag:"Phase 2 • Level 4 • ABC ABC",
-    chain:["koala","bear","giraffe","koala",null,"giraffe"],
-    answer:"bear",
-    options:["orangeFlower","bear","umbrella"]
-  },
-  {
-    tag:"Phase 2 • Level 5 • ABC ABC",
-    chain:["blueFlower","purpleFlower","orangeFlower","blueFlower","purpleFlower",null],
-    answer:"orangeFlower",
-    options:["orangeFlower","cloud","avocado"]
-  },
-  {
-    tag:"Phase 2 • Level 6 • ABC ABC",
-    chain:["carrot","avocado","pear","carrot","avocado",null],
-    answer:"pear",
-    options:["pear","penguin","boots"]
-  },
-  {
-    tag:"Phase 2 • Level 7 • ABC ABC",
-    chain:["penguin","girl","boy","penguin","girl",null],
-    answer:"boy",
-    options:["blueFlower","boy","boots"]
-  }
+  {tag:"Phase 1 • Level 1",chain:["dog","cat","dog",null],answer:"cat",options:["cat","boots","koala"]},
+  {tag:"Phase 1 • Level 2",chain:["rainbow","cloud","rainbow",null],answer:"cloud",options:["cloud","boots","penguin"]},
+  {tag:"Phase 1 • Level 3",chain:["boots","umbrella","boots",null],answer:"umbrella",options:["purpleFlower","avocado","umbrella"]},
+  {tag:"Phase 2 • Level 4",chain:["koala","bear","giraffe","koala",null,"giraffe"],answer:"bear",options:["orangeFlower","bear","umbrella"]},
+  {tag:"Phase 2 • Level 5",chain:["blueFlower","purpleFlower","orangeFlower","blueFlower","purpleFlower",null],answer:"orangeFlower",options:["orangeFlower","cloud","avocado"]},
+  {tag:"Phase 2 • Level 6",chain:["carrot","avocado","pear","carrot","avocado",null],answer:"pear",options:["pear","penguin","boots"]},
+  {tag:"Phase 2 • Level 7",chain:["penguin","girl","boy","penguin","girl",null],answer:"boy",options:["blueFlower","boy","boots"]}
 ];
 
 let current=0;
@@ -469,6 +454,7 @@ function loadLevel(){
     }else{
       box.innerText="?";
     }
+
     chain.appendChild(box);
   });
 
@@ -477,7 +463,6 @@ function loadLevel(){
     op.className="option";
     op.dataset.item=item;
     op.innerHTML=`<img src="${img[item]}" alt="">`;
-
     op.addEventListener("pointerdown",startDrag);
     optionsBox.appendChild(op);
   });
