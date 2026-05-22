@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Patterning Game</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  touch-action:none;
+  background:white;
+}
+:root{--vh:1vh}
+
+.screen{
+  width:100vw;
+  height:calc(var(--vh)*100);
+  display:none;
+  position:relative;
+  overflow:hidden;
+}
+.active{display:flex}
+
+#logoScreen{
+  background:white;
+  align-items:center;
+  justify-content:center;
+}
+#logoScreen img{
+  width:55vw;
+  max-width:320px;
+}
+
+/* GAME BACKGROUNDS */
+#gameScreen{
+  flex-direction:column;
+  align-items:center;
+  background:linear-gradient(#b9f5df 0%,#68d29e 48%,#9ee650 100%);
+}
+
+.bgLeaves:before,.bgLeaves:after{
+  content:"";
+  position:absolute;
+  top:-30px;
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  background:radial-gradient(circle,#156b28 0 35%,transparent 36%);
+  opacity:.55;
+  z-index:0;
+}
+.bgLeaves:before{left:-90px}
+.bgLeaves:after{right:-90px}
+
+.ground{
+  position:absolute;
+  bottom:-7vh;
+  width:120vw;
+  height:28vh;
+  background:radial-gradient(ellipse at center,#baff24 0%,#81d938 55%,#37a849 100%);
+  border-radius:50% 50% 0 0;
+  z-index:0;
+}
+
+.title{
+  z-index:5;
+  margin-top:8px;
+  padding:7px 18px;
+  max-width:92vw;
+  background:rgba(255,255,255,.72);
+  border-radius:22px;
+  text-align:center;
+  font-family:Georgia,serif;
+  font-style:italic;
+  font-weight:900;
+  color:#123c2c;
+  font-size:clamp(20px,5vw,36px);
+  line-height:1.05;
+  box-shadow:0 5px 0 rgba(0,0,0,.08);
+}
+
+.instruction{
+  z-index:5;
+  margin-top:6px;
+  background:white;
+  border-radius:18px;
+  padding:7px 14px;
+  font-weight:bold;
+  color:#20332d;
+  text-align:center;
+  font-size:clamp(13px,3.4vw,18px);
+  max-width:90vw;
+}
+
+.levelTag{
+  z-index:5;
+  margin-top:6px;
+  background:#fff3a8;
+  color:#3b3212;
+  border-radius:18px;
+  padding:5px 14px;
+  font-weight:900;
+  font-size:clamp(13px,3vw,17px);
+}
+
+.patternArea{
+  z-index:5;
+  width:96vw;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px;
+}
+
+.chain{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:nowrap;
+  width:100%;
+}
+
+.card,.blank{
+  width:92px;
+  height:92px;
+  background:rgba(255,255,255,.88);
+  border-radius:24px;
+  border:4px solid white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 8px 0 rgba(0,0,0,.15);
+  position:relative;
+}
+
+.card img,.option img{
+  max-width:78%;
+  max-height:78%;
+  object-fit:contain;
+  pointer-events:none;
+  user-select:none;
+}
+
+.blank{
+  border:5px dashed #2f3b31;
+  background:rgba(255,255,255,.65);
+  color:#333;
+  font-size:40px;
+  font-weight:900;
+}
+
+.arrow{
+  font-size:28px;
+  font-weight:900;
+  color:#194b33;
+  text-shadow:1px 1px white;
+}
+
+.optionsBox{
+  z-index:10;
+  width:100%;
+  min-height:112px;
+  padding:8px 8px calc(env(safe-area-inset-bottom) + 10px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  background:rgba(255,255,255,.45);
+  backdrop-filter:blur(4px);
+}
+
+.option{
+  width:94px;
+  height:82px;
+  background:white;
+  border:4px solid #2e3d34;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 7px 0 rgba(0,0,0,.2);
+  cursor:grab;
+  touch-action:none;
+}
+
+.option:active{
+  cursor:grabbing;
+  transform:scale(.96);
+}
+
+#message{
+  position:absolute;
+  z-index:50;
+  top:48%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:white;
+  padding:15px 26px;
+  border-radius:24px;
+  font-size:clamp(24px,6vw,44px);
+  font-weight:900;
+  color:#1e3b2b;
+  display:none;
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
+  text-align:center;
+}
+
+.dragging{
+  position:fixed!important;
+  z-index:1000!important;
+  pointer-events:none;
+  opacity:.95;
+  transform:scale(1.05);
+}
+
+/* END */
+#endScreen{
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  background:linear-gradient(#b9f5df,#8de65c);
+}
+
+#endScreen h1{
+  z-index:5;
+  background:white;
+  padding:25px;
+  border-radius:28px;
+  font-size:clamp(32px,8vw,58px);
+  color:#22422e;
+  box-shadow:0 8px 0 rgba(0,0,0,.15);
+}
+
+#endScreen button{
+  z-index:5;
+  margin-top:18px;
+  border:none;
+  border-radius:18px;
+  padding:13px 26px;
+  background:#24382b;
+  color:white;
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* MOBILE */
+@media(max-width:760px){
+  .title{font-size:19px;margin-top:7px}
+  .instruction{font-size:13px;padding:6px 10px}
+  .levelTag{font-size:13px;margin-top:5px}
+
+  .patternArea{
+    align-items:center;
+    padding:2px;
+  }
+
+  .chain{
+    gap:4px;
+  }
+
+  .card,.blank{
+    width:54px;
+    height:54px;
+    border-radius:15px;
+    border-width:3px;
+  }
+
+  .blank{
+    border-width:4px;
+    font-size:26px;
+  }
+
+  .arrow{
+    font-size:16px;
+  }
+
+  .optionsBox{
+    min-height:92px;
+    gap:10px;
+    padding-bottom:calc(env(safe-area-inset-bottom) + 8px);
+  }
+
+  .option{
+    width:72px;
+    height:64px;
+    border-radius:18px;
+    border-width:3px;
+  }
+}
+
+@media(max-width:380px){
+  .title{font-size:17px}
+  .instruction{font-size:12px}
+  .card,.blank{
+    width:48px;
+    height:48px;
+  }
+  .arrow{font-size:14px}
+  .option{
+    width:64px;
+    height:58px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="correctSound" src="assets/correct.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="assets/wrong.mp3" preload="auto"></audio>
+<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
+
+<div id="logoScreen" class="screen active">
+  <img src="assets/innovine-logo.png" alt="Innovine Logo">
+</div>
+
+<div id="gameScreen" class="screen bgLeaves">
+  <div class="ground"></div>
+
+  <div class="title">Pattern Chain Adventure</div>
+  <div class="instruction">Drag the correct picture into the empty box.</div>
+  <div class="levelTag" id="levelTag">Level 1</div>
+
+  <div class="patternArea">
+    <div class="chain" id="chain"></div>
+  </div>
+
+  <div class="optionsBox" id="optionsBox"></div>
+  <div id="message"></div>
+</div>
+
+<div id="endScreen" class="screen bgLeaves">
+  <div class="ground"></div>
+  <h1>Great Patterning! 🎉</h1>
+  <button onclick="location.reload()">Play Again</button>
+</div>
+
+<script>
+function setVH(){
+  document.documentElement.style.setProperty("--vh", window.innerHeight * 0.01 + "px");
+}
+setVH();
+window.addEventListener("resize", setVH);
+window.addEventListener("orientationchange", setVH);
+
+const correctSound=document.getElementById("correctSound");
+const wrongSound=document.getElementById("wrongSound");
+const clapSound=document.getElementById("clapSound");
+
+const img={
+  dog:"assets/dog.png",
+  cat:"assets/cat.png",
+  boots:"assets/boots.png",
+  koala:"assets/koala.png",
+  rainbow:"assets/rainbow.png",
+  cloud:"assets/rainy-cloud.png",
+  penguin:"assets/cartoon-penguin.png",
+  umbrella:"assets/umbrella.png",
+  purpleFlower:"assets/purple-flower.png",
+  avocado:"assets/avocado.png",
+  bear:"assets/dear.png",
+  giraffe:"assets/giraffe.png",
+  orangeFlower:"assets/orange-flower.png",
+  blueFlower:"assets/blue-flower.png",
+  carrot:"assets/carrot.png",
+  pear:"assets/pear.png",
+  girl:"assets/cartoon-girl.png",
+  boy:"assets/cartoon-boy.png"
+};
+
+const levels=[
+  {
+    tag:"Phase 1 • Level 1 • AB AB",
+    chain:["dog","cat","dog",null],
+    answer:"cat",
+    options:["cat","boots","koala"]
+  },
+  {
+    tag:"Phase 1 • Level 2 • AB AB",
+    chain:["rainbow","cloud","rainbow",null],
+    answer:"cloud",
+    options:["cloud","boots","penguin"]
+  },
+  {
+    tag:"Phase 1 • Level 3 • AB AB",
+    chain:["boots","umbrella","boots",null],
+    answer:"umbrella",
+    options:["purpleFlower","avocado","umbrella"]
+  },
+  {
+    tag:"Phase 2 • Level 4 • ABC ABC",
+    chain:["koala","bear","giraffe","koala",null,"giraffe"],
+    answer:"bear",
+    options:["orangeFlower","bear","umbrella"]
+  },
+  {
+    tag:"Phase 2 • Level 5 • ABC ABC",
+    chain:["blueFlower","purpleFlower","orangeFlower","blueFlower","purpleFlower",null],
+    answer:"orangeFlower",
+    options:["orangeFlower","cloud","avocado"]
+  },
+  {
+    tag:"Phase 2 • Level 6 • ABC ABC",
+    chain:["carrot","avocado","pear","carrot","avocado",null],
+    answer:"pear",
+    options:["pear","penguin","boots"]
+  },
+  {
+    tag:"Phase 2 • Level 7 • ABC ABC",
+    chain:["penguin","girl","boy","penguin","girl",null],
+    answer:"boy",
+    options:["blueFlower","boy","boots"]
+  }
+];
+
+let current=0;
+let dragged=null;
+let dragClone=null;
+
+setTimeout(()=>{
+  document.getElementById("logoScreen").classList.remove("active");
+  document.getElementById("gameScreen").classList.add("active");
+  loadLevel();
+},2000);
+
+function playSound(sound){
+  sound.currentTime=0;
+  sound.play().catch(()=>{});
+}
+
+function showMessage(text){
+  const m=document.getElementById("message");
+  m.innerText=text;
+  m.style.display="block";
+  setTimeout(()=>m.style.display="none",850);
+}
+
+function loadLevel(){
+  const level=levels[current];
+  document.getElementById("levelTag").innerText=level.tag;
+
+  const chain=document.getElementById("chain");
+  const optionsBox=document.getElementById("optionsBox");
+  chain.innerHTML="";
+  optionsBox.innerHTML="";
+
+  level.chain.forEach((item,index)=>{
+    if(index>0){
+      const arrow=document.createElement("div");
+      arrow.className="arrow";
+      arrow.innerText="➜";
+      chain.appendChild(arrow);
+    }
+
+    const box=document.createElement("div");
+    box.className=item ? "card" : "blank";
+    box.dataset.blank=item ? "no" : "yes";
+
+    if(item){
+      box.innerHTML=`<img src="${img[item]}" alt="">`;
+    }else{
+      box.innerText="?";
+    }
+    chain.appendChild(box);
+  });
+
+  shuffle([...level.options]).forEach(item=>{
+    const op=document.createElement("div");
+    op.className="option";
+    op.dataset.item=item;
+    op.innerHTML=`<img src="${img[item]}" alt="">`;
+
+    op.addEventListener("pointerdown",startDrag);
+    optionsBox.appendChild(op);
+  });
+}
+
+function startDrag(e){
+  e.preventDefault();
+
+  dragged=e.currentTarget;
+  dragged.setPointerCapture(e.pointerId);
+
+  dragClone=dragged.cloneNode(true);
+  dragClone.classList.add("dragging");
+  document.body.appendChild(dragClone);
+
+  moveClone(e.clientX,e.clientY);
+
+  document.addEventListener("pointermove",moveDrag);
+  document.addEventListener("pointerup",endDrag,{once:true});
+}
+
+function moveDrag(e){
+  moveClone(e.clientX,e.clientY);
+}
+
+function moveClone(x,y){
+  if(!dragClone)return;
+  dragClone.style.left=(x-dragClone.offsetWidth/2)+"px";
+  dragClone.style.top=(y-dragClone.offsetHeight/2)+"px";
+}
+
+function endDrag(e){
+  document.removeEventListener("pointermove",moveDrag);
+
+  const blank=document.querySelector(".blank");
+  const rect=blank.getBoundingClientRect();
+  const inside=e.clientX>=rect.left && e.clientX<=rect.right && e.clientY>=rect.top && e.clientY<=rect.bottom;
+
+  if(dragClone){
+    dragClone.remove();
+    dragClone=null;
+  }
+
+  if(!inside){
+    dragged=null;
+    return;
+  }
+
+  checkAnswer(dragged.dataset.item);
+  dragged=null;
+}
+
+function checkAnswer(item){
+  const level=levels[current];
+
+  if(item===level.answer){
+    playSound(correctSound);
+
+    const blank=document.querySelector(".blank");
+    blank.className="card";
+    blank.innerHTML=`<img src="${img[item]}" alt="">`;
+
+    showMessage("Correct! 🌟");
+
+    setTimeout(()=>{
+      current++;
+      if(current>=levels.length){
+        showEnd();
+      }else{
+        loadLevel();
+      }
+    },1100);
+
+  }else{
+    playSound(wrongSound);
+    if(navigator.vibrate)navigator.vibrate(120);
+    showMessage("Try again!");
+  }
+}
+
+function showEnd(){
+  document.getElementById("gameScreen").classList.remove("active");
+  document.getElementById("endScreen").classList.add("active");
+  playSound(clapSound);
+}
+
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-.5);
+}
+</script>
+
+</body>
+</html>
