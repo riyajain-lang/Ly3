@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Vowels and Consonants</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:"Comic Sans MS","Trebuchet MS",sans-serif;
+
+  background:
+  repeating-linear-gradient(
+    135deg,
+    #f7e96f 0px,
+    #f7e96f 32px,
+    #f7b6d5 32px,
+    #f7b6d5 64px,
+    #dff59b 64px,
+    #dff59b 96px
+  );
+}
+
+#game{
+  width:100vw;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.slide{
+  display:none;
+  width:94vw;
+  height:92vh;
+  max-width:1000px;
+  background:#f8f5ec;
+  border-radius:30px;
+  overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+  position:relative;
+}
+
+.slide.active{
+  display:block;
+}
+
+/* LOGO SCREEN */
+
+.logo-slide{
+  background:white;
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.logo-slide.active{
+  display:flex;
+}
+
+.logo-slide img{
+  width:70%;
+  max-width:400px;
+  object-fit:contain;
+}
+
+/* HEADER */
+
+.header{
+  height:90px;
+  background:#2487c7;
+  display:grid;
+  grid-template-columns:70px 1fr 150px;
+  align-items:center;
+  padding:0 15px;
+  color:white;
+}
+
+.back-btn{
+  font-size:48px;
+  cursor:pointer;
+  user-select:none;
+}
+
+.title{
+  text-align:center;
+  font-size:clamp(28px,4vw,56px);
+  font-weight:bold;
+  line-height:1.1;
+}
+
+.scoreboard{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:14px;
+  font-size:clamp(24px,3vw,40px);
+}
+
+.star{
+  color:#ffe81d;
+}
+
+.tick{
+  color:#11d100;
+}
+
+/* CONTENT */
+
+.content{
+  height:calc(100% - 90px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  position:relative;
+}
+
+.instructions{
+  position:absolute;
+  top:18px;
+  background:white;
+  border:4px solid #ff4fb2;
+  border-radius:28px;
+  padding:12px 22px;
+  text-align:center;
+  color:#2487c7;
+  font-size:clamp(18px,2.5vw,34px);
+  font-weight:bold;
+  width:min(90%,500px);
+  box-shadow:0 4px 10px rgba(0,0,0,0.12);
+}
+
+.letter-card{
+  margin-top:60px;
+  width:140px;
+  height:170px;
+  border-radius:22px;
+  background:white;
+  border:4px solid #d2d2d2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:110px;
+  font-weight:bold;
+  box-shadow:0 8px 18px rgba(0,0,0,0.15);
+}
+
+.options{
+  margin-top:34px;
+  display:flex;
+  gap:30px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.option-btn{
+  border:none;
+  background:#3aa0e5;
+  color:white;
+  padding:18px 28px;
+  border-radius:30px;
+  min-width:190px;
+  font-size:clamp(24px,3vw,42px);
+  font-family:inherit;
+  cursor:pointer;
+  box-shadow:0 8px 0 #156ba6;
+}
+
+.option-btn:active{
+  transform:translateY(4px);
+  box-shadow:0 4px 0 #156ba6;
+}
+
+.feedback{
+  margin-top:24px;
+  min-height:50px;
+  font-size:clamp(28px,3vw,46px);
+  color:#12b900;
+  font-weight:bold;
+}
+
+/* ANIMATIONS */
+
+.giggle{
+  animation:giggle 0.35s;
+}
+
+@keyframes giggle{
+  0%{transform:translateX(0);}
+  20%{transform:translateX(-8px);}
+  40%{transform:translateX(8px);}
+  60%{transform:translateX(-6px);}
+  80%{transform:translateX(6px);}
+  100%{transform:translateX(0);}
+}
+
+.glow{
+  animation:glow 1s infinite alternate;
+}
+
+@keyframes glow{
+  from{
+    box-shadow:0 0 10px #00ff44,0 8px 0 #156ba6;
+  }
+  to{
+    box-shadow:0 0 28px #00ff44,0 8px 0 #156ba6;
+  }
+}
+
+/* END SCREEN */
+
+.end-screen{
+  height:calc(100% - 90px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+}
+
+.end-screen h1{
+  color:#ff4fb2;
+  font-size:clamp(50px,7vw,90px);
+  margin:0;
+}
+
+.end-screen p{
+  color:#2487c7;
+  font-size:clamp(24px,3vw,42px);
+  font-weight:bold;
+}
+
+.play-again{
+  margin-top:25px;
+  border:none;
+  background:#3aa0e5;
+  color:white;
+  padding:18px 35px;
+  border-radius:30px;
+  font-size:clamp(24px,3vw,40px);
+  font-family:inherit;
+  cursor:pointer;
+  box-shadow:0 8px 0 #156ba6;
+}
+
+/* CONFETTI */
+
+.confetti{
+  position:fixed;
+  width:12px;
+  height:18px;
+  top:-20px;
+  z-index:9999;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  .slide{
+    width:96vw;
+    height:94vh;
+    border-radius:24px;
+  }
+
+  .header{
+    height:88px;
+    grid-template-columns:55px 1fr 120px;
+  }
+
+  .back-btn{
+    font-size:40px;
+  }
+
+  .letter-card{
+    width:120px;
+    height:150px;
+    font-size:90px;
+    margin-top:70px;
+  }
+
+  .option-btn{
+    min-width:160px;
+    padding:16px 22px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+  <!-- LOGO SLIDE -->
+  <div class="slide logo-slide active" id="logoSlide">
+    <img src="assets/innovine-logo.png" alt="logo">
+  </div>
+
+  <!-- GAME SLIDE -->
+  <div class="slide" id="gameSlide">
+
+    <div class="header">
+      <div class="back-btn" onclick="restartGame()">←</div>
+
+      <div class="title">
+        Vowels and Consonants
+      </div>
+
+      <div class="scoreboard">
+        <span class="star">★</span><span id="questionNumber">1</span>
+        <span class="tick">✓</span><span id="score">0</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="instructions">
+        Sort the alphabet into vowels or consonants
+      </div>
+
+      <div class="letter-card" id="letterCard">
+        A
+      </div>
+
+      <div class="options">
+        <button class="option-btn" onclick="checkAnswer('consonant',this)">
+          consonant
+        </button>
+
+        <button class="option-btn" onclick="checkAnswer('vowel',this)">
+          vowel
+        </button>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+
+    </div>
+  </div>
+
+  <!-- END SLIDE -->
+  <div class="slide" id="endSlide">
+
+    <div class="header">
+      <div class="back-btn" onclick="restartGame()">←</div>
+
+      <div class="title">
+        Vowels and Consonants
+      </div>
+
+      <div class="scoreboard">
+        <span class="star">★</span>10
+        <span class="tick">✓</span><span id="finalScore">0</span>
+      </div>
+    </div>
+
+    <div class="end-screen">
+      <h1>Excellent!</h1>
+      <p>You sorted all the letters correctly!</p>
+
+      <button class="play-again" onclick="restartGame()">
+        Play Again
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- AUDIO -->
+
+<audio id="correctSound" src="assets/correct.mp3"></audio>
+<audio id="wrongSound" src="assets/wrong.mp3"></audio>
+<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
+
+<script>
+
+const questions = [
+  {letter:"A",answer:"vowel"},
+  {letter:"B",answer:"consonant"},
+  {letter:"E",answer:"vowel"},
+  {letter:"M",answer:"consonant"},
+  {letter:"I",answer:"vowel"},
+  {letter:"S",answer:"consonant"},
+  {letter:"O",answer:"vowel"},
+  {letter:"T",answer:"consonant"},
+  {letter:"U",answer:"vowel"},
+  {letter:"J",answer:"consonant"}
+];
+
+let currentQuestion = 0;
+let score = 0;
+let wrongAttempts = 0;
+let locked = false;
+
+const logoSlide = document.getElementById("logoSlide");
+const gameSlide = document.getElementById("gameSlide");
+const endSlide = document.getElementById("endSlide");
+
+const questionNumber = document.getElementById("questionNumber");
+const scoreBox = document.getElementById("score");
+const finalScore = document.getElementById("finalScore");
+const letterCard = document.getElementById("letterCard");
+const feedback = document.getElementById("feedback");
+
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+const clapSound = document.getElementById("clapSound");
+
+window.onload = () => {
+
+  setTimeout(() => {
+    logoSlide.classList.remove("active");
+    gameSlide.classList.add("active");
+    loadQuestion();
+  },2000);
+
+};
+
+function loadQuestion(){
+
+  locked = false;
+  wrongAttempts = 0;
+
+  document.querySelectorAll(".option-btn").forEach(btn=>{
+    btn.classList.remove("giggle","glow");
+    btn.disabled = false;
+  });
+
+  feedback.textContent = "";
+
+  letterCard.textContent = questions[currentQuestion].letter;
+
+  questionNumber.textContent = currentQuestion + 1;
+
+  scoreBox.textContent = score;
+}
+
+function checkAnswer(selected,button){
+
+  if(locked) return;
+
+  const correct = questions[currentQuestion].answer;
+
+  if(selected === correct){
+
+    locked = true;
+
+    score++;
+
+    scoreBox.textContent = score;
+
+    feedback.textContent = "✓ Good Job!";
+
+    playSound(correctSound);
+
+    setTimeout(()=>{
+
+      currentQuestion++;
+
+      if(currentQuestion < questions.length){
+
+        loadQuestion();
+
+      }else{
+
+        showEndScreen();
+
+      }
+
+    },1000);
+
+  }else{
+
+    wrongAttempts++;
+
+    playSound(wrongSound);
+
+    button.classList.add("giggle");
+
+    setTimeout(()=>{
+      button.classList.remove("giggle");
+    },350);
+
+    if(wrongAttempts >= 2){
+
+      document.querySelectorAll(".option-btn").forEach(btn=>{
+
+        if(btn.textContent.trim().toLowerCase() === correct){
+
+          btn.classList.add("glow");
+
+        }
+
+      });
+
+    }
+
+  }
+
+}
+
+function showEndScreen(){
+
+  gameSlide.classList.remove("active");
+
+  endSlide.classList.add("active");
+
+  finalScore.textContent = score;
+
+  playSound(clapSound);
+
+  launchConfetti();
+
+}
+
+function restartGame(){
+
+  currentQuestion = 0;
+  score = 0;
+  wrongAttempts = 0;
+  locked = false;
+
+  endSlide.classList.remove("active");
+  gameSlide.classList.remove("active");
+
+  logoSlide.classList.add("active");
+
+  setTimeout(()=>{
+
+    logoSlide.classList.remove("active");
+    gameSlide.classList.add("active");
+
+    loadQuestion();
+
+  },2000);
+
+}
+
+function playSound(sound){
+
+  sound.currentTime = 0;
+
+  sound.play().catch(()=>{});
+
+}
+
+function launchConfetti(){
+
+  const colors = [
+    "#ff4fb2",
+    "#ffe600",
+    "#36a7f0",
+    "#4dff4d",
+    "#ff8a00"
+  ];
+
+  for(let i=0;i<90;i++){
+
+    const confetti = document.createElement("div");
+
+    confetti.className = "confetti";
+
+    confetti.style.left = Math.random()*100 + "vw";
+
+    confetti.style.background =
+      colors[Math.floor(Math.random()*colors.length)];
+
+    confetti.style.animationDelay =
+      Math.random()*1.5 + "s";
+
+    document.body.appendChild(confetti);
+
+    setTimeout(()=>{
+      confetti.remove();
+    },4000);
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
