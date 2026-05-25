@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Backward Numbers 10-1</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:"Comic Sans MS","Arial Rounded MT Bold",Arial,sans-serif;
+}
+body{
+  background:#fff;
+}
+.screen{
+  width:100vw;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Logo Slide */
+#logoScreen{
+  background:white;
+  z-index:10;
+}
+.logo{
+  width:min(55vw,340px);
+  animation:pop 1s ease;
+}
+@keyframes pop{
+  0%{transform:scale(.5);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+
+/* Game Background */
+#gameScreen,#endScreen{
+  display:none;
+  flex-direction:column;
+  background:linear-gradient(#77e7f0 0%,#b7f2ef 25%,#ffd46d 55%,#f5b65b 100%);
+}
+#gameScreen:before,#endScreen:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 15% 18%,rgba(255,255,255,.8) 0 7%,transparent 8%),
+    radial-gradient(circle at 82% 15%,rgba(255,255,255,.75) 0 8%,transparent 9%),
+    radial-gradient(circle at 50% 90%,rgba(245,130,58,.35) 0 28%,transparent 29%);
+  opacity:.7;
+}
+.cactus{
+  position:absolute;
+  bottom:3%;
+  width:55px;
+  height:120px;
+  background:#2fb36f;
+  border-radius:40px 40px 12px 12px;
+  box-shadow:inset -8px 0 rgba(0,0,0,.12);
+}
+.cactus:before,.cactus:after{
+  content:"";
+  position:absolute;
+  width:32px;
+  height:70px;
+  background:#2fb36f;
+  border-radius:30px;
+  top:35px;
+}
+.cactus:before{left:-25px}
+.cactus:after{right:-25px}
+.c1{left:4%;transform:scale(.75)}
+.c2{right:5%;transform:scale(.85)}
+.c3{left:82%;bottom:16%;transform:scale(.45)}
+
+.game-card{
+  position:relative;
+  z-index:2;
+  width:min(94vw,900px);
+  height:min(92vh,620px);
+  background:rgba(255,255,255,.86);
+  border:6px solid #ff5fb7;
+  border-radius:32px;
+  box-shadow:0 12px 25px rgba(0,0,0,.18);
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+}
+
+h1{
+  font-size:clamp(22px,4vw,42px);
+  color:#5d2c86;
+  text-align:center;
+  text-shadow:2px 2px #fff;
+}
+.instruction{
+  font-size:clamp(15px,2.4vw,22px);
+  color:#333;
+  text-align:center;
+  font-weight:bold;
+}
+.question-count{
+  font-size:clamp(13px,2vw,18px);
+  color:#8d3faf;
+  font-weight:bold;
+}
+
+.sequence{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(6px,1.4vw,15px);
+  flex-wrap:wrap;
+  min-height:115px;
+}
+.box{
+  width:clamp(55px,11vw,92px);
+  height:clamp(55px,11vw,92px);
+  border-radius:18px;
+  border:4px solid white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:clamp(26px,6vw,54px);
+  font-weight:900;
+  color:#222;
+  box-shadow:0 7px 0 rgba(0,0,0,.15);
+}
+.filled{
+  background:#ffe680;
+}
+.blank{
+  background:#fff;
+  border:4px dashed #5d2c86;
+  color:#5d2c86;
+}
+.blank.filled-answer{
+  border:4px solid white;
+  background:#9ee493;
+  animation:dropin .3s ease;
+}
+@keyframes dropin{
+  from{transform:scale(.4);opacity:.2}
+  to{transform:scale(1);opacity:1}
+}
+
+.options{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(10px,2vw,22px);
+  flex-wrap:wrap;
+}
+.option{
+  width:clamp(70px,17vw,130px);
+  height:clamp(65px,15vw,115px);
+  border-radius:18px;
+  border:5px solid white;
+  font-size:clamp(30px,7vw,62px);
+  font-weight:900;
+  color:#222;
+  box-shadow:0 8px 0 rgba(0,0,0,.18);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.option:nth-child(1){background:#ff7676}
+.option:nth-child(2){background:#78c7ff}
+.option:nth-child(3){background:#7de0a6}
+.option:nth-child(4){background:#ffd28a}
+.option:active{transform:scale(.95)}
+
+.giggle{
+  animation:giggle .35s ease;
+}
+@keyframes giggle{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-8px) rotate(-4deg)}
+  50%{transform:translateX(8px) rotate(4deg)}
+  75%{transform:translateX(-5px) rotate(-2deg)}
+}
+.glow{
+  animation:glow 1s infinite;
+}
+@keyframes glow{
+  0%,100%{box-shadow:0 0 8px 4px #fff}
+  50%{box-shadow:0 0 22px 10px #38ff5f}
+}
+.feedback{
+  min-height:45px;
+  font-size:clamp(22px,4vw,40px);
+  font-weight:900;
+  color:#16a34a;
+  text-align:center;
+}
+
+/* End Screen */
+.end-card{
+  position:relative;
+  z-index:2;
+  width:min(90vw,650px);
+  padding:35px 20px;
+  background:rgba(255,255,255,.9);
+  border:6px solid #ff5fb7;
+  border-radius:35px;
+  text-align:center;
+  box-shadow:0 12px 25px rgba(0,0,0,.2);
+}
+.end-card h2{
+  font-size:clamp(36px,8vw,72px);
+  color:#7c3aed;
+}
+.end-card p{
+  font-size:clamp(22px,4vw,38px);
+  margin:15px 0;
+  color:#16a34a;
+  font-weight:bold;
+}
+button{
+  border:none;
+  border-radius:30px;
+  background:#ff5fb7;
+  color:white;
+  padding:16px 32px;
+  font-size:clamp(20px,4vw,32px);
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 7px 0 #c0267d;
+}
+button:active{transform:translateY(4px);box-shadow:0 3px 0 #c0267d}
+
+.confetti{
+  position:absolute;
+  width:10px;
+  height:18px;
+  top:-20px;
+  animation:fall 3s linear infinite;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg)}
+}
+
+@media(max-height:520px){
+  .game-card{height:96vh;padding:8px}
+  .feedback{min-height:30px}
+  .box{width:52px;height:52px;font-size:28px}
+  .option{width:70px;height:58px;font-size:32px}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="correctSound" src="assets/correct.mp3"></audio>
+<audio id="wrongSound" src="assets/wrong.mp3"></audio>
+<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
+
+<div id="logoScreen" class="screen">
+  <img src="assets/innovine-logo.png" class="logo" alt="Innovine Logo">
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="cactus c1"></div>
+  <div class="cactus c2"></div>
+  <div class="cactus c3"></div>
+
+  <div class="game-card">
+    <div>
+      <h1>Backward Numbers 10-1</h1>
+      <div class="instruction">Click on the correct number in backward order.</div>
+      <div class="question-count" id="questionCount"></div>
+    </div>
+
+    <div class="sequence" id="sequence"></div>
+
+    <div class="options" id="options"></div>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+</div>
+
+<div id="endScreen" class="screen">
+  <div class="cactus c1"></div>
+  <div class="cactus c2"></div>
+  <div class="end-card">
+    <h2>Excellent!</h2>
+    <p>Great Job!</p>
+    <button onclick="restartGame()">Play Again</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {seq:[10,9,8,null,null], ans:[7,6], opts:[5,7,6,3]},
+  {seq:[9,8,null,null,5], ans:[7,6], opts:[7,4,6,2]},
+  {seq:[8,7,6,null,null], ans:[5,4], opts:[5,2,9,4]},
+  {seq:[7,null,null,4,3], ans:[6,5], opts:[1,6,5,8]},
+  {seq:[6,5,null,null,2], ans:[4,3], opts:[4,7,3,9]},
+  {seq:[10,null,8,null,6], ans:[9,7], opts:[9,5,7,2]},
+  {seq:[5,4,null,null,1], ans:[3,2], opts:[8,3,2,6]},
+  {seq:[9,null,7,6,null], ans:[8,5], opts:[8,5,3,1]},
+  {seq:[4,null,null,1], ans:[3,2], opts:[3,7,2,6]},
+  {seq:[10,9,null,7,null], ans:[8,6], opts:[8,4,6,1]},
+  {seq:[8,null,6,null,4], ans:[7,5], opts:[7,2,5,9]},
+  {seq:[7,6,null,4,null], ans:[5,3], opts:[1,5,8,3]},
+  {seq:[6,null,4,null,2], ans:[5,3], opts:[5,9,3,7]},
+  {seq:[10,null,null,7,6], ans:[9,8], opts:[2,9,8,4]},
+  {seq:[5,null,3,null,1], ans:[4,2], opts:[4,7,2,8]}
+];
+
+let currentQuestion = 0;
+let currentAnswerIndex = 0;
+let wrongAttempts = 0;
+let accepting = true;
+
+const logoScreen = document.getElementById("logoScreen");
+const gameScreen = document.getElementById("gameScreen");
+const endScreen = document.getElementById("endScreen");
+const sequenceEl = document.getElementById("sequence");
+const optionsEl = document.getElementById("options");
+const feedbackEl = document.getElementById("feedback");
+const questionCountEl = document.getElementById("questionCount");
+
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+const clapSound = document.getElementById("clapSound");
+
+setTimeout(() => {
+  logoScreen.style.display = "none";
+  gameScreen.style.display = "flex";
+  loadQuestion();
+}, 2000);
+
+function playSound(sound){
+  sound.currentTime = 0;
+  sound.play().catch(()=>{});
+}
+
+function loadQuestion(){
+  accepting = true;
+  wrongAttempts = 0;
+  currentAnswerIndex = 0;
+  feedbackEl.textContent = "";
+  const q = questions[currentQuestion];
+
+  questionCountEl.textContent = "Question " + (currentQuestion + 1) + " of " + questions.length;
+  sequenceEl.innerHTML = "";
+  optionsEl.innerHTML = "";
+
+  q.seq.forEach(num => {
+    const box = document.createElement("div");
+    box.className = num === null ? "box blank" : "box filled";
+    box.textContent = num === null ? "" : num;
+    sequenceEl.appendChild(box);
+  });
+
+  shuffle([...q.opts]).forEach(num => {
+    const option = document.createElement("div");
+    option.className = "option";
+    option.textContent = num;
+    option.onclick = () => checkAnswer(num, option);
+    optionsEl.appendChild(option);
+  });
+}
+
+function checkAnswer(num, optionEl){
+  if(!accepting) return;
+
+  const q = questions[currentQuestion];
+  const correct = q.ans[currentAnswerIndex];
+
+  if(num === correct){
+    playSound(correctSound);
+    fillBlank(num);
+    optionEl.style.visibility = "hidden";
+    currentAnswerIndex++;
+    wrongAttempts = 0;
+
+    if(currentAnswerIndex === q.ans.length){
+      accepting = false;
+      feedbackEl.textContent = "✓ Good Job!";
+      playSound(clapSound);
+
+      setTimeout(() => {
+        currentQuestion++;
+        if(currentQuestion < questions.length){
+          loadQuestion();
+        }else{
+          showEndScreen();
+        }
+      }, 1200);
+    }
+  } else {
+    playSound(wrongSound);
+    optionEl.classList.add("giggle");
+    setTimeout(()=>optionEl.classList.remove("giggle"),400);
+    wrongAttempts++;
+
+    if(wrongAttempts >= 2){
+      glowCorrectOption(correct);
+    }
+  }
+}
+
+function fillBlank(num){
+  const blanks = document.querySelectorAll(".blank:not(.filled-answer)");
+  if(blanks.length){
+    blanks[0].textContent = num;
+    blanks[0].classList.add("filled-answer");
+  }
+}
+
+function glowCorrectOption(correct){
+  document.querySelectorAll(".option").forEach(opt=>{
+    if(Number(opt.textContent) === correct && opt.style.visibility !== "hidden"){
+      opt.classList.add("glow");
+    }
+  });
+}
+
+function showEndScreen(){
+  gameScreen.style.display = "none";
+  endScreen.style.display = "flex";
+  playSound(clapSound);
+  createConfetti();
+}
+
+function restartGame(){
+  currentQuestion = 0;
+  endScreen.style.display = "none";
+  gameScreen.style.display = "flex";
+  document.querySelectorAll(".confetti").forEach(c=>c.remove());
+  loadQuestion();
+}
+
+function createConfetti(){
+  const colors = ["#ff5fb7","#ffd93d","#6ee7b7","#60a5fa","#a78bfa","#fb7185"];
+  for(let i=0;i<70;i++){
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random()*100 + "vw";
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay = Math.random()*3 + "s";
+    c.style.animationDuration = 2 + Math.random()*2 + "s";
+    document.body.appendChild(c);
+  }
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+</script>
+
+</body>
+</html>
