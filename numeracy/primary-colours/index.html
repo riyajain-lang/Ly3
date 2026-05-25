@@ -3,806 +3,421 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Primary Colours Game</title>
+<title>My Healthy Plate</title>
 
 <style>
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-html,body{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
-  background:#fff;
-}
-
-.screen{
-  width:100vw;
-  height:100vh;
-  display:none;
-  position:relative;
-  overflow:hidden;
-}
-
-.active{
-  display:flex;
-}
-
-/* LOGO SCREEN */
-
-#logoScreen{
-  background:#fff;
-  align-items:center;
-  justify-content:center;
-}
-
-#logoScreen img{
-  width:55vw;
-  max-width:320px;
-}
-
-/* GAME + END SCREEN */
-
-#gameScreen,
-#endScreen{
-  flex-direction:column;
-  background:#f4e7d9;
-}
-
-#gameScreen::before,
-#endScreen::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:0;
-
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
   background:
-  radial-gradient(circle at 20% 20%, rgba(255,80,80,.25), transparent 25%),
-  radial-gradient(circle at 80% 30%, rgba(255,220,0,.25), transparent 25%),
-  radial-gradient(circle at 50% 10%, rgba(80,120,255,.2), transparent 20%);
+    linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.82)),
+    repeating-linear-gradient(
+      0deg,
+      #d7f4f2 0px,
+      #d7f4f2 26px,
+      #ffffff 26px,
+      #ffffff 52px
+    );
 }
 
-/* DECORATIVE CURVES */
-
-.curve{
-  position:absolute;
-  border:10px solid;
-  border-radius:50%;
-  opacity:.8;
-  z-index:0;
+.game {
+  width: 100vw;
+  height: 100vh;
+  padding: 1.5vh 2vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
 }
 
-.c1{
-  width:260px;
-  height:90px;
-  border-color:#ef5a50;
-  top:20px;
-  left:-80px;
-  transform:rotate(-20deg);
+.header {
+  height: 10vh;
+  min-height: 54px;
+  background: #ffffffd9;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3vw;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
 }
 
-.c2{
-  width:280px;
-  height:100px;
-  border-color:#596dc0;
-  top:15px;
-  right:-90px;
-  transform:rotate(20deg);
+.header h1 {
+  margin: 0;
+  font-size: clamp(18px, 4vw, 30px);
+  color: #3b7c72;
 }
 
-.c3{
-  width:240px;
-  height:90px;
-  border-color:#d27cc2;
-  bottom:120px;
-  left:-100px;
-  transform:rotate(15deg);
+.score {
+  font-size: clamp(16px, 3.5vw, 26px);
+  font-weight: bold;
+  color: #f49b2f;
 }
 
-.c4{
-  width:250px;
-  height:100px;
-  border-color:#f5bc37;
-  bottom:70px;
-  right:-70px;
-  transform:rotate(-25deg);
+.instruction {
+  text-align: center;
+  font-size: clamp(13px, 2.6vw, 20px);
+  color: #555;
+  font-weight: bold;
 }
 
-/* HEADER */
-
-.header{
-  z-index:2;
-  text-align:center;
-  padding-top:10px;
-  font-size:clamp(24px,5vw,42px);
-  font-weight:bold;
-  color:#333;
+.stage {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 58% 40%;
+  gap: 2%;
+  min-height: 0;
 }
 
-.instruction{
-  z-index:2;
-  text-align:center;
-  margin-top:8px;
-  font-size:clamp(14px,3vw,22px);
-  color:#444;
+.plate-area {
+  background: #ffffffcc;
+  border-radius: 22px;
+  padding: 1.5vh 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* OBJECTS */
-
-.objects{
-  z-index:2;
-
-  width:100%;
-  height:48vh;
-
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-
-  gap:10px;
-
-  padding:12px;
-
-  justify-items:center;
-  align-items:center;
+.plate {
+  width: min(54vw, 72vh);
+  height: min(54vw, 72vh);
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 50%;
+  background: #ffd9ea;
+  border: 8px solid #f6a8ca;
+  position: relative;
+  box-shadow: inset 0 0 0 6px #fff2f7, 0 5px 12px rgba(0,0,0,0.12);
+  overflow: hidden;
 }
 
-.obj{
-  width:min(16vw,90px);
-  height:min(16vw,90px);
-
-  background:#fff;
-  border-radius:20px;
-  padding:8px;
-
-  object-fit:contain;
-
-  box-shadow:0 5px 12px rgba(0,0,0,.15);
-
-  animation:jump 1.3s infinite ease-in-out;
-
-  cursor:pointer;
-
-  border:4px solid transparent;
+.zone {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  border: 2px dashed rgba(255,255,255,0.9);
+  font-size: clamp(11px, 2.2vw, 17px);
+  padding: 4px;
+  cursor: pointer;
 }
 
-.obj.selected{
-  border:4px solid #222;
-  transform:scale(1.1);
+.zone span {
+  background: rgba(255,255,255,0.85);
+  border-radius: 12px;
+  padding: 5px 8px;
 }
 
-.obj.done{
-  visibility:hidden;
+.zone.fruits {
+  left: 8%;
+  top: 10%;
+  width: 40%;
+  height: 38%;
+  background: #ffe3e3;
+  border-radius: 100% 0 0 0;
 }
 
-@keyframes jump{
+.zone.vegetables {
+  right: 8%;
+  top: 10%;
+  width: 40%;
+  height: 38%;
+  background: #dcf7d7;
+  border-radius: 0 100% 0 0;
+}
 
-  0%,100%{
-    transform:translateY(0);
+.zone.grains {
+  left: 8%;
+  bottom: 12%;
+  width: 40%;
+  height: 35%;
+  background: #fff0c9;
+  border-radius: 0 0 0 100%;
+}
+
+.zone.protein {
+  right: 8%;
+  bottom: 12%;
+  width: 40%;
+  height: 35%;
+  background: #eadcff;
+  border-radius: 0 0 100% 0;
+}
+
+.zone.dairy {
+  left: 34%;
+  top: 40%;
+  width: 32%;
+  height: 22%;
+  background: #dff4ff;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.zone.correct-flash {
+  outline: 4px solid #54c36a;
+}
+
+.food-area {
+  background: #ffffffcc;
+  border-radius: 22px;
+  padding: 1.5vh 1vw;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.food-title {
+  text-align: center;
+  font-weight: bold;
+  color: #3b7c72;
+  font-size: clamp(14px, 2.8vw, 20px);
+  margin-bottom: 1vh;
+}
+
+.food-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8vh 0.8vw;
+  min-height: 0;
+}
+
+.food {
+  border: none;
+  border-radius: 16px;
+  background: #fff8e8;
+  box-shadow: 0 3px 7px rgba(0,0,0,0.12);
+  font-size: clamp(22px, 4.5vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.food.selected {
+  outline: 4px solid #ffb33e;
+  transform: scale(1.05);
+}
+
+.food.done {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.message {
+  height: 5vh;
+  min-height: 28px;
+  text-align: center;
+  font-size: clamp(14px, 3vw, 22px);
+  font-weight: bold;
+  color: #2f8f5b;
+}
+
+.end-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.94);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.end-card {
+  background: white;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+
+.end-card h2 {
+  color: #3b7c72;
+  font-size: 32px;
+}
+
+.end-card button {
+  border: none;
+  background: #f6a8ca;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 18px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+@media (max-width: 700px) {
+  .stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: 58% 40%;
   }
 
-  50%{
-    transform:translateY(-10px);
-  }
-}
-
-/* BASKETS */
-
-.baskets{
-  z-index:2;
-
-  width:100%;
-  height:34vh;
-
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-
-  gap:10px;
-
-  padding:10px;
-}
-
-.basketBox{
-  background:rgba(255,255,255,.4);
-
-  border-radius:24px;
-
-  display:flex;
-  flex-direction:column;
-
-  justify-content:flex-end;
-  align-items:center;
-
-  padding:10px;
-}
-
-.basket{
-  width:95%;
-  height:75%;
-
-  border-radius:0 0 40px 40px;
-  border:6px solid #333;
-
-  position:relative;
-
-  cursor:pointer;
-}
-
-.basket::before{
-  content:"";
-
-  position:absolute;
-
-  left:12%;
-  right:12%;
-  top:-22px;
-
-  height:35px;
-
-  border:6px solid #333;
-  border-bottom:none;
-
-  border-radius:50px 50px 0 0;
-}
-
-.red{
-  background:#f8362d;
-}
-
-.blue{
-  background:#356ae8;
-}
-
-.yellow{
-  background:#f8cf2f;
-}
-
-.label{
-  margin-top:6px;
-
-  font-size:clamp(18px,3vw,30px);
-  font-weight:bold;
-
-  color:#222;
-}
-
-/* MESSAGE */
-
-#message{
-  position:absolute;
-
-  top:42%;
-  left:50%;
-
-  transform:translate(-50%,-50%);
-
-  z-index:5;
-
-  background:#fff;
-
-  padding:15px 25px;
-
-  border-radius:20px;
-
-  font-size:clamp(22px,5vw,40px);
-  font-weight:bold;
-
-  display:none;
-
-  box-shadow:0 8px 20px rgba(0,0,0,.2);
-}
-
-/* END SCREEN */
-
-#endScreen{
-  justify-content:center;
-  align-items:center;
-}
-
-#endScreen h1{
-  z-index:2;
-
-  background:#fff;
-
-  padding:25px;
-
-  border-radius:25px;
-
-  font-size:clamp(30px,7vw,60px);
-
-  color:#333;
-}
-
-button{
-  z-index:2;
-
-  margin-top:20px;
-
-  padding:14px 26px;
-
-  border:none;
-
-  border-radius:18px;
-
-  background:#333;
-  color:#fff;
-
-  font-size:20px;
-
-  cursor:pointer;
-}
-
-/* CONFETTI */
-
-.confetti{
-  position:absolute;
-
-  width:12px;
-  height:14px;
-
-  top:-20px;
-
-  animation:fall 3s linear infinite;
-}
-
-@keyframes fall{
-
-  to{
-    transform:translateY(110vh) rotate(360deg);
-  }
-}
-
-/* MOBILE */
-
-@media(max-height:650px){
-
-  .objects{
-    height:45vh;
+  .plate {
+    width: min(86vw, 48vh);
+    height: min(86vw, 48vh);
   }
 
-  .baskets{
-    height:38vh;
+  .food-grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 
-  .obj{
-    width:min(14vw,70px);
-    height:min(14vw,70px);
+  .food {
+    font-size: clamp(20px, 7vw, 34px);
   }
 }
-
 </style>
 </head>
 
 <body>
-
-<!-- AUDIO -->
-
-<audio id="correctSound" src="assets/correct.mp3" preload="auto"></audio>
-<audio id="wrongSound" src="assets/wrong.mp3" preload="auto"></audio>
-<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3" preload="auto"></audio>
-
-<!-- LOGO SCREEN -->
-
-<div id="logoScreen" class="screen active">
-
-  <img src="assets/innovine-logo.png" alt="Logo">
-
-</div>
-
-<!-- GAME SCREEN -->
-
-<div id="gameScreen" class="screen">
-
-  <div class="curve c1"></div>
-  <div class="curve c2"></div>
-  <div class="curve c3"></div>
-  <div class="curve c4"></div>
+<div class="game">
 
   <div class="header">
-    Primary Colours
+    <h1>My Healthy Plate</h1>
+    <div class="score">⭐ <span id="score">0</span>/15</div>
   </div>
 
   <div class="instruction">
-    Tap an object. Then tap the matching colour basket.
+    Tap a food item. Then tap the correct section on the plate.
   </div>
 
-  <div class="objects" id="objects"></div>
-
-  <div class="baskets">
-
-    <div class="basketBox">
-
-      <div class="basket red" data-colour="red"></div>
-
-      <div class="label">Red</div>
-
+  <div class="stage">
+    <div class="plate-area">
+      <div class="plate">
+        <div class="zone fruits" data-group="fruits"><span>Fruits</span></div>
+        <div class="zone vegetables" data-group="vegetables"><span>Vegetables</span></div>
+        <div class="zone grains" data-group="grains"><span>Grains</span></div>
+        <div class="zone protein" data-group="protein"><span>Protein</span></div>
+        <div class="zone dairy" data-group="dairy"><span>Dairy</span></div>
+      </div>
     </div>
 
-    <div class="basketBox">
-
-      <div class="basket blue" data-colour="blue"></div>
-
-      <div class="label">Blue</div>
-
+    <div class="food-area">
+      <div class="food-title">Choose and place the food</div>
+      <div class="food-grid" id="foodGrid"></div>
     </div>
-
-    <div class="basketBox">
-
-      <div class="basket yellow" data-colour="yellow"></div>
-
-      <div class="label">Yellow</div>
-
-    </div>
-
   </div>
 
-  <div id="message"></div>
-
+  <div class="message" id="message"></div>
 </div>
 
-<!-- END SCREEN -->
-
-<div id="endScreen" class="screen">
-
-  <div class="curve c1"></div>
-  <div class="curve c2"></div>
-  <div class="curve c3"></div>
-  <div class="curve c4"></div>
-
-  <h1>Great Job! 🎉</h1>
-
-  <button onclick="location.reload()">
-    Play Again
-  </button>
-
+<div class="end-screen" id="endScreen">
+  <div class="end-card">
+    <h2>🎉 Amazing!</h2>
+    <p>You made a healthy plate!</p>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
 </div>
 
 <script>
+const foods = [
+  { icon: "🍎", group: "fruits", name: "Apple" },
+  { icon: "🍌", group: "fruits", name: "Banana" },
+  { icon: "🍇", group: "fruits", name: "Grapes" },
 
-/* AUDIO */
+  { icon: "🥕", group: "vegetables", name: "Carrot" },
+  { icon: "🥦", group: "vegetables", name: "Broccoli" },
+  { icon: "🍅", group: "vegetables", name: "Tomato" },
 
-const correctSound = document.getElementById("correctSound");
-const wrongSound = document.getElementById("wrongSound");
-const clapSound = document.getElementById("clapSound");
+  { icon: "🍞", group: "grains", name: "Bread" },
+  { icon: "🍚", group: "grains", name: "Rice" },
+  { icon: "🌽", group: "grains", name: "Corn" },
 
-/* OBJECTS */
+  { icon: "🥚", group: "protein", name: "Egg" },
+  { icon: "🐟", group: "protein", name: "Fish" },
+  { icon: "🫘", group: "protein", name: "Beans" },
 
-const items = [
-
-  /* RED */
-
-  {
-    file:"apple.png",
-    colour:"red"
-  },
-
-  {
-    file:"car.png",
-    colour:"red"
-  },
-
-  {
-    file:"socks.png",
-    colour:"red"
-  },
-
-  {
-    file:"cap.png",
-    colour:"red"
-  },
-
-  /* YELLOW */
-
-  {
-    file:"banana.jpg",
-    colour:"yellow"
-  },
-
-  {
-    file:"pineapple.png",
-    colour:"yellow"
-  },
-
-  {
-    file:"star.jpg",
-    colour:"yellow"
-  },
-
-  {
-    file:"balloon.png",
-    colour:"yellow"
-  },
-
-  /* BLUE */
-
-  {
-    file:"blueberry.png",
-    colour:"blue"
-  },
-
-  {
-    file:"whale.png",
-    colour:"blue"
-  },
-
-  {
-    file:"butterfly.png",
-    colour:"blue"
-  },
-
-  {
-    file:"crayon.png",
-    colour:"blue"
-  }
-
+  { icon: "🥛", group: "dairy", name: "Milk" },
+  { icon: "🧀", group: "dairy", name: "Cheese" },
+  { icon: "🍦", group: "dairy", name: "Curd" }
 ];
 
-/* VARIABLES */
+let selectedFood = null;
+let score = 0;
+let attempts = {};
 
-let selected = null;
-let completed = 0;
+const foodGrid = document.getElementById("foodGrid");
+const scoreEl = document.getElementById("score");
+const message = document.getElementById("message");
 
-/* LOGO SCREEN */
+foods.forEach((food, index) => {
+  const btn = document.createElement("button");
+  btn.className = "food";
+  btn.textContent = food.icon;
+  btn.dataset.group = food.group;
+  btn.dataset.index = index;
+  btn.title = food.name;
 
-setTimeout(() => {
-
-  document
-  .getElementById("logoScreen")
-  .classList
-  .remove("active");
-
-  document
-  .getElementById("gameScreen")
-  .classList
-  .add("active");
-
-},2000);
-
-/* PLAY SOUND */
-
-function playSound(sound){
-
-  sound.currentTime = 0;
-
-  sound.play().catch(()=>{});
-
-}
-
-/* SHUFFLE */
-
-function shuffle(array){
-
-  return array.sort(() => Math.random() - 0.5);
-
-}
-
-/* LOAD OBJECTS */
-
-function loadObjects(){
-
-  const container = document.getElementById("objects");
-
-  shuffle(items).forEach((item,index)=>{
-
-    const img = document.createElement("img");
-
-    img.src = "assets/" + item.file;
-
-    img.className = "obj";
-
-    img.dataset.colour = item.colour;
-
-    img.style.animationDelay = (index * 0.1) + "s";
-
-    img.onclick = () => selectObject(img);
-
-    container.appendChild(img);
-
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".food").forEach(f => f.classList.remove("selected"));
+    btn.classList.add("selected");
+    selectedFood = btn;
+    message.textContent = `Place ${food.name} on the plate.`;
   });
 
-}
+  foodGrid.appendChild(btn);
+});
 
-/* SELECT OBJECT */
-
-function selectObject(img){
-
-  if(img.classList.contains("done")) return;
-
-  document
-  .querySelectorAll(".obj")
-  .forEach(o => o.classList.remove("selected"));
-
-  img.classList.add("selected");
-
-  selected = img;
-
-}
-
-/* BASKET CLICK */
-
-document.querySelectorAll(".basket").forEach(basket => {
-
-  basket.onclick = () => {
-
-    if(!selected){
-
-      showMessage("Pick an object!");
-
+document.querySelectorAll(".zone").forEach(zone => {
+  zone.addEventListener("click", () => {
+    if (!selectedFood) {
+      message.textContent = "First tap a food item.";
       return;
     }
 
-    const objectColour = selected.dataset.colour;
+    const foodIndex = selectedFood.dataset.index;
+    const correctGroup = selectedFood.dataset.group;
+    const chosenGroup = zone.dataset.group;
 
-    const basketColour = basket.dataset.colour;
+    attempts[foodIndex] = attempts[foodIndex] || 0;
 
-    if(objectColour === basketColour){
+    if (correctGroup === chosenGroup) {
+      score++;
+      scoreEl.textContent = score;
+      selectedFood.classList.add("done");
+      selectedFood.classList.remove("selected");
+      selectedFood = null;
 
-      playSound(correctSound);
+      zone.classList.add("correct-flash");
+      setTimeout(() => zone.classList.remove("correct-flash"), 500);
 
-      moveToBasket(selected,basket);
+      message.textContent = "Good job!";
 
-    }else{
+      if (score === foods.length) {
+        setTimeout(() => {
+          document.getElementById("endScreen").style.display = "flex";
+        }, 700);
+      }
+    } else {
+      attempts[foodIndex]++;
 
-      playSound(wrongSound);
+      if (attempts[foodIndex] >= 2) {
+        const correctZone = document.querySelector(`.zone.${correctGroup}`);
+        message.textContent = `Correct answer: ${correctGroup.toUpperCase()}`;
+        correctZone.classList.add("correct-flash");
 
-      showMessage("Try again!");
-
-      if(navigator.vibrate){
-
-        navigator.vibrate(120);
-
+        setTimeout(() => {
+          correctZone.classList.remove("correct-flash");
+          selectedFood.classList.remove("selected");
+          selectedFood = null;
+        }, 1200);
+      } else {
+        message.textContent = "Try once more.";
       }
     }
-  };
-
+  });
 });
-
-/* MOVE OBJECT */
-
-function moveToBasket(obj,basket){
-
-  const objRect = obj.getBoundingClientRect();
-
-  const basketRect = basket.getBoundingClientRect();
-
-  const clone = obj.cloneNode(true);
-
-  clone.style.position = "fixed";
-
-  clone.style.left = objRect.left + "px";
-
-  clone.style.top = objRect.top + "px";
-
-  clone.style.width = objRect.width + "px";
-
-  clone.style.height = objRect.height + "px";
-
-  clone.style.zIndex = "20";
-
-  clone.style.transition = "all .7s ease";
-
-  document.body.appendChild(clone);
-
-  obj.classList.add("done");
-
-  obj.classList.remove("selected");
-
-  selected = null;
-
-  setTimeout(()=>{
-
-    clone.style.left =
-    (basketRect.left + basketRect.width/2 - objRect.width/2) + "px";
-
-    clone.style.top =
-    (basketRect.top + basketRect.height/2 - objRect.height/2) + "px";
-
-    clone.style.transform = "scale(.7)";
-
-  },30);
-
-  setTimeout(()=>{
-
-    clone.remove();
-
-    completed++;
-
-    showMessage("Good job!");
-
-    if(completed === items.length){
-
-      setTimeout(showEndScreen,1000);
-
-    }
-
-  },750);
-
-}
-
-/* MESSAGE */
-
-function showMessage(text){
-
-  const message = document.getElementById("message");
-
-  message.innerText = text;
-
-  message.style.display = "block";
-
-  setTimeout(()=>{
-
-    message.style.display = "none";
-
-  },700);
-
-}
-
-/* END SCREEN */
-
-function showEndScreen(){
-
-  document
-  .getElementById("gameScreen")
-  .classList
-  .remove("active");
-
-  document
-  .getElementById("endScreen")
-  .classList
-  .add("active");
-
-  playSound(clapSound);
-
-  createConfetti();
-
-}
-
-/* CONFETTI */
-
-function createConfetti(){
-
-  const colours = [
-    "#f8362d",
-    "#356ae8",
-    "#f8cf2f",
-    "#6ed46e",
-    "#d27cc2"
-  ];
-
-  for(let i=0;i<80;i++){
-
-    const confetti = document.createElement("div");
-
-    confetti.className = "confetti";
-
-    confetti.style.left = Math.random()*100 + "vw";
-
-    confetti.style.background =
-    colours[Math.floor(Math.random()*colours.length)];
-
-    confetti.style.animationDelay =
-    Math.random()*2 + "s";
-
-    confetti.style.animationDuration =
-    (2 + Math.random()*2) + "s";
-
-    document
-    .getElementById("endScreen")
-    .appendChild(confetti);
-
-  }
-
-}
-
-/* START GAME */
-
-loadObjects();
-
 </script>
-
 </body>
 </html>
