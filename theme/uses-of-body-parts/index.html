@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>My Body Parts</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:"Comic Sans MS","Trebuchet MS",sans-serif;
+  background:#57d6d6;
+}
+
+#game{
+  width:100vw;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* SLIDES */
+
+.slide{
+  width:100vw;
+  height:100vh;
+  display:none;
+  position:relative;
+  overflow:hidden;
+}
+
+.slide.active{
+  display:flex;
+}
+
+/* LOGO SLIDE */
+
+.logo-slide{
+  background:white;
+  justify-content:center;
+  align-items:center;
+}
+
+.logo-slide img{
+  width:65%;
+  max-width:380px;
+  object-fit:contain;
+}
+
+/* GAME SLIDE */
+
+.game-slide{
+  background:#57d6d6;
+  flex-direction:column;
+}
+
+.top-bar{
+  width:100%;
+  height:58px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 18px;
+  color:white;
+  font-weight:bold;
+}
+
+.back-btn{
+  font-size:38px;
+  cursor:pointer;
+}
+
+.score{
+  font-size:24px;
+  background:rgba(255,255,255,0.25);
+  padding:8px 16px;
+  border-radius:20px;
+}
+
+/* MAIN AREA */
+
+.main-area{
+  width:100%;
+  height:calc(100vh - 58px);
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  padding:5px 18px 18px;
+}
+
+/* FACE */
+
+.face-area{
+  width:47%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.face{
+  width:min(38vw,360px);
+  height:min(38vw,360px);
+  min-width:210px;
+  min-height:210px;
+  background:#f4a98b;
+  border-radius:50%;
+  position:relative;
+}
+
+.hair{
+  position:absolute;
+  width:105%;
+  height:48%;
+  background:#42120f;
+  top:-14%;
+  left:-2%;
+  border-radius:60% 60% 35% 35%;
+}
+
+.hair:before{
+  content:"";
+  position:absolute;
+  width:45%;
+  height:70%;
+  background:#42120f;
+  left:-6%;
+  top:22%;
+  border-radius:80% 30% 50% 70%;
+}
+
+.hair:after{
+  content:"";
+  position:absolute;
+  width:42%;
+  height:55%;
+  background:#42120f;
+  right:-6%;
+  top:20%;
+  border-radius:30% 80% 60% 40%;
+}
+
+.ear{
+  position:absolute;
+  width:20%;
+  height:27%;
+  background:#ee9b7e;
+  top:39%;
+  border-radius:50%;
+}
+
+.ear.left{left:-10%;}
+.ear.right{right:-10%;}
+
+.eye{
+  position:absolute;
+  width:18%;
+  height:19%;
+  background:white;
+  border:4px solid #44201b;
+  border-radius:50%;
+  top:36%;
+}
+
+.eye.left{left:26%;}
+.eye.right{right:26%;}
+
+.eye:before{
+  content:"";
+  position:absolute;
+  width:42%;
+  height:42%;
+  background:#8d3727;
+  border-radius:50%;
+  top:27%;
+  left:30%;
+}
+
+.nose{
+  position:absolute;
+  width:10%;
+  height:9%;
+  border:5px solid #c46c55;
+  border-bottom:none;
+  border-radius:50% 50% 0 0;
+  top:52%;
+  left:45%;
+}
+
+.mouth{
+  position:absolute;
+  width:34%;
+  height:18%;
+  background:#32100e;
+  border-radius:0 0 90px 90px;
+  top:67%;
+  left:33%;
+  overflow:hidden;
+}
+
+.mouth:after{
+  content:"";
+  position:absolute;
+  width:65%;
+  height:40%;
+  background:#e57b63;
+  border-radius:50%;
+  bottom:-8%;
+  left:18%;
+}
+
+.cheek{
+  position:absolute;
+  width:12%;
+  height:12%;
+  background:#d56f55;
+  border-radius:50%;
+  top:58%;
+}
+
+.cheek.left{left:14%;}
+.cheek.right{right:14%;}
+
+.arrow{
+  position:absolute;
+  font-size:clamp(48px,8vw,90px);
+  color:#fff0d8;
+  font-weight:bold;
+  text-shadow:2px 2px #d7c2a1;
+  transform:rotate(18deg);
+  display:none;
+  z-index:5;
+}
+
+.question-text{
+  position:absolute;
+  right:4%;
+  top:12%;
+  font-size:clamp(34px,6vw,72px);
+  font-weight:bold;
+  color:#57d6d6;
+  -webkit-text-stroke:2px #111;
+  text-shadow:2px 2px white;
+}
+
+/* OPTIONS */
+
+.options-area{
+  width:48%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:24px;
+}
+
+.option-btn{
+  width:90%;
+  min-height:74px;
+  background:#eefafa;
+  border:7px solid #10242c;
+  border-radius:18px;
+  font-size:clamp(30px,4vw,56px);
+  font-weight:bold;
+  text-align:left;
+  padding:8px 25px;
+  font-family:inherit;
+  cursor:pointer;
+  display:none;
+}
+
+.option-btn:active{
+  transform:scale(0.97);
+}
+
+.feedback{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:clamp(30px,4vw,54px);
+  color:#0bbd1c;
+  font-weight:bold;
+  background:white;
+  padding:8px 24px;
+  border-radius:25px;
+  display:none;
+}
+
+/* END SCREEN */
+
+.end-slide{
+  background:#57d6d6;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+}
+
+.end-card{
+  background:white;
+  padding:35px;
+  border-radius:30px;
+  width:88%;
+  max-width:600px;
+  box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+
+.end-card h1{
+  color:#ff4fb2;
+  font-size:clamp(52px,8vw,92px);
+  margin:0;
+}
+
+.end-card p{
+  color:#2487c7;
+  font-size:clamp(26px,4vw,44px);
+  font-weight:bold;
+}
+
+.play-again{
+  border:none;
+  background:#2487c7;
+  color:white;
+  padding:16px 34px;
+  border-radius:28px;
+  font-size:clamp(24px,3vw,38px);
+  font-family:inherit;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* ANIMATIONS */
+
+.giggle{
+  animation:giggle 0.35s;
+}
+
+@keyframes giggle{
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-8px);}
+  50%{transform:translateX(8px);}
+  75%{transform:translateX(-6px);}
+  100%{transform:translateX(0);}
+}
+
+.glow{
+  animation:glow 0.8s infinite alternate;
+}
+
+@keyframes glow{
+  from{box-shadow:0 0 10px #00ff44;}
+  to{box-shadow:0 0 30px #00ff44;}
+}
+
+.confetti{
+  position:fixed;
+  top:-20px;
+  width:12px;
+  height:18px;
+  z-index:9999;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+  .top-bar{
+    height:48px;
+  }
+
+  .main-area{
+    height:calc(100vh - 48px);
+    flex-direction:row;
+    padding:4px 8px 10px;
+  }
+
+  .face-area{
+    width:46%;
+  }
+
+  .options-area{
+    width:52%;
+    gap:14px;
+  }
+
+  .face{
+    width:42vw;
+    height:42vw;
+    min-width:150px;
+    min-height:150px;
+  }
+
+  .question-text{
+    top:8%;
+    right:3%;
+    font-size:clamp(28px,7vw,44px);
+    -webkit-text-stroke:1px #111;
+  }
+
+  .option-btn{
+    width:96%;
+    min-height:58px;
+    border:5px solid #10242c;
+    border-radius:14px;
+    font-size:clamp(23px,6vw,34px);
+    padding:6px 16px;
+  }
+
+  .feedback{
+    bottom:8px;
+    font-size:28px;
+  }
+}
+
+@media(max-height:500px){
+  .option-btn{
+    min-height:50px;
+    font-size:26px;
+  }
+
+  .options-area{
+    gap:10px;
+  }
+
+  .feedback{
+    bottom:5px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+  <!-- LOGO SLIDE -->
+  <div class="slide logo-slide active" id="logoSlide">
+    <img src="assets/innovine-logo.png" alt="Innovine Logo">
+  </div>
+
+  <!-- GAME SLIDE -->
+  <div class="slide game-slide" id="gameSlide">
+
+    <div class="top-bar">
+      <div class="back-btn" onclick="restartGame()">←</div>
+      <div class="score">★ <span id="questionNumber">1</span>/15 &nbsp; ✓ <span id="score">0</span></div>
+    </div>
+
+    <div class="main-area">
+
+      <div class="face-area">
+        <div class="face">
+          <div class="hair"></div>
+          <div class="ear left"></div>
+          <div class="ear right"></div>
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="nose"></div>
+          <div class="mouth"></div>
+          <div class="cheek left"></div>
+          <div class="cheek right"></div>
+        </div>
+
+        <div class="arrow" id="arrow">↜</div>
+      </div>
+
+      <div class="question-text" id="questionText">What's this?</div>
+
+      <div class="options-area">
+        <button class="option-btn" onclick="checkAnswer(this)"></button>
+        <button class="option-btn" onclick="checkAnswer(this)"></button>
+        <button class="option-btn" onclick="checkAnswer(this)"></button>
+      </div>
+
+      <div class="feedback" id="feedback">✓ Good Job!</div>
+
+    </div>
+  </div>
+
+  <!-- END SLIDE -->
+  <div class="slide end-slide" id="endSlide">
+    <div class="end-card">
+      <h1>Excellent!</h1>
+      <p>You named all the body parts!</p>
+      <button class="play-again" onclick="restartGame()">Play Again</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- AUDIO -->
+<audio id="correctSound" src="assets/correct.mp3"></audio>
+<audio id="wrongSound" src="assets/wrong.mp3"></audio>
+<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
+
+<script>
+const questions = [
+  {
+    answer:"eye",
+    options:["nose","mouth","eye"],
+    arrow:{left:"55%",top:"35%",rotate:"18deg"}
+  },
+  {
+    answer:"nose",
+    options:["ear","nose","hair"],
+    arrow:{left:"48%",top:"50%",rotate:"-10deg"}
+  },
+  {
+    answer:"mouth",
+    options:["mouth","eye","hand"],
+    arrow:{left:"45%",top:"64%",rotate:"-20deg"}
+  },
+  {
+    answer:"ear",
+    options:["leg","ear","nose"],
+    arrow:{left:"73%",top:"42%",rotate:"10deg"}
+  },
+  {
+    answer:"hair",
+    options:["hair","mouth","foot"],
+    arrow:{left:"45%",top:"7%",rotate:"35deg"}
+  },
+  {
+    answer:"cheek",
+    options:["eye","cheek","ear"],
+    arrow:{left:"63%",top:"57%",rotate:"10deg"}
+  },
+  {
+    answer:"head",
+    options:["head","hand","leg"],
+    arrow:{left:"42%",top:"20%",rotate:"20deg"}
+  },
+  {
+    answer:"eye",
+    options:["eye","foot","arm"],
+    arrow:{left:"30%",top:"35%",rotate:"-8deg"}
+  },
+  {
+    answer:"ear",
+    options:["nose","ear","mouth"],
+    arrow:{left:"13%",top:"42%",rotate:"180deg"}
+  },
+  {
+    answer:"nose",
+    options:["nose","eye","cheek"],
+    arrow:{left:"48%",top:"50%",rotate:"-10deg"}
+  },
+  {
+    answer:"mouth",
+    options:["hair","mouth","ear"],
+    arrow:{left:"45%",top:"64%",rotate:"-20deg"}
+  },
+  {
+    answer:"cheek",
+    options:["cheek","nose","hair"],
+    arrow:{left:"25%",top:"57%",rotate:"180deg"}
+  },
+  {
+    answer:"hair",
+    options:["ear","hair","eye"],
+    arrow:{left:"52%",top:"8%",rotate:"30deg"}
+  },
+  {
+    answer:"head",
+    options:["mouth","head","nose"],
+    arrow:{left:"42%",top:"20%",rotate:"20deg"}
+  },
+  {
+    answer:"eye",
+    options:["mouth","eye","ear"],
+    arrow:{left:"55%",top:"35%",rotate:"18deg"}
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let wrongAttempts = 0;
+let locked = false;
+
+const logoSlide = document.getElementById("logoSlide");
+const gameSlide = document.getElementById("gameSlide");
+const endSlide = document.getElementById("endSlide");
+
+const questionNumber = document.getElementById("questionNumber");
+const scoreBox = document.getElementById("score");
+const arrow = document.getElementById("arrow");
+const optionButtons = document.querySelectorAll(".option-btn");
+const feedback = document.getElementById("feedback");
+
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+const clapSound = document.getElementById("clapSound");
+
+window.onload = function(){
+  setTimeout(function(){
+    logoSlide.classList.remove("active");
+    gameSlide.classList.add("active");
+    loadQuestion();
+  },2000);
+};
+
+function loadQuestion(){
+  locked = true;
+  wrongAttempts = 0;
+
+  feedback.style.display = "none";
+  arrow.style.display = "block";
+
+  optionButtons.forEach(function(btn){
+    btn.style.display = "none";
+    btn.classList.remove("giggle","glow");
+    btn.disabled = false;
+  });
+
+  const q = questions[currentQuestion];
+
+  arrow.style.left = q.arrow.left;
+  arrow.style.top = q.arrow.top;
+  arrow.style.transform = "rotate(" + q.arrow.rotate + ")";
+
+  questionNumber.textContent = currentQuestion + 1;
+  scoreBox.textContent = score;
+
+  setTimeout(function(){
+    q.options.forEach(function(option,index){
+      optionButtons[index].textContent = option;
+      optionButtons[index].style.display = "block";
+    });
+    locked = false;
+  },1000);
+}
+
+function checkAnswer(button){
+  if(locked) return;
+
+  const selected = button.textContent.trim().toLowerCase();
+  const correct = questions[currentQuestion].answer;
+
+  if(selected === correct){
+    locked = true;
+    score++;
+    scoreBox.textContent = score;
+
+    feedback.style.display = "block";
+    playSound(correctSound);
+
+    setTimeout(function(){
+      currentQuestion++;
+
+      if(currentQuestion < questions.length){
+        loadQuestion();
+      }else{
+        showEndScreen();
+      }
+    },1000);
+
+  }else{
+    wrongAttempts++;
+    playSound(wrongSound);
+
+    button.classList.add("giggle");
+
+    setTimeout(function(){
+      button.classList.remove("giggle");
+    },350);
+
+    if(wrongAttempts >= 2){
+      optionButtons.forEach(function(btn){
+        if(btn.textContent.trim().toLowerCase() === correct){
+          btn.classList.add("glow");
+        }
+      });
+    }
+  }
+}
+
+function showEndScreen(){
+  gameSlide.classList.remove("active");
+  endSlide.classList.add("active");
+  playSound(clapSound);
+  launchConfetti();
+}
+
+function restartGame(){
+  currentQuestion = 0;
+  score = 0;
+  wrongAttempts = 0;
+  locked = false;
+
+  endSlide.classList.remove("active");
+  gameSlide.classList.remove("active");
+  logoSlide.classList.add("active");
+
+  setTimeout(function(){
+    logoSlide.classList.remove("active");
+    gameSlide.classList.add("active");
+    loadQuestion();
+  },2000);
+}
+
+function playSound(sound){
+  sound.currentTime = 0;
+  sound.play().catch(function(){});
+}
+
+function launchConfetti(){
+  const colors = ["#ff4fb2","#ffe600","#36a7f0","#4dff4d","#ff8a00"];
+
+  for(let i=0;i<100;i++){
+    const piece = document.createElement("div");
+    piece.className = "confetti";
+    piece.style.left = Math.random()*100 + "vw";
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.animationDelay = Math.random()*1.5 + "s";
+    document.body.appendChild(piece);
+
+    setTimeout(function(){
+      piece.remove();
+    },4000);
+  }
+}
+</script>
+
+</body>
+</html>
