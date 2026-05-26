@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Body Parts Matching Game</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:"Comic Sans MS","Trebuchet MS",sans-serif;
+  background:
+    repeating-linear-gradient(90deg,#f4a3d1 0 38px,#eef5a8 38px 76px),
+    repeating-linear-gradient(0deg,#f4a3d1 0 38px,#eef5a8 38px 76px);
+  background-blend-mode:multiply;
+}
+
+.slide{
+  width:100vw;
+  height:100vh;
+  display:none;
+  position:relative;
+  overflow:hidden;
+}
+
+.slide.active{display:flex}
+
+.logo-slide{
+  background:white;
+  justify-content:center;
+  align-items:center;
+}
+
+.logo-slide img{
+  width:70%;
+  max-width:400px;
+  object-fit:contain;
+}
+
+.game-slide{
+  justify-content:center;
+  align-items:center;
+}
+
+.game-card{
+  width:92vw;
+  height:92vh;
+  background:white;
+  border:8px solid #ec1593;
+  border-radius:45px;
+  position:relative;
+  overflow:hidden;
+  padding:12px;
+}
+
+.header{
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:#0d2027;
+  font-weight:bold;
+}
+
+.back-btn{
+  font-size:38px;
+  cursor:pointer;
+}
+
+.title{
+  font-size:clamp(22px,4vw,44px);
+  text-align:center;
+  color:#ec1593;
+}
+
+.score{
+  font-size:clamp(18px,3vw,28px);
+  background:#eefafa;
+  border:4px solid #0d2027;
+  padding:5px 12px;
+  border-radius:20px;
+}
+
+.instruction{
+  width:max-content;
+  max-width:90%;
+  margin:0 auto 6px;
+  padding:7px 18px;
+  border:4px solid #0d2027;
+  border-radius:20px;
+  background:#fff7cf;
+  font-size:clamp(18px,3vw,30px);
+  font-weight:bold;
+  text-align:center;
+}
+
+.board{
+  width:100%;
+  height:calc(100% - 120px);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:relative;
+  padding:8px 24px;
+}
+
+.column{
+  width:35%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-around;
+  gap:8px;
+  z-index:2;
+}
+
+.item{
+  width:100%;
+  height:28%;
+  background:#eefafa;
+  border:5px solid #0d2027;
+  border-radius:22px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  position:relative;
+  box-shadow:0 5px 0 rgba(0,0,0,0.2);
+}
+
+.item img{
+  max-width:82%;
+  max-height:82%;
+  object-fit:contain;
+  pointer-events:none;
+}
+
+.item.selected{
+  border-color:#ec1593;
+  box-shadow:0 0 20px #ec1593;
+}
+
+.item.matched{
+  opacity:0.75;
+  pointer-events:none;
+}
+
+svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:1;
+  pointer-events:none;
+}
+
+line{
+  stroke:#ec1593;
+  stroke-width:8;
+  stroke-linecap:round;
+}
+
+.feedback{
+  position:absolute;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  background:white;
+  color:#10b917;
+  padding:8px 24px;
+  border-radius:24px;
+  font-size:clamp(24px,4vw,42px);
+  font-weight:bold;
+  display:none;
+  border:4px solid #10b917;
+  z-index:5;
+}
+
+.end-slide{
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.end-card{
+  background:white;
+  width:88%;
+  max-width:620px;
+  padding:38px 24px;
+  border:8px solid #ec1593;
+  border-radius:35px;
+}
+
+.end-card h1{
+  color:#ec1593;
+  font-size:clamp(54px,8vw,90px);
+}
+
+.end-card p{
+  color:#2487c7;
+  font-size:clamp(26px,4vw,42px);
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.play-again{
+  margin-top:24px;
+  border:none;
+  background:#2487c7;
+  color:white;
+  font-size:clamp(24px,4vw,38px);
+  padding:15px 34px;
+  border-radius:28px;
+  font-family:inherit;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.giggle{animation:giggle .35s}
+
+@keyframes giggle{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-8px)}
+  50%{transform:translateX(8px)}
+  75%{transform:translateX(-6px)}
+  100%{transform:translateX(0)}
+}
+
+.glow{
+  animation:glow .8s infinite alternate;
+}
+
+@keyframes glow{
+  from{box-shadow:0 0 10px #00ff44}
+  to{box-shadow:0 0 34px #00ff44}
+}
+
+.confetti{
+  position:fixed;
+  top:-20px;
+  width:12px;
+  height:18px;
+  z-index:9999;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+@media(max-width:700px){
+  .game-card{
+    width:96vw;
+    height:94vh;
+    border-radius:28px;
+    border:5px solid #ec1593;
+    padding:8px;
+  }
+
+  .header{
+    height:48px;
+  }
+
+  .back-btn{
+    font-size:30px;
+  }
+
+  .title{
+    font-size:clamp(18px,5vw,28px);
+  }
+
+  .score{
+    font-size:16px;
+    padding:4px 8px;
+    border:3px solid #0d2027;
+  }
+
+  .instruction{
+    font-size:clamp(15px,4vw,22px);
+    padding:5px 10px;
+    border:3px solid #0d2027;
+  }
+
+  .board{
+    height:calc(100% - 100px);
+    padding:4px 8px;
+  }
+
+  .column{
+    width:38%;
+  }
+
+  .item{
+    border:4px solid #0d2027;
+    border-radius:16px;
+  }
+
+  line{
+    stroke-width:6;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="slide logo-slide active" id="logoSlide">
+  <img src="assets/innovine-logo.png" alt="Innovine Logo">
+</div>
+
+<div class="slide game-slide" id="gameSlide">
+  <div class="game-card">
+
+    <div class="header">
+      <div class="back-btn" onclick="restartGame()">←</div>
+      <div class="title">Body Parts Matching Game</div>
+      <div class="score">★ <span id="roundNo">1</span>/5 &nbsp; ✓ <span id="score">0</span></div>
+    </div>
+
+    <div class="instruction">Tap and tap on the correct match</div>
+
+    <div class="board" id="board">
+      <svg id="lineSvg"></svg>
+
+      <div class="column" id="leftColumn"></div>
+      <div class="column" id="rightColumn"></div>
+
+      <div class="feedback" id="feedback">✓ Good Job!</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide end-slide" id="endSlide">
+  <div class="end-card">
+    <h1>Excellent!</h1>
+    <p>You matched all body parts correctly!</p>
+    <button class="play-again" onclick="restartGame()">Play Again</button>
+  </div>
+</div>
+
+<audio id="correctSound" src="assets/correct.mp3"></audio>
+<audio id="wrongSound" src="assets/wrong.mp3"></audio>
+<audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
+
+<script>
+const allPairs = [
+  {part:"nose", use:"smelling", partImg:"assets/nose.png", useImg:"assets/smelling.png"},
+  {part:"mouth", use:"eating", partImg:"assets/mouth.png", useImg:"assets/eating.png"},
+  {part:"legs", use:"running", partImg:"assets/legs.png", useImg:"assets/running.png"},
+  {part:"hand", use:"writing", partImg:"assets/hand.png", useImg:"assets/writing.png"},
+  {part:"ears", use:"listening", partImg:"assets/ears.png", useImg:"assets/listening.png"},
+  {part:"eye", use:"seeing", partImg:"assets/eye.png", useImg:"assets/seeing.png"}
+];
+
+const rounds = [
+  ["nose","mouth","eye"],
+  ["legs","hand","ears"],
+  ["mouth","legs","nose"],
+  ["eye","hand","ears"],
+  ["nose","legs","eye"]
+];
+
+let currentRound = 0;
+let score = 0;
+let selectedLeft = null;
+let wrongAttempts = 0;
+let matchedCount = 0;
+let locked = false;
+
+const logoSlide = document.getElementById("logoSlide");
+const gameSlide = document.getElementById("gameSlide");
+const endSlide = document.getElementById("endSlide");
+
+const leftColumn = document.getElementById("leftColumn");
+const rightColumn = document.getElementById("rightColumn");
+const board = document.getElementById("board");
+const svg = document.getElementById("lineSvg");
+
+const roundNo = document.getElementById("roundNo");
+const scoreBox = document.getElementById("score");
+const feedback = document.getElementById("feedback");
+
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+const clapSound = document.getElementById("clapSound");
+
+window.onload = function(){
+  setTimeout(function(){
+    logoSlide.classList.remove("active");
+    gameSlide.classList.add("active");
+    loadRound();
+  },2000);
+};
+
+function shuffle(array){
+  return array.sort(function(){return Math.random() - 0.5});
+}
+
+function loadRound(){
+  locked = false;
+  selectedLeft = null;
+  wrongAttempts = 0;
+  matchedCount = 0;
+  feedback.style.display = "none";
+  leftColumn.innerHTML = "";
+  rightColumn.innerHTML = "";
+  svg.innerHTML = "";
+
+  roundNo.textContent = currentRound + 1;
+  scoreBox.textContent = score;
+
+  const currentParts = rounds[currentRound];
+  const selectedPairs = allPairs.filter(function(pair){
+    return currentParts.includes(pair.part);
+  });
+
+  const leftItems = shuffle(selectedPairs.slice());
+  const rightItems = shuffle(selectedPairs.slice());
+
+  leftItems.forEach(function(pair){
+    const div = document.createElement("div");
+    div.className = "item left-item";
+    div.dataset.part = pair.part;
+    div.dataset.match = pair.use;
+    div.innerHTML = '<img src="' + pair.partImg + '" alt="' + pair.part + '">';
+    div.onclick = function(){selectLeft(div)};
+    leftColumn.appendChild(div);
+  });
+
+  rightItems.forEach(function(pair){
+    const div = document.createElement("div");
+    div.className = "item right-item";
+    div.dataset.use = pair.use;
+    div.innerHTML = '<img src="' + pair.useImg + '" alt="' + pair.use + '">';
+    div.onclick = function(){selectRight(div)};
+    rightColumn.appendChild(div);
+  });
+}
+
+function selectLeft(item){
+  if(locked || item.classList.contains("matched")) return;
+
+  document.querySelectorAll(".left-item").forEach(function(el){
+    el.classList.remove("selected");
+  });
+
+  selectedLeft = item;
+  selectedLeft.classList.add("selected");
+}
+
+function selectRight(item){
+  if(locked || item.classList.contains("matched")) return;
+
+  if(!selectedLeft){
+    item.classList.add("giggle");
+    setTimeout(function(){item.classList.remove("giggle")},350);
+    return;
+  }
+
+  const correctUse = selectedLeft.dataset.match;
+  const chosenUse = item.dataset.use;
+
+  if(correctUse === chosenUse){
+    locked = true;
+    score++;
+    matchedCount++;
+    wrongAttempts = 0;
+
+    selectedLeft.classList.remove("selected");
+    selectedLeft.classList.add("matched");
+    item.classList.add("matched");
+
+    drawLine(selectedLeft,item);
+
+    feedback.style.display = "block";
+    scoreBox.textContent = score;
+    playSound(correctSound);
+
+    selectedLeft = null;
+
+    setTimeout(function(){
+      feedback.style.display = "none";
+      locked = false;
+
+      if(matchedCount === 3){
+        currentRound++;
+
+        if(currentRound < rounds.length){
+          setTimeout(loadRound,500);
+        }else{
+          showEndScreen();
+        }
+      }
+    },800);
+
+  }else{
+    wrongAttempts++;
+    playSound(wrongSound);
+
+    item.classList.add("giggle");
+    setTimeout(function(){item.classList.remove("giggle")},350);
+
+    if(wrongAttempts >= 2){
+      document.querySelectorAll(".right-item").forEach(function(right){
+        if(right.dataset.use === correctUse && !right.classList.contains("matched")){
+          right.classList.add("glow");
+          setTimeout(function(){right.classList.remove("glow")},1600);
+        }
+      });
+    }
+  }
+}
+
+function drawLine(leftEl,rightEl){
+  const boardRect = board.getBoundingClientRect();
+  const leftRect = leftEl.getBoundingClientRect();
+  const rightRect = rightEl.getBoundingClientRect();
+
+  const x1 = leftRect.right - boardRect.left;
+  const y1 = leftRect.top + leftRect.height/2 - boardRect.top;
+  const x2 = rightRect.left - boardRect.left;
+  const y2 = rightRect.top + rightRect.height/2 - boardRect.top;
+
+  const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+  line.setAttribute("x1",x1);
+  line.setAttribute("y1",y1);
+  line.setAttribute("x2",x2);
+  line.setAttribute("y2",y2);
+
+  svg.appendChild(line);
+}
+
+function showEndScreen(){
+  gameSlide.classList.remove("active");
+  endSlide.classList.add("active");
+  playSound(clapSound);
+  launchConfetti();
+}
+
+function restartGame(){
+  currentRound = 0;
+  score = 0;
+  selectedLeft = null;
+  wrongAttempts = 0;
+  matchedCount = 0;
+  locked = false;
+
+  endSlide.classList.remove("active");
+  gameSlide.classList.remove("active");
+  logoSlide.classList.add("active");
+
+  setTimeout(function(){
+    logoSlide.classList.remove("active");
+    gameSlide.classList.add("active");
+    loadRound();
+  },2000);
+}
+
+function playSound(sound){
+  sound.currentTime = 0;
+  sound.play().catch(function(){});
+}
+
+function launchConfetti(){
+  const colors = ["#ff4fb2","#ffe600","#36a7f0","#4dff4d","#ff8a00"];
+
+  for(let i=0;i<100;i++){
+    const confetti = document.createElement("div");
+    confetti.className = "confetti";
+    confetti.style.left = Math.random()*100 + "vw";
+    confetti.style.background = colors[Math.floor(Math.random()*colors.length)];
+    confetti.style.animationDelay = Math.random()*1.5 + "s";
+
+    document.body.appendChild(confetti);
+
+    setTimeout(function(){
+      confetti.remove();
+    },4000);
+  }
+}
+</script>
+
+</body>
+</html>
