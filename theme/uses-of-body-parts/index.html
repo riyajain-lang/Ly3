@@ -34,8 +34,6 @@ html,body{
   display:flex;
 }
 
-/* LOGO SLIDE */
-
 .logo-slide{
   background:white;
   justify-content:center;
@@ -47,8 +45,6 @@ html,body{
   max-width:400px;
   object-fit:contain;
 }
-
-/* GAME */
 
 .game-slide{
   background:#58d4d4;
@@ -90,12 +86,12 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:10px 18px 18px;
-  gap:22px;
+  padding:8px 18px 18px;
+  gap:24px;
 }
 
 .face-side{
-  width:48%;
+  width:50%;
   height:100%;
   display:flex;
   flex-direction:column;
@@ -111,14 +107,14 @@ html,body{
   background:white;
   padding:8px 22px;
   border-radius:25px;
-  margin-bottom:10px;
+  margin-bottom:8px;
   border:4px solid #0d2027;
 }
 
 .face-box{
   position:relative;
-  width:min(42vw,430px);
-  height:min(42vw,430px);
+  width:min(47vw,500px);
+  height:min(47vw,500px);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -130,12 +126,10 @@ html,body{
   object-fit:contain;
 }
 
-/* CLEAR TARGET MARKER */
-
 .target{
   position:absolute;
-  width:54px;
-  height:54px;
+  width:58px;
+  height:58px;
   border:7px solid #fff3b0;
   border-radius:50%;
   box-shadow:0 0 0 5px rgba(255,255,255,0.7), 0 0 24px #fff3b0;
@@ -144,16 +138,12 @@ html,body{
 }
 
 @keyframes pulse{
-  from{
-    transform:scale(0.88);
-  }
-  to{
-    transform:scale(1.15);
-  }
+  from{ transform:translate(-50%,-50%) scale(0.9); }
+  to{ transform:translate(-50%,-50%) scale(1.15); }
 }
 
 .options-side{
-  width:48%;
+  width:46%;
   height:100%;
   display:flex;
   flex-direction:column;
@@ -194,8 +184,6 @@ html,body{
   display:none;
   border:4px solid #10b917;
 }
-
-/* END */
 
 .end-slide{
   background:#58d4d4;
@@ -238,8 +226,6 @@ html,body{
   cursor:pointer;
 }
 
-/* EFFECTS */
-
 .giggle{
   animation:giggle 0.35s;
 }
@@ -257,12 +243,8 @@ html,body{
 }
 
 @keyframes glow{
-  from{
-    box-shadow:0 0 10px #00ff44;
-  }
-  to{
-    box-shadow:0 0 34px #00ff44;
-  }
+  from{box-shadow:0 0 10px #00ff44;}
+  to{box-shadow:0 0 34px #00ff44;}
 }
 
 .confetti{
@@ -280,8 +262,6 @@ html,body{
     opacity:0;
   }
 }
-
-/* MOBILE */
 
 @media(max-width:700px){
 
@@ -301,11 +281,11 @@ html,body{
   }
 
   .face-side{
-    width:45%;
+    width:48%;
   }
 
   .options-side{
-    width:55%;
+    width:52%;
     gap:12px;
   }
 
@@ -317,13 +297,13 @@ html,body{
   }
 
   .face-box{
-    width:43vw;
-    height:43vw;
+    width:48vw;
+    height:48vw;
   }
 
   .target{
-    width:36px;
-    height:36px;
+    width:40px;
+    height:40px;
     border:5px solid #fff3b0;
   }
 
@@ -364,12 +344,10 @@ html,body{
 
 <body>
 
-<!-- LOGO SLIDE -->
 <div class="slide logo-slide active" id="logoSlide">
   <img src="assets/innovine-logo.png" alt="Innovine Logo">
 </div>
 
-<!-- GAME SLIDE -->
 <div class="slide game-slide" id="gameSlide">
 
   <div class="header">
@@ -400,7 +378,6 @@ html,body{
   </div>
 </div>
 
-<!-- END SLIDE -->
 <div class="slide end-slide" id="endSlide">
   <div class="end-card">
     <h1>Excellent!</h1>
@@ -409,7 +386,6 @@ html,body{
   </div>
 </div>
 
-<!-- AUDIO -->
 <audio id="correctSound" src="assets/correct.mp3"></audio>
 <audio id="wrongSound" src="assets/wrong.mp3"></audio>
 <audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
@@ -417,44 +393,44 @@ html,body{
 <script>
 const questions = [
   {
-    answer:"eye",
-    options:["nose","mouth","eye"],
-    target:{left:"38%",top:"41%"}
-  },
-  {
     answer:"mouth",
     options:["mouth","eye","nose"],
-    target:{left:"50%",top:"66%"}
+    target:{left:"50%",top:"68%"}
   },
   {
     answer:"nose",
     options:["ear","nose","mouth"],
-    target:{left:"50%",top:"52%"}
+    target:{left:"50%",top:"57%"}
   },
   {
     answer:"ear",
     options:["eye","ear","hair"],
-    target:{left:"83%",top:"47%"}
-  },
-  {
-    answer:"hair",
-    options:["hair","mouth","nose"],
-    target:{left:"50%",top:"18%"}
+    target:{left:"84%",top:"50%"}
   },
   {
     answer:"cheek",
     options:["nose","cheek","eye"],
-    target:{left:"31%",top:"57%"}
+    target:{left:"31%",top:"62%"}
   },
   {
-    answer:"head",
+    answer:"hair",
     options:["head","ear","mouth"],
-    target:{left:"50%",top:"31%"}
+    target:{left:"50%",top:"18%"}
   },
   {
     answer:"eye",
     options:["mouth","eye","hair"],
-    target:{left:"62%",top:"41%"}
+    target:{left:"62%",top:"49%"}
+  },
+  {
+    answer:"head",
+    options:["head","mouth","nose"],
+    target:{left:"50%",top:"34%"}
+  },
+  {
+    answer:"eye",
+    options:["nose","eye","ear"],
+    target:{left:"38%",top:"49%"}
   }
 ];
 
@@ -503,7 +479,6 @@ function loadQuestion(){
 
   target.style.left = q.target.left;
   target.style.top = q.target.top;
-  target.style.transform = "translate(-50%,-50%)";
 
   setTimeout(function(){
     q.options.forEach(function(option,index){
