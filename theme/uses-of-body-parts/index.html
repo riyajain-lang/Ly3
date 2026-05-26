@@ -97,7 +97,6 @@ html,body{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  position:relative;
 }
 
 .instruction{
@@ -115,9 +114,6 @@ html,body{
   position:relative;
   width:min(47vw,500px);
   height:min(47vw,500px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
 .face-img{
@@ -132,7 +128,7 @@ html,body{
   height:58px;
   border:7px solid #fff3b0;
   border-radius:50%;
-  box-shadow:0 0 0 5px rgba(255,255,255,0.7), 0 0 24px #fff3b0;
+  box-shadow:0 0 0 5px rgba(255,255,255,0.75), 0 0 24px #fff3b0;
   animation:pulse 0.9s infinite alternate;
   pointer-events:none;
 }
@@ -264,7 +260,6 @@ html,body{
 }
 
 @media(max-width:700px){
-
   .header{
     height:58px;
     padding:6px 10px;
@@ -393,9 +388,9 @@ html,body{
 <script>
 const questions = [
   {
-    answer:"mouth",
+    answer:"nose",
     options:["mouth","eye","nose"],
-    target:{left:"50%",top:"68%"}
+    target:{left:"50%",top:"57%"}
   },
   {
     answer:"nose",
@@ -405,32 +400,32 @@ const questions = [
   {
     answer:"ear",
     options:["eye","ear","hair"],
-    target:{left:"84%",top:"50%"}
+    target:{left:"86%",top:"54%"}
   },
   {
     answer:"cheek",
     options:["nose","cheek","eye"],
-    target:{left:"31%",top:"62%"}
+    target:{left:"32%",top:"64%"}
   },
   {
     answer:"hair",
-    options:["head","ear","mouth"],
-    target:{left:"50%",top:"18%"}
+    options:["hair","ear","mouth"],
+    target:{left:"50%",top:"20%"}
   },
   {
     answer:"eye",
     options:["mouth","eye","hair"],
-    target:{left:"62%",top:"49%"}
+    target:{left:"62%",top:"50%"}
   },
   {
-    answer:"head",
-    options:["head","mouth","nose"],
-    target:{left:"50%",top:"34%"}
+    answer:"mouth",
+    options:["mouth","nose","ear"],
+    target:{left:"50%",top:"69%"}
   },
   {
     answer:"eye",
     options:["nose","eye","ear"],
-    target:{left:"38%",top:"49%"}
+    target:{left:"38%",top:"50%"}
   }
 ];
 
@@ -487,7 +482,7 @@ function loadQuestion(){
     });
 
     locked = false;
-  },1000);
+  },900);
 }
 
 function checkAnswer(button){
