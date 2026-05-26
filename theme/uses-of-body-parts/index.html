@@ -4,40 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>My Body Parts</title>
+<title>Body Parts Quiz</title>
 
 <style>
 *{
   box-sizing:border-box;
+  margin:0;
+  padding:0;
   -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-  margin:0;
-  padding:0;
   width:100%;
   height:100%;
   overflow:hidden;
   font-family:"Comic Sans MS","Trebuchet MS",sans-serif;
-  background:#57d6d6;
+  background:#58d4d4;
 }
-
-#game{
-  width:100vw;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-/* SLIDES */
 
 .slide{
   width:100vw;
   height:100vh;
   display:none;
-  position:relative;
   overflow:hidden;
+  position:relative;
 }
 
 .slide.active{
@@ -53,230 +43,135 @@ html,body{
 }
 
 .logo-slide img{
-  width:65%;
-  max-width:380px;
+  width:70%;
+  max-width:400px;
   object-fit:contain;
 }
 
-/* GAME SLIDE */
+/* GAME */
 
 .game-slide{
-  background:#57d6d6;
+  background:#58d4d4;
   flex-direction:column;
 }
 
-.top-bar{
+.header{
+  height:70px;
   width:100%;
-  height:58px;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   padding:8px 18px;
   color:white;
   font-weight:bold;
 }
 
 .back-btn{
-  font-size:38px;
+  font-size:42px;
   cursor:pointer;
 }
 
-.score{
-  font-size:24px;
-  background:rgba(255,255,255,0.25);
-  padding:8px 16px;
-  border-radius:20px;
+.title{
+  font-size:clamp(28px,4vw,54px);
+  color:white;
+  text-shadow:2px 2px #0d2027;
 }
 
-/* MAIN AREA */
+.score{
+  font-size:clamp(20px,3vw,32px);
+  background:rgba(255,255,255,0.28);
+  padding:8px 18px;
+  border-radius:22px;
+}
 
-.main-area{
+.main{
+  height:calc(100vh - 70px);
   width:100%;
-  height:calc(100vh - 58px);
   display:flex;
   align-items:center;
-  justify-content:space-around;
-  padding:5px 18px 18px;
+  justify-content:center;
+  padding:10px 18px 18px;
+  gap:22px;
 }
 
-/* FACE */
-
-.face-area{
-  width:47%;
+.face-side{
+  width:48%;
   height:100%;
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
   position:relative;
 }
 
-.face{
-  width:min(38vw,360px);
-  height:min(38vw,360px);
-  min-width:210px;
-  min-height:210px;
-  background:#f4a98b;
-  border-radius:50%;
-  position:relative;
-}
-
-.hair{
-  position:absolute;
-  width:105%;
-  height:48%;
-  background:#42120f;
-  top:-14%;
-  left:-2%;
-  border-radius:60% 60% 35% 35%;
-}
-
-.hair:before{
-  content:"";
-  position:absolute;
-  width:45%;
-  height:70%;
-  background:#42120f;
-  left:-6%;
-  top:22%;
-  border-radius:80% 30% 50% 70%;
-}
-
-.hair:after{
-  content:"";
-  position:absolute;
-  width:42%;
-  height:55%;
-  background:#42120f;
-  right:-6%;
-  top:20%;
-  border-radius:30% 80% 60% 40%;
-}
-
-.ear{
-  position:absolute;
-  width:20%;
-  height:27%;
-  background:#ee9b7e;
-  top:39%;
-  border-radius:50%;
-}
-
-.ear.left{left:-10%;}
-.ear.right{right:-10%;}
-
-.eye{
-  position:absolute;
-  width:18%;
-  height:19%;
+.instruction{
+  font-size:clamp(24px,3vw,40px);
+  font-weight:bold;
+  color:#0d2027;
   background:white;
-  border:4px solid #44201b;
+  padding:8px 22px;
+  border-radius:25px;
+  margin-bottom:10px;
+  border:4px solid #0d2027;
+}
+
+.face-box{
+  position:relative;
+  width:min(42vw,430px);
+  height:min(42vw,430px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.face-img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+/* CLEAR TARGET MARKER */
+
+.target{
+  position:absolute;
+  width:54px;
+  height:54px;
+  border:7px solid #fff3b0;
   border-radius:50%;
-  top:36%;
+  box-shadow:0 0 0 5px rgba(255,255,255,0.7), 0 0 24px #fff3b0;
+  animation:pulse 0.9s infinite alternate;
+  pointer-events:none;
 }
 
-.eye.left{left:26%;}
-.eye.right{right:26%;}
-
-.eye:before{
-  content:"";
-  position:absolute;
-  width:42%;
-  height:42%;
-  background:#8d3727;
-  border-radius:50%;
-  top:27%;
-  left:30%;
+@keyframes pulse{
+  from{
+    transform:scale(0.88);
+  }
+  to{
+    transform:scale(1.15);
+  }
 }
 
-.nose{
-  position:absolute;
-  width:10%;
-  height:9%;
-  border:5px solid #c46c55;
-  border-bottom:none;
-  border-radius:50% 50% 0 0;
-  top:52%;
-  left:45%;
-}
-
-.mouth{
-  position:absolute;
-  width:34%;
-  height:18%;
-  background:#32100e;
-  border-radius:0 0 90px 90px;
-  top:67%;
-  left:33%;
-  overflow:hidden;
-}
-
-.mouth:after{
-  content:"";
-  position:absolute;
-  width:65%;
-  height:40%;
-  background:#e57b63;
-  border-radius:50%;
-  bottom:-8%;
-  left:18%;
-}
-
-.cheek{
-  position:absolute;
-  width:12%;
-  height:12%;
-  background:#d56f55;
-  border-radius:50%;
-  top:58%;
-}
-
-.cheek.left{left:14%;}
-.cheek.right{right:14%;}
-
-.arrow{
-  position:absolute;
-  font-size:clamp(48px,8vw,90px);
-  color:#fff0d8;
-  font-weight:bold;
-  text-shadow:2px 2px #d7c2a1;
-  transform:rotate(18deg);
-  display:none;
-  z-index:5;
-}
-
-.question-text{
-  position:absolute;
-  right:4%;
-  top:12%;
-  font-size:clamp(34px,6vw,72px);
-  font-weight:bold;
-  color:#57d6d6;
-  -webkit-text-stroke:2px #111;
-  text-shadow:2px 2px white;
-}
-
-/* OPTIONS */
-
-.options-area{
+.options-side{
   width:48%;
   height:100%;
   display:flex;
   flex-direction:column;
   justify-content:center;
-  gap:24px;
+  gap:22px;
 }
 
 .option-btn{
-  width:90%;
-  min-height:74px;
+  width:100%;
+  min-height:78px;
+  border:6px solid #0d2027;
   background:#eefafa;
-  border:7px solid #10242c;
   border-radius:18px;
   font-size:clamp(30px,4vw,56px);
+  font-family:inherit;
   font-weight:bold;
   text-align:left;
-  padding:8px 25px;
-  font-family:inherit;
+  padding-left:26px;
   cursor:pointer;
   display:none;
 }
@@ -287,62 +182,63 @@ html,body{
 
 .feedback{
   position:absolute;
-  bottom:20px;
   left:50%;
+  bottom:14px;
   transform:translateX(-50%);
-  font-size:clamp(30px,4vw,54px);
-  color:#0bbd1c;
-  font-weight:bold;
   background:white;
-  padding:8px 24px;
-  border-radius:25px;
+  color:#10b917;
+  padding:10px 26px;
+  border-radius:24px;
+  font-size:clamp(28px,4vw,48px);
+  font-weight:bold;
   display:none;
+  border:4px solid #10b917;
 }
 
-/* END SCREEN */
+/* END */
 
 .end-slide{
-  background:#57d6d6;
-  justify-content:center;
+  background:#58d4d4;
   align-items:center;
-  flex-direction:column;
+  justify-content:center;
   text-align:center;
 }
 
 .end-card{
   background:white;
-  padding:35px;
-  border-radius:30px;
   width:88%;
-  max-width:600px;
-  box-shadow:0 10px 20px rgba(0,0,0,0.2);
+  max-width:620px;
+  padding:38px 24px;
+  border-radius:32px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.22);
 }
 
 .end-card h1{
   color:#ff4fb2;
-  font-size:clamp(52px,8vw,92px);
-  margin:0;
+  font-size:clamp(54px,8vw,94px);
 }
 
 .end-card p{
   color:#2487c7;
-  font-size:clamp(26px,4vw,44px);
+  font-size:clamp(26px,4vw,42px);
   font-weight:bold;
+  margin-top:10px;
 }
 
 .play-again{
+  margin-top:24px;
   border:none;
   background:#2487c7;
   color:white;
-  padding:16px 34px;
+  font-size:clamp(24px,4vw,38px);
+  padding:15px 34px;
   border-radius:28px;
-  font-size:clamp(24px,3vw,38px);
   font-family:inherit;
   font-weight:bold;
   cursor:pointer;
 }
 
-/* ANIMATIONS */
+/* EFFECTS */
 
 .giggle{
   animation:giggle 0.35s;
@@ -361,8 +257,12 @@ html,body{
 }
 
 @keyframes glow{
-  from{box-shadow:0 0 10px #00ff44;}
-  to{box-shadow:0 0 30px #00ff44;}
+  from{
+    box-shadow:0 0 10px #00ff44;
+  }
+  to{
+    box-shadow:0 0 34px #00ff44;
+  }
 }
 
 .confetti{
@@ -384,66 +284,79 @@ html,body{
 /* MOBILE */
 
 @media(max-width:700px){
-  .top-bar{
-    height:48px;
+
+  .header{
+    height:58px;
+    padding:6px 10px;
   }
 
-  .main-area{
-    height:calc(100vh - 48px);
-    flex-direction:row;
-    padding:4px 8px 10px;
+  .back-btn{
+    font-size:34px;
   }
 
-  .face-area{
-    width:46%;
+  .main{
+    height:calc(100vh - 58px);
+    padding:6px;
+    gap:8px;
   }
 
-  .options-area{
-    width:52%;
-    gap:14px;
+  .face-side{
+    width:45%;
   }
 
-  .face{
-    width:42vw;
-    height:42vw;
-    min-width:150px;
-    min-height:150px;
+  .options-side{
+    width:55%;
+    gap:12px;
   }
 
-  .question-text{
-    top:8%;
-    right:3%;
-    font-size:clamp(28px,7vw,44px);
-    -webkit-text-stroke:1px #111;
+  .instruction{
+    font-size:clamp(18px,5vw,26px);
+    padding:6px 12px;
+    border:3px solid #0d2027;
+    margin-bottom:6px;
+  }
+
+  .face-box{
+    width:43vw;
+    height:43vw;
+  }
+
+  .target{
+    width:36px;
+    height:36px;
+    border:5px solid #fff3b0;
   }
 
   .option-btn{
-    width:96%;
     min-height:58px;
-    border:5px solid #10242c;
-    border-radius:14px;
+    border:5px solid #0d2027;
     font-size:clamp(23px,6vw,34px);
-    padding:6px 16px;
-  }
-
-  .feedback{
-    bottom:8px;
-    font-size:28px;
-  }
-}
-
-@media(max-height:500px){
-  .option-btn{
-    min-height:50px;
-    font-size:26px;
-  }
-
-  .options-area{
-    gap:10px;
+    padding-left:16px;
+    border-radius:14px;
   }
 
   .feedback{
     bottom:5px;
+    font-size:24px;
+    padding:6px 18px;
+  }
+}
+
+@media(max-height:500px){
+  .header{
+    height:50px;
+  }
+
+  .main{
+    height:calc(100vh - 50px);
+  }
+
+  .option-btn{
+    min-height:48px;
+  }
+
+  .options-side{
+    gap:9px;
   }
 }
 </style>
@@ -451,61 +364,49 @@ html,body{
 
 <body>
 
-<div id="game">
+<!-- LOGO SLIDE -->
+<div class="slide logo-slide active" id="logoSlide">
+  <img src="assets/innovine-logo.png" alt="Innovine Logo">
+</div>
 
-  <!-- LOGO SLIDE -->
-  <div class="slide logo-slide active" id="logoSlide">
-    <img src="assets/innovine-logo.png" alt="Innovine Logo">
+<!-- GAME SLIDE -->
+<div class="slide game-slide" id="gameSlide">
+
+  <div class="header">
+    <div class="back-btn" onclick="restartGame()">←</div>
+    <div class="title">Body Parts Quiz</div>
+    <div class="score">★ <span id="questionNo">1</span>/8 &nbsp; ✓ <span id="score">0</span></div>
   </div>
 
-  <!-- GAME SLIDE -->
-  <div class="slide game-slide" id="gameSlide">
+  <div class="main">
 
-    <div class="top-bar">
-      <div class="back-btn" onclick="restartGame()">←</div>
-      <div class="score">★ <span id="questionNumber">1</span>/15 &nbsp; ✓ <span id="score">0</span></div>
-    </div>
+    <div class="face-side">
+      <div class="instruction">Tap the correct answer</div>
 
-    <div class="main-area">
-
-      <div class="face-area">
-        <div class="face">
-          <div class="hair"></div>
-          <div class="ear left"></div>
-          <div class="ear right"></div>
-          <div class="eye left"></div>
-          <div class="eye right"></div>
-          <div class="nose"></div>
-          <div class="mouth"></div>
-          <div class="cheek left"></div>
-          <div class="cheek right"></div>
-        </div>
-
-        <div class="arrow" id="arrow">↜</div>
+      <div class="face-box">
+        <img src="assets/face.png" class="face-img" alt="Face">
+        <div class="target" id="target"></div>
       </div>
-
-      <div class="question-text" id="questionText">What's this?</div>
-
-      <div class="options-area">
-        <button class="option-btn" onclick="checkAnswer(this)"></button>
-        <button class="option-btn" onclick="checkAnswer(this)"></button>
-        <button class="option-btn" onclick="checkAnswer(this)"></button>
-      </div>
-
-      <div class="feedback" id="feedback">✓ Good Job!</div>
-
     </div>
-  </div>
 
-  <!-- END SLIDE -->
-  <div class="slide end-slide" id="endSlide">
-    <div class="end-card">
-      <h1>Excellent!</h1>
-      <p>You named all the body parts!</p>
-      <button class="play-again" onclick="restartGame()">Play Again</button>
+    <div class="options-side">
+      <button class="option-btn" onclick="checkAnswer(this)"></button>
+      <button class="option-btn" onclick="checkAnswer(this)"></button>
+      <button class="option-btn" onclick="checkAnswer(this)"></button>
     </div>
-  </div>
 
+    <div class="feedback" id="feedback">✓ Good Job!</div>
+
+  </div>
+</div>
+
+<!-- END SLIDE -->
+<div class="slide end-slide" id="endSlide">
+  <div class="end-card">
+    <h1>Excellent!</h1>
+    <p>You completed the Body Parts Quiz!</p>
+    <button class="play-again" onclick="restartGame()">Play Again</button>
+  </div>
 </div>
 
 <!-- AUDIO -->
@@ -518,77 +419,42 @@ const questions = [
   {
     answer:"eye",
     options:["nose","mouth","eye"],
-    arrow:{left:"55%",top:"35%",rotate:"18deg"}
-  },
-  {
-    answer:"nose",
-    options:["ear","nose","hair"],
-    arrow:{left:"48%",top:"50%",rotate:"-10deg"}
+    target:{left:"38%",top:"41%"}
   },
   {
     answer:"mouth",
-    options:["mouth","eye","hand"],
-    arrow:{left:"45%",top:"64%",rotate:"-20deg"}
-  },
-  {
-    answer:"ear",
-    options:["leg","ear","nose"],
-    arrow:{left:"73%",top:"42%",rotate:"10deg"}
-  },
-  {
-    answer:"hair",
-    options:["hair","mouth","foot"],
-    arrow:{left:"45%",top:"7%",rotate:"35deg"}
-  },
-  {
-    answer:"cheek",
-    options:["eye","cheek","ear"],
-    arrow:{left:"63%",top:"57%",rotate:"10deg"}
-  },
-  {
-    answer:"head",
-    options:["head","hand","leg"],
-    arrow:{left:"42%",top:"20%",rotate:"20deg"}
-  },
-  {
-    answer:"eye",
-    options:["eye","foot","arm"],
-    arrow:{left:"30%",top:"35%",rotate:"-8deg"}
-  },
-  {
-    answer:"ear",
-    options:["nose","ear","mouth"],
-    arrow:{left:"13%",top:"42%",rotate:"180deg"}
+    options:["mouth","eye","nose"],
+    target:{left:"50%",top:"66%"}
   },
   {
     answer:"nose",
-    options:["nose","eye","cheek"],
-    arrow:{left:"48%",top:"50%",rotate:"-10deg"}
+    options:["ear","nose","mouth"],
+    target:{left:"50%",top:"52%"}
   },
   {
-    answer:"mouth",
-    options:["hair","mouth","ear"],
-    arrow:{left:"45%",top:"64%",rotate:"-20deg"}
-  },
-  {
-    answer:"cheek",
-    options:["cheek","nose","hair"],
-    arrow:{left:"25%",top:"57%",rotate:"180deg"}
+    answer:"ear",
+    options:["eye","ear","hair"],
+    target:{left:"83%",top:"47%"}
   },
   {
     answer:"hair",
-    options:["ear","hair","eye"],
-    arrow:{left:"52%",top:"8%",rotate:"30deg"}
+    options:["hair","mouth","nose"],
+    target:{left:"50%",top:"18%"}
+  },
+  {
+    answer:"cheek",
+    options:["nose","cheek","eye"],
+    target:{left:"31%",top:"57%"}
   },
   {
     answer:"head",
-    options:["mouth","head","nose"],
-    arrow:{left:"42%",top:"20%",rotate:"20deg"}
+    options:["head","ear","mouth"],
+    target:{left:"50%",top:"31%"}
   },
   {
     answer:"eye",
-    options:["mouth","eye","ear"],
-    arrow:{left:"55%",top:"35%",rotate:"18deg"}
+    options:["mouth","eye","hair"],
+    target:{left:"62%",top:"41%"}
   }
 ];
 
@@ -601,11 +467,11 @@ const logoSlide = document.getElementById("logoSlide");
 const gameSlide = document.getElementById("gameSlide");
 const endSlide = document.getElementById("endSlide");
 
-const questionNumber = document.getElementById("questionNumber");
+const questionNo = document.getElementById("questionNo");
 const scoreBox = document.getElementById("score");
-const arrow = document.getElementById("arrow");
-const optionButtons = document.querySelectorAll(".option-btn");
+const target = document.getElementById("target");
 const feedback = document.getElementById("feedback");
+const buttons = document.querySelectorAll(".option-btn");
 
 const correctSound = document.getElementById("correctSound");
 const wrongSound = document.getElementById("wrongSound");
@@ -624,28 +490,27 @@ function loadQuestion(){
   wrongAttempts = 0;
 
   feedback.style.display = "none";
-  arrow.style.display = "block";
 
-  optionButtons.forEach(function(btn){
+  buttons.forEach(function(btn){
     btn.style.display = "none";
     btn.classList.remove("giggle","glow");
-    btn.disabled = false;
   });
 
   const q = questions[currentQuestion];
 
-  arrow.style.left = q.arrow.left;
-  arrow.style.top = q.arrow.top;
-  arrow.style.transform = "rotate(" + q.arrow.rotate + ")";
-
-  questionNumber.textContent = currentQuestion + 1;
+  questionNo.textContent = currentQuestion + 1;
   scoreBox.textContent = score;
+
+  target.style.left = q.target.left;
+  target.style.top = q.target.top;
+  target.style.transform = "translate(-50%,-50%)";
 
   setTimeout(function(){
     q.options.forEach(function(option,index){
-      optionButtons[index].textContent = option;
-      optionButtons[index].style.display = "block";
+      buttons[index].textContent = option;
+      buttons[index].style.display = "block";
     });
+
     locked = false;
   },1000);
 }
@@ -685,7 +550,7 @@ function checkAnswer(button){
     },350);
 
     if(wrongAttempts >= 2){
-      optionButtons.forEach(function(btn){
+      buttons.forEach(function(btn){
         if(btn.textContent.trim().toLowerCase() === correct){
           btn.classList.add("glow");
         }
@@ -697,6 +562,7 @@ function checkAnswer(button){
 function showEndScreen(){
   gameSlide.classList.remove("active");
   endSlide.classList.add("active");
+
   playSound(clapSound);
   launchConfetti();
 }
@@ -727,15 +593,17 @@ function launchConfetti(){
   const colors = ["#ff4fb2","#ffe600","#36a7f0","#4dff4d","#ff8a00"];
 
   for(let i=0;i<100;i++){
-    const piece = document.createElement("div");
-    piece.className = "confetti";
-    piece.style.left = Math.random()*100 + "vw";
-    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
-    piece.style.animationDelay = Math.random()*1.5 + "s";
-    document.body.appendChild(piece);
+    const confetti = document.createElement("div");
+
+    confetti.className = "confetti";
+    confetti.style.left = Math.random()*100 + "vw";
+    confetti.style.background = colors[Math.floor(Math.random()*colors.length)];
+    confetti.style.animationDelay = Math.random()*1.5 + "s";
+
+    document.body.appendChild(confetti);
 
     setTimeout(function(){
-      piece.remove();
+      confetti.remove();
     },4000);
   }
 }
