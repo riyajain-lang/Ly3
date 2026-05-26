@@ -3,38 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<title>Body Parts Uses</title>
+<title>Body Parts Matching Game</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
 html,body{
   width:100%;
   height:100%;
   overflow:hidden;
   font-family:"Comic Sans MS","Trebuchet MS",sans-serif;
-  background:#58d4d4;
+  background:
+    repeating-linear-gradient(90deg,#f4a3d1 0 38px,#eef5a8 38px 76px),
+    repeating-linear-gradient(0deg,#f4a3d1 0 38px,#eef5a8 38px 76px);
+  background-blend-mode:multiply;
 }
 
 .slide{
   width:100vw;
   height:100vh;
   display:none;
-  overflow:hidden;
   position:relative;
+  overflow:hidden;
 }
 
-.slide.active{
-  display:flex;
-}
-
-/* LOGO */
+.slide.active{display:flex}
 
 .logo-slide{
   background:white;
@@ -48,136 +41,127 @@ html,body{
   object-fit:contain;
 }
 
-/* GAME */
-
 .game-slide{
-  background:#58d4d4;
-  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+.game-card{
+  width:92vw;
+  height:92vh;
+  background:white;
+  border:8px solid #ec1593;
+  border-radius:45px;
+  position:relative;
+  overflow:hidden;
+  padding:12px;
 }
 
 .header{
-  height:74px;
-  width:100%;
+  height:58px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:8px 18px;
-  color:white;
+  color:#0d2027;
   font-weight:bold;
 }
 
 .back-btn{
-  font-size:42px;
+  font-size:38px;
   cursor:pointer;
 }
 
 .title{
-  font-size:clamp(24px,4vw,48px);
-  color:white;
-  text-shadow:2px 2px #0d2027;
+  font-size:clamp(22px,4vw,44px);
   text-align:center;
+  color:#ec1593;
 }
 
 .score{
-  font-size:clamp(18px,3vw,30px);
-  background:rgba(255,255,255,0.28);
-  padding:8px 16px;
-  border-radius:22px;
-  white-space:nowrap;
-}
-
-.main{
-  height:calc(100vh - 74px);
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:8px 18px 18px;
-  gap:24px;
-}
-
-.left-side{
-  width:46%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
+  font-size:clamp(18px,3vw,28px);
+  background:#eefafa;
+  border:4px solid #0d2027;
+  padding:5px 12px;
+  border-radius:20px;
 }
 
 .instruction{
-  font-size:clamp(20px,3vw,34px);
-  font-weight:bold;
-  color:#0d2027;
-  background:white;
+  width:max-content;
+  max-width:90%;
+  margin:0 auto 6px;
+  padding:7px 18px;
   border:4px solid #0d2027;
-  padding:8px 18px;
-  border-radius:24px;
-  text-align:center;
-  margin-bottom:14px;
-}
-
-.body-card{
-  width:90%;
-  max-width:420px;
-  min-height:180px;
+  border-radius:20px;
   background:#fff7cf;
-  border:7px solid #0d2027;
-  border-radius:30px;
+  font-size:clamp(18px,3vw,30px);
+  font-weight:bold;
+  text-align:center;
+}
+
+.board{
+  width:100%;
+  height:calc(100% - 120px);
   display:flex;
-  justify-content:center;
+  justify-content:space-between;
   align-items:center;
-  text-align:center;
-  padding:18px;
-  box-shadow:0 8px 0 rgba(13,32,39,0.35);
+  position:relative;
+  padding:8px 24px;
 }
 
-.body-word{
-  font-size:clamp(46px,7vw,86px);
-  font-weight:bold;
-  color:#ff4fb2;
-  text-transform:lowercase;
-}
-
-.tap-note{
-  margin-top:18px;
-  background:#ffffff;
-  border-radius:22px;
-  padding:8px 18px;
-  border:4px dashed #2487c7;
-  color:#2487c7;
-  font-size:clamp(18px,2.5vw,28px);
-  font-weight:bold;
-  text-align:center;
-}
-
-.right-side{
-  width:50%;
+.column{
+  width:35%;
   height:100%;
   display:flex;
   flex-direction:column;
-  justify-content:center;
-  gap:18px;
+  justify-content:space-around;
+  gap:8px;
+  z-index:2;
 }
 
-.option-btn{
+.item{
   width:100%;
-  min-height:72px;
-  border:6px solid #0d2027;
+  height:28%;
   background:#eefafa;
-  border-radius:18px;
-  font-size:clamp(28px,4vw,52px);
-  font-family:inherit;
-  font-weight:bold;
-  text-align:left;
-  padding-left:26px;
+  border:5px solid #0d2027;
+  border-radius:22px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   cursor:pointer;
-  display:none;
-  text-transform:lowercase;
+  position:relative;
+  box-shadow:0 5px 0 rgba(0,0,0,0.2);
 }
 
-.option-btn:active{
-  transform:scale(0.97);
+.item img{
+  max-width:82%;
+  max-height:82%;
+  object-fit:contain;
+  pointer-events:none;
+}
+
+.item.selected{
+  border-color:#ec1593;
+  box-shadow:0 0 20px #ec1593;
+}
+
+.item.matched{
+  opacity:0.75;
+  pointer-events:none;
+}
+
+svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:1;
+  pointer-events:none;
+}
+
+line{
+  stroke:#ec1593;
+  stroke-width:8;
+  stroke-linecap:round;
 }
 
 .feedback{
@@ -187,21 +171,18 @@ html,body{
   transform:translateX(-50%);
   background:white;
   color:#10b917;
-  padding:9px 24px;
+  padding:8px 24px;
   border-radius:24px;
-  font-size:clamp(26px,4vw,46px);
+  font-size:clamp(24px,4vw,42px);
   font-weight:bold;
   display:none;
   border:4px solid #10b917;
-  z-index:10;
+  z-index:5;
 }
 
-/* END */
-
 .end-slide{
-  background:#58d4d4;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   text-align:center;
 }
 
@@ -210,13 +191,13 @@ html,body{
   width:88%;
   max-width:620px;
   padding:38px 24px;
-  border-radius:32px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.22);
+  border:8px solid #ec1593;
+  border-radius:35px;
 }
 
 .end-card h1{
-  color:#ff4fb2;
-  font-size:clamp(54px,8vw,94px);
+  color:#ec1593;
+  font-size:clamp(54px,8vw,90px);
 }
 
 .end-card p{
@@ -239,27 +220,23 @@ html,body{
   cursor:pointer;
 }
 
-/* EFFECTS */
-
-.giggle{
-  animation:giggle 0.35s;
-}
+.giggle{animation:giggle .35s}
 
 @keyframes giggle{
-  0%{transform:translateX(0);}
-  25%{transform:translateX(-8px);}
-  50%{transform:translateX(8px);}
-  75%{transform:translateX(-6px);}
-  100%{transform:translateX(0);}
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-8px)}
+  50%{transform:translateX(8px)}
+  75%{transform:translateX(-6px)}
+  100%{transform:translateX(0)}
 }
 
 .glow{
-  animation:glow 0.8s infinite alternate;
+  animation:glow .8s infinite alternate;
 }
 
 @keyframes glow{
-  from{box-shadow:0 0 10px #00ff44;}
-  to{box-shadow:0 0 34px #00ff44;}
+  from{box-shadow:0 0 10px #00ff44}
+  to{box-shadow:0 0 34px #00ff44}
 }
 
 .confetti{
@@ -272,113 +249,58 @@ html,body{
 }
 
 @keyframes fall{
-  to{
-    transform:translateY(110vh) rotate(720deg);
-    opacity:0;
-  }
+  to{transform:translateY(110vh) rotate(720deg);opacity:0}
 }
 
-/* MOBILE */
-
 @media(max-width:700px){
+  .game-card{
+    width:96vw;
+    height:94vh;
+    border-radius:28px;
+    border:5px solid #ec1593;
+    padding:8px;
+  }
 
   .header{
-    height:60px;
-    padding:6px 8px;
+    height:48px;
   }
 
   .back-btn{
-    font-size:34px;
+    font-size:30px;
   }
 
   .title{
-    font-size:clamp(20px,5vw,30px);
+    font-size:clamp(18px,5vw,28px);
   }
 
   .score{
-    font-size:18px;
-    padding:6px 10px;
-  }
-
-  .main{
-    height:calc(100vh - 60px);
-    padding:6px;
-    gap:8px;
-  }
-
-  .left-side{
-    width:45%;
-  }
-
-  .right-side{
-    width:55%;
-    gap:10px;
+    font-size:16px;
+    padding:4px 8px;
+    border:3px solid #0d2027;
   }
 
   .instruction{
-    font-size:clamp(16px,4vw,22px);
-    padding:6px 10px;
+    font-size:clamp(15px,4vw,22px);
+    padding:5px 10px;
     border:3px solid #0d2027;
-    margin-bottom:8px;
   }
 
-  .body-card{
-    width:96%;
-    min-height:130px;
-    border:5px solid #0d2027;
-    border-radius:22px;
-    padding:10px;
+  .board{
+    height:calc(100% - 100px);
+    padding:4px 8px;
   }
 
-  .body-word{
-    font-size:clamp(34px,10vw,52px);
+  .column{
+    width:38%;
   }
 
-  .tap-note{
-    margin-top:10px;
-    padding:6px 10px;
-    font-size:clamp(15px,4vw,20px);
-    border:3px dashed #2487c7;
+  .item{
+    border:4px solid #0d2027;
+    border-radius:16px;
   }
 
-  .option-btn{
-    min-height:58px;
-    border:5px solid #0d2027;
-    font-size:clamp(22px,6vw,34px);
-    padding-left:16px;
-    border-radius:14px;
-  }
-
-  .feedback{
-    bottom:5px;
-    font-size:23px;
-    padding:6px 16px;
-  }
-}
-
-@media(max-height:500px){
-  .header{
-    height:52px;
-  }
-
-  .main{
-    height:calc(100vh - 52px);
-  }
-
-  .body-card{
-    min-height:110px;
-  }
-
-  .option-btn{
-    min-height:46px;
-  }
-
-  .right-side{
-    gap:7px;
-  }
-
-  .tap-note{
-    display:none;
+  line{
+    stroke-width:6;
   }
 }
 </style>
@@ -386,92 +308,82 @@ html,body{
 
 <body>
 
-<!-- LOGO SLIDE -->
 <div class="slide logo-slide active" id="logoSlide">
   <img src="assets/innovine-logo.png" alt="Innovine Logo">
 </div>
 
-<!-- GAME SLIDE -->
 <div class="slide game-slide" id="gameSlide">
+  <div class="game-card">
 
-  <div class="header">
-    <div class="back-btn" onclick="restartGame()">←</div>
-    <div class="title">Body Parts Uses</div>
-    <div class="score">★ <span id="questionNo">1</span>/15 &nbsp; ✓ <span id="score">0</span></div>
-  </div>
-
-  <div class="main">
-
-    <div class="left-side">
-      <div class="instruction">Match the body parts to their uses</div>
-
-      <div class="body-card">
-        <div class="body-word" id="bodyWord">nose</div>
-      </div>
-
-      <div class="tap-note">Tap the correct match</div>
+    <div class="header">
+      <div class="back-btn" onclick="restartGame()">←</div>
+      <div class="title">Body Parts Matching Game</div>
+      <div class="score">★ <span id="roundNo">1</span>/5 &nbsp; ✓ <span id="score">0</span></div>
     </div>
 
-    <div class="right-side">
-      <button class="option-btn" onclick="checkAnswer(this)"></button>
-      <button class="option-btn" onclick="checkAnswer(this)"></button>
-      <button class="option-btn" onclick="checkAnswer(this)"></button>
-    </div>
+    <div class="instruction">Tap and tap on the correct match</div>
 
-    <div class="feedback" id="feedback">✓ Good Job!</div>
+    <div class="board" id="board">
+      <svg id="lineSvg"></svg>
+
+      <div class="column" id="leftColumn"></div>
+      <div class="column" id="rightColumn"></div>
+
+      <div class="feedback" id="feedback">✓ Good Job!</div>
+    </div>
 
   </div>
 </div>
 
-<!-- END SLIDE -->
 <div class="slide end-slide" id="endSlide">
   <div class="end-card">
     <h1>Excellent!</h1>
-    <p>You matched all the body parts correctly!</p>
+    <p>You matched all body parts correctly!</p>
     <button class="play-again" onclick="restartGame()">Play Again</button>
   </div>
 </div>
 
-<!-- AUDIO -->
 <audio id="correctSound" src="assets/correct.mp3"></audio>
 <audio id="wrongSound" src="assets/wrong.mp3"></audio>
 <audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
 
 <script>
-const questions = [
-  {part:"nose", answer:"smelling", options:["eating","smelling","running"]},
-  {part:"mouth", answer:"eating", options:["eating","seeing","listening"]},
-  {part:"legs", answer:"running", options:["writing","running","smelling"]},
-  {part:"hand", answer:"writing", options:["listening","eating","writing"]},
-  {part:"ears", answer:"listening", options:["seeing","listening","running"]},
-  {part:"eye", answer:"seeing", options:["smelling","writing","seeing"]},
-
-  {part:"nose", answer:"smelling", options:["smelling","eating","seeing"]},
-  {part:"legs", answer:"running", options:["running","listening","writing"]},
-  {part:"mouth", answer:"eating", options:["seeing","eating","smelling"]},
-  {part:"eye", answer:"seeing", options:["writing","seeing","running"]},
-  {part:"hand", answer:"writing", options:["eating","writing","listening"]},
-  {part:"ears", answer:"listening", options:["listening","smelling","seeing"]},
-
-  {part:"legs", answer:"running", options:["smelling","running","eating"]},
-  {part:"nose", answer:"smelling", options:["writing","seeing","smelling"]},
-  {part:"mouth", answer:"eating", options:["eating","listening","running"]}
+const allPairs = [
+  {part:"nose", use:"smelling", partImg:"assets/nose.png", useImg:"assets/smelling.png"},
+  {part:"mouth", use:"eating", partImg:"assets/mouth.png", useImg:"assets/eating.png"},
+  {part:"legs", use:"running", partImg:"assets/legs.png", useImg:"assets/running.png"},
+  {part:"hand", use:"writing", partImg:"assets/hand.png", useImg:"assets/writing.png"},
+  {part:"ears", use:"listening", partImg:"assets/ears.png", useImg:"assets/listening.png"},
+  {part:"eye", use:"seeing", partImg:"assets/eye.png", useImg:"assets/seeing.png"}
 ];
 
-let currentQuestion = 0;
+const rounds = [
+  ["nose","mouth","eye"],
+  ["legs","hand","ears"],
+  ["mouth","legs","nose"],
+  ["eye","hand","ears"],
+  ["nose","legs","eye"]
+];
+
+let currentRound = 0;
 let score = 0;
+let selectedLeft = null;
 let wrongAttempts = 0;
+let matchedCount = 0;
 let locked = false;
 
 const logoSlide = document.getElementById("logoSlide");
 const gameSlide = document.getElementById("gameSlide");
 const endSlide = document.getElementById("endSlide");
 
-const questionNo = document.getElementById("questionNo");
+const leftColumn = document.getElementById("leftColumn");
+const rightColumn = document.getElementById("rightColumn");
+const board = document.getElementById("board");
+const svg = document.getElementById("lineSvg");
+
+const roundNo = document.getElementById("roundNo");
 const scoreBox = document.getElementById("score");
-const bodyWord = document.getElementById("bodyWord");
 const feedback = document.getElementById("feedback");
-const buttons = document.querySelectorAll(".option-btn");
 
 const correctSound = document.getElementById("correctSound");
 const wrongSound = document.getElementById("wrongSound");
@@ -481,93 +393,161 @@ window.onload = function(){
   setTimeout(function(){
     logoSlide.classList.remove("active");
     gameSlide.classList.add("active");
-    loadQuestion();
+    loadRound();
   },2000);
 };
 
-function loadQuestion(){
-  locked = true;
-  wrongAttempts = 0;
-
-  feedback.style.display = "none";
-
-  buttons.forEach(function(btn){
-    btn.style.display = "none";
-    btn.classList.remove("giggle","glow");
-  });
-
-  const q = questions[currentQuestion];
-
-  questionNo.textContent = currentQuestion + 1;
-  scoreBox.textContent = score;
-  bodyWord.textContent = q.part;
-
-  setTimeout(function(){
-    q.options.forEach(function(option,index){
-      buttons[index].textContent = option;
-      buttons[index].style.display = "block";
-    });
-
-    locked = false;
-  },700);
+function shuffle(array){
+  return array.sort(function(){return Math.random() - 0.5});
 }
 
-function checkAnswer(button){
-  if(locked) return;
+function loadRound(){
+  locked = false;
+  selectedLeft = null;
+  wrongAttempts = 0;
+  matchedCount = 0;
+  feedback.style.display = "none";
+  leftColumn.innerHTML = "";
+  rightColumn.innerHTML = "";
+  svg.innerHTML = "";
 
-  const selected = button.textContent.trim().toLowerCase();
-  const correct = questions[currentQuestion].answer;
+  roundNo.textContent = currentRound + 1;
+  scoreBox.textContent = score;
 
-  if(selected === correct){
+  const currentParts = rounds[currentRound];
+  const selectedPairs = allPairs.filter(function(pair){
+    return currentParts.includes(pair.part);
+  });
+
+  const leftItems = shuffle(selectedPairs.slice());
+  const rightItems = shuffle(selectedPairs.slice());
+
+  leftItems.forEach(function(pair){
+    const div = document.createElement("div");
+    div.className = "item left-item";
+    div.dataset.part = pair.part;
+    div.dataset.match = pair.use;
+    div.innerHTML = '<img src="' + pair.partImg + '" alt="' + pair.part + '">';
+    div.onclick = function(){selectLeft(div)};
+    leftColumn.appendChild(div);
+  });
+
+  rightItems.forEach(function(pair){
+    const div = document.createElement("div");
+    div.className = "item right-item";
+    div.dataset.use = pair.use;
+    div.innerHTML = '<img src="' + pair.useImg + '" alt="' + pair.use + '">';
+    div.onclick = function(){selectRight(div)};
+    rightColumn.appendChild(div);
+  });
+}
+
+function selectLeft(item){
+  if(locked || item.classList.contains("matched")) return;
+
+  document.querySelectorAll(".left-item").forEach(function(el){
+    el.classList.remove("selected");
+  });
+
+  selectedLeft = item;
+  selectedLeft.classList.add("selected");
+}
+
+function selectRight(item){
+  if(locked || item.classList.contains("matched")) return;
+
+  if(!selectedLeft){
+    item.classList.add("giggle");
+    setTimeout(function(){item.classList.remove("giggle")},350);
+    return;
+  }
+
+  const correctUse = selectedLeft.dataset.match;
+  const chosenUse = item.dataset.use;
+
+  if(correctUse === chosenUse){
     locked = true;
     score++;
-    scoreBox.textContent = score;
+    matchedCount++;
+    wrongAttempts = 0;
+
+    selectedLeft.classList.remove("selected");
+    selectedLeft.classList.add("matched");
+    item.classList.add("matched");
+
+    drawLine(selectedLeft,item);
 
     feedback.style.display = "block";
+    scoreBox.textContent = score;
     playSound(correctSound);
 
-    setTimeout(function(){
-      currentQuestion++;
+    selectedLeft = null;
 
-      if(currentQuestion < questions.length){
-        loadQuestion();
-      }else{
-        showEndScreen();
+    setTimeout(function(){
+      feedback.style.display = "none";
+      locked = false;
+
+      if(matchedCount === 3){
+        currentRound++;
+
+        if(currentRound < rounds.length){
+          setTimeout(loadRound,500);
+        }else{
+          showEndScreen();
+        }
       }
-    },1000);
+    },800);
 
   }else{
     wrongAttempts++;
     playSound(wrongSound);
 
-    button.classList.add("giggle");
-
-    setTimeout(function(){
-      button.classList.remove("giggle");
-    },350);
+    item.classList.add("giggle");
+    setTimeout(function(){item.classList.remove("giggle")},350);
 
     if(wrongAttempts >= 2){
-      buttons.forEach(function(btn){
-        if(btn.textContent.trim().toLowerCase() === correct){
-          btn.classList.add("glow");
+      document.querySelectorAll(".right-item").forEach(function(right){
+        if(right.dataset.use === correctUse && !right.classList.contains("matched")){
+          right.classList.add("glow");
+          setTimeout(function(){right.classList.remove("glow")},1600);
         }
       });
     }
   }
 }
 
+function drawLine(leftEl,rightEl){
+  const boardRect = board.getBoundingClientRect();
+  const leftRect = leftEl.getBoundingClientRect();
+  const rightRect = rightEl.getBoundingClientRect();
+
+  const x1 = leftRect.right - boardRect.left;
+  const y1 = leftRect.top + leftRect.height/2 - boardRect.top;
+  const x2 = rightRect.left - boardRect.left;
+  const y2 = rightRect.top + rightRect.height/2 - boardRect.top;
+
+  const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+  line.setAttribute("x1",x1);
+  line.setAttribute("y1",y1);
+  line.setAttribute("x2",x2);
+  line.setAttribute("y2",y2);
+
+  svg.appendChild(line);
+}
+
 function showEndScreen(){
   gameSlide.classList.remove("active");
   endSlide.classList.add("active");
-
   playSound(clapSound);
   launchConfetti();
 }
 
 function restartGame(){
-  currentQuestion = 0;
+  currentRound = 0;
   score = 0;
+  selectedLeft = null;
   wrongAttempts = 0;
+  matchedCount = 0;
   locked = false;
 
   endSlide.classList.remove("active");
@@ -577,7 +557,7 @@ function restartGame(){
   setTimeout(function(){
     logoSlide.classList.remove("active");
     gameSlide.classList.add("active");
-    loadQuestion();
+    loadRound();
   },2000);
 }
 
@@ -591,7 +571,6 @@ function launchConfetti(){
 
   for(let i=0;i<100;i++){
     const confetti = document.createElement("div");
-
     confetti.className = "confetti";
     confetti.style.left = Math.random()*100 + "vw";
     confetti.style.background = colors[Math.floor(Math.random()*colors.length)];
