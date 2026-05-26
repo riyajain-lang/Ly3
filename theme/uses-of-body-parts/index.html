@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Body Parts Quiz</title>
+<title>Body Parts Uses</title>
 
 <style>
 *{
@@ -34,6 +34,8 @@ html,body{
   display:flex;
 }
 
+/* LOGO */
+
 .logo-slide{
   background:white;
   justify-content:center;
@@ -46,13 +48,15 @@ html,body{
   object-fit:contain;
 }
 
+/* GAME */
+
 .game-slide{
   background:#58d4d4;
   flex-direction:column;
 }
 
 .header{
-  height:70px;
+  height:74px;
   width:100%;
   display:flex;
   align-items:center;
@@ -68,20 +72,22 @@ html,body{
 }
 
 .title{
-  font-size:clamp(28px,4vw,54px);
+  font-size:clamp(24px,4vw,48px);
   color:white;
   text-shadow:2px 2px #0d2027;
+  text-align:center;
 }
 
 .score{
-  font-size:clamp(20px,3vw,32px);
+  font-size:clamp(18px,3vw,30px);
   background:rgba(255,255,255,0.28);
-  padding:8px 18px;
+  padding:8px 16px;
   border-radius:22px;
+  white-space:nowrap;
 }
 
 .main{
-  height:calc(100vh - 70px);
+  height:calc(100vh - 74px);
   width:100%;
   display:flex;
   align-items:center;
@@ -90,76 +96,84 @@ html,body{
   gap:24px;
 }
 
-.face-side{
-  width:50%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
-
-.instruction{
-  font-size:clamp(24px,3vw,40px);
-  font-weight:bold;
-  color:#0d2027;
-  background:white;
-  padding:8px 22px;
-  border-radius:25px;
-  margin-bottom:8px;
-  border:4px solid #0d2027;
-}
-
-.face-box{
-  position:relative;
-  width:min(47vw,500px);
-  height:min(47vw,500px);
-}
-
-.face-img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-}
-
-.target{
-  position:absolute;
-  width:58px;
-  height:58px;
-  border:7px solid #fff3b0;
-  border-radius:50%;
-  box-shadow:0 0 0 5px rgba(255,255,255,0.75), 0 0 24px #fff3b0;
-  animation:pulse 0.9s infinite alternate;
-  pointer-events:none;
-}
-
-@keyframes pulse{
-  from{ transform:translate(-50%,-50%) scale(0.9); }
-  to{ transform:translate(-50%,-50%) scale(1.15); }
-}
-
-.options-side{
+.left-side{
   width:46%;
   height:100%;
   display:flex;
   flex-direction:column;
   justify-content:center;
-  gap:22px;
+  align-items:center;
+}
+
+.instruction{
+  font-size:clamp(20px,3vw,34px);
+  font-weight:bold;
+  color:#0d2027;
+  background:white;
+  border:4px solid #0d2027;
+  padding:8px 18px;
+  border-radius:24px;
+  text-align:center;
+  margin-bottom:14px;
+}
+
+.body-card{
+  width:90%;
+  max-width:420px;
+  min-height:180px;
+  background:#fff7cf;
+  border:7px solid #0d2027;
+  border-radius:30px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:18px;
+  box-shadow:0 8px 0 rgba(13,32,39,0.35);
+}
+
+.body-word{
+  font-size:clamp(46px,7vw,86px);
+  font-weight:bold;
+  color:#ff4fb2;
+  text-transform:lowercase;
+}
+
+.tap-note{
+  margin-top:18px;
+  background:#ffffff;
+  border-radius:22px;
+  padding:8px 18px;
+  border:4px dashed #2487c7;
+  color:#2487c7;
+  font-size:clamp(18px,2.5vw,28px);
+  font-weight:bold;
+  text-align:center;
+}
+
+.right-side{
+  width:50%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:18px;
 }
 
 .option-btn{
   width:100%;
-  min-height:78px;
+  min-height:72px;
   border:6px solid #0d2027;
   background:#eefafa;
   border-radius:18px;
-  font-size:clamp(30px,4vw,56px);
+  font-size:clamp(28px,4vw,52px);
   font-family:inherit;
   font-weight:bold;
   text-align:left;
   padding-left:26px;
   cursor:pointer;
   display:none;
+  text-transform:lowercase;
 }
 
 .option-btn:active{
@@ -169,17 +183,20 @@ html,body{
 .feedback{
   position:absolute;
   left:50%;
-  bottom:14px;
+  bottom:12px;
   transform:translateX(-50%);
   background:white;
   color:#10b917;
-  padding:10px 26px;
+  padding:9px 24px;
   border-radius:24px;
-  font-size:clamp(28px,4vw,48px);
+  font-size:clamp(26px,4vw,46px);
   font-weight:bold;
   display:none;
   border:4px solid #10b917;
+  z-index:10;
 }
+
+/* END */
 
 .end-slide{
   background:#58d4d4;
@@ -222,6 +239,8 @@ html,body{
   cursor:pointer;
 }
 
+/* EFFECTS */
+
 .giggle{
   animation:giggle 0.35s;
 }
@@ -259,79 +278,107 @@ html,body{
   }
 }
 
+/* MOBILE */
+
 @media(max-width:700px){
+
   .header{
-    height:58px;
-    padding:6px 10px;
+    height:60px;
+    padding:6px 8px;
   }
 
   .back-btn{
     font-size:34px;
   }
 
+  .title{
+    font-size:clamp(20px,5vw,30px);
+  }
+
+  .score{
+    font-size:18px;
+    padding:6px 10px;
+  }
+
   .main{
-    height:calc(100vh - 58px);
+    height:calc(100vh - 60px);
     padding:6px;
     gap:8px;
   }
 
-  .face-side{
-    width:48%;
+  .left-side{
+    width:45%;
   }
 
-  .options-side{
-    width:52%;
-    gap:12px;
+  .right-side{
+    width:55%;
+    gap:10px;
   }
 
   .instruction{
-    font-size:clamp(18px,5vw,26px);
-    padding:6px 12px;
+    font-size:clamp(16px,4vw,22px);
+    padding:6px 10px;
     border:3px solid #0d2027;
-    margin-bottom:6px;
+    margin-bottom:8px;
   }
 
-  .face-box{
-    width:48vw;
-    height:48vw;
+  .body-card{
+    width:96%;
+    min-height:130px;
+    border:5px solid #0d2027;
+    border-radius:22px;
+    padding:10px;
   }
 
-  .target{
-    width:40px;
-    height:40px;
-    border:5px solid #fff3b0;
+  .body-word{
+    font-size:clamp(34px,10vw,52px);
+  }
+
+  .tap-note{
+    margin-top:10px;
+    padding:6px 10px;
+    font-size:clamp(15px,4vw,20px);
+    border:3px dashed #2487c7;
   }
 
   .option-btn{
     min-height:58px;
     border:5px solid #0d2027;
-    font-size:clamp(23px,6vw,34px);
+    font-size:clamp(22px,6vw,34px);
     padding-left:16px;
     border-radius:14px;
   }
 
   .feedback{
     bottom:5px;
-    font-size:24px;
-    padding:6px 18px;
+    font-size:23px;
+    padding:6px 16px;
   }
 }
 
 @media(max-height:500px){
   .header{
-    height:50px;
+    height:52px;
   }
 
   .main{
-    height:calc(100vh - 50px);
+    height:calc(100vh - 52px);
+  }
+
+  .body-card{
+    min-height:110px;
   }
 
   .option-btn{
-    min-height:48px;
+    min-height:46px;
   }
 
-  .options-side{
-    gap:9px;
+  .right-side{
+    gap:7px;
+  }
+
+  .tap-note{
+    display:none;
   }
 }
 </style>
@@ -339,30 +386,33 @@ html,body{
 
 <body>
 
+<!-- LOGO SLIDE -->
 <div class="slide logo-slide active" id="logoSlide">
   <img src="assets/innovine-logo.png" alt="Innovine Logo">
 </div>
 
+<!-- GAME SLIDE -->
 <div class="slide game-slide" id="gameSlide">
 
   <div class="header">
     <div class="back-btn" onclick="restartGame()">←</div>
-    <div class="title">Body Parts Quiz</div>
-    <div class="score">★ <span id="questionNo">1</span>/8 &nbsp; ✓ <span id="score">0</span></div>
+    <div class="title">Body Parts Uses</div>
+    <div class="score">★ <span id="questionNo">1</span>/15 &nbsp; ✓ <span id="score">0</span></div>
   </div>
 
   <div class="main">
 
-    <div class="face-side">
-      <div class="instruction">Tap the correct answer</div>
+    <div class="left-side">
+      <div class="instruction">Match the body parts to their uses</div>
 
-      <div class="face-box">
-        <img src="assets/face.png" class="face-img" alt="Face">
-        <div class="target" id="target"></div>
+      <div class="body-card">
+        <div class="body-word" id="bodyWord">nose</div>
       </div>
+
+      <div class="tap-note">Tap the correct match</div>
     </div>
 
-    <div class="options-side">
+    <div class="right-side">
       <button class="option-btn" onclick="checkAnswer(this)"></button>
       <button class="option-btn" onclick="checkAnswer(this)"></button>
       <button class="option-btn" onclick="checkAnswer(this)"></button>
@@ -373,60 +423,39 @@ html,body{
   </div>
 </div>
 
+<!-- END SLIDE -->
 <div class="slide end-slide" id="endSlide">
   <div class="end-card">
     <h1>Excellent!</h1>
-    <p>You completed the Body Parts Quiz!</p>
+    <p>You matched all the body parts correctly!</p>
     <button class="play-again" onclick="restartGame()">Play Again</button>
   </div>
 </div>
 
+<!-- AUDIO -->
 <audio id="correctSound" src="assets/correct.mp3"></audio>
 <audio id="wrongSound" src="assets/wrong.mp3"></audio>
 <audio id="clapSound" src="assets/freesound_community-claps-44774.mp3"></audio>
 
 <script>
 const questions = [
-  {
-    answer:"nose",
-    options:["mouth","eye","nose"],
-    target:{left:"50%",top:"57%"}
-  },
-  {
-    answer:"nose",
-    options:["ear","nose","mouth"],
-    target:{left:"50%",top:"57%"}
-  },
-  {
-    answer:"ear",
-    options:["eye","ear","hair"],
-    target:{left:"86%",top:"54%"}
-  },
-  {
-    answer:"cheek",
-    options:["nose","cheek","eye"],
-    target:{left:"32%",top:"64%"}
-  },
-  {
-    answer:"hair",
-    options:["hair","ear","mouth"],
-    target:{left:"50%",top:"20%"}
-  },
-  {
-    answer:"eye",
-    options:["mouth","eye","hair"],
-    target:{left:"62%",top:"50%"}
-  },
-  {
-    answer:"mouth",
-    options:["mouth","nose","ear"],
-    target:{left:"50%",top:"69%"}
-  },
-  {
-    answer:"eye",
-    options:["nose","eye","ear"],
-    target:{left:"38%",top:"50%"}
-  }
+  {part:"nose", answer:"smelling", options:["eating","smelling","running"]},
+  {part:"mouth", answer:"eating", options:["eating","seeing","listening"]},
+  {part:"legs", answer:"running", options:["writing","running","smelling"]},
+  {part:"hand", answer:"writing", options:["listening","eating","writing"]},
+  {part:"ears", answer:"listening", options:["seeing","listening","running"]},
+  {part:"eye", answer:"seeing", options:["smelling","writing","seeing"]},
+
+  {part:"nose", answer:"smelling", options:["smelling","eating","seeing"]},
+  {part:"legs", answer:"running", options:["running","listening","writing"]},
+  {part:"mouth", answer:"eating", options:["seeing","eating","smelling"]},
+  {part:"eye", answer:"seeing", options:["writing","seeing","running"]},
+  {part:"hand", answer:"writing", options:["eating","writing","listening"]},
+  {part:"ears", answer:"listening", options:["listening","smelling","seeing"]},
+
+  {part:"legs", answer:"running", options:["smelling","running","eating"]},
+  {part:"nose", answer:"smelling", options:["writing","seeing","smelling"]},
+  {part:"mouth", answer:"eating", options:["eating","listening","running"]}
 ];
 
 let currentQuestion = 0;
@@ -440,7 +469,7 @@ const endSlide = document.getElementById("endSlide");
 
 const questionNo = document.getElementById("questionNo");
 const scoreBox = document.getElementById("score");
-const target = document.getElementById("target");
+const bodyWord = document.getElementById("bodyWord");
 const feedback = document.getElementById("feedback");
 const buttons = document.querySelectorAll(".option-btn");
 
@@ -471,9 +500,7 @@ function loadQuestion(){
 
   questionNo.textContent = currentQuestion + 1;
   scoreBox.textContent = score;
-
-  target.style.left = q.target.left;
-  target.style.top = q.target.top;
+  bodyWord.textContent = q.part;
 
   setTimeout(function(){
     q.options.forEach(function(option,index){
@@ -482,7 +509,7 @@ function loadQuestion(){
     });
 
     locked = false;
-  },900);
+  },700);
 }
 
 function checkAnswer(button){
