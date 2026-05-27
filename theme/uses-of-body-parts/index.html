@@ -3,133 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Body Parts Quiz</title>
+<title>Body Parts Matching Game</title>
 <style>
 body, html {
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  font-family:"Comic Sans MS","Trebuchet MS",sans-serif;
-  background:
-    repeating-linear-gradient(90deg,#f4a3d1 0 38px,#eef5a8 38px 76px),
-    repeating-linear-gradient(0deg,#f4a3d1 0 38px,#eef5a8 38px 76px);
-  background-blend-mode:multiply;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  font-family: "Comic Sans MS", sans-serif;
+  display: flex; justify-content: center; align-items: center;
+  background: #a0e5f0;
+  overflow: hidden;
 }
-.container{
-  width:95vw;
-  max-width:800px;
-  background:white;
-  border:8px solid #ec1593;
-  border-radius:30px;
-  padding:20px;
-  position:relative;
+.container {
+  width: 95vw; max-width: 1000px; height: 95vh;
+  background: white; border: 6px solid #ec1593;
+  border-radius: 25px; padding: 10px;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative;
 }
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.header {
+  width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
 }
-.title{
-  font-size:2.4rem;
-  color:#ec1593;
-  text-align:center;
-  flex:1;
+.title { font-size: 2rem; color: #ec1593; flex: 1; text-align: center; }
+.score { font-size: 1.4rem; padding: 4px 10px; border: 3px solid #0d2027; border-radius: 20px; background: #eefafa; }
+.instruction {
+  font-size: 1.3rem; border: 3px solid #0d2027;
+  border-radius: 18px; background: #fff7cf; padding: 6px 12px; margin-bottom: 10px;
+  text-align: center;
 }
-.score{
-  font-size:1.5rem;
-  padding:5px 12px;
-  border:3px solid #0d2027;
-  border-radius:20px;
-  background:#eefafa;
+.board {
+  display: flex; justify-content: space-between; flex: 1; width: 100%;
+  position: relative; padding: 10px;
 }
-.instruction{
-  text-align:center;
-  margin:12px 0;
-  font-size:1.4rem;
-  border:4px solid #0d2027;
-  border-radius:20px;
-  padding:8px 12px;
-  background:#fff7cf;
+.column {
+  display: flex; flex-direction: column; justify-content: space-around;
+  align-items: center; flex: 0 0 48%;
+  gap: 15px;
 }
-.board{
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:10px;
+.item {
+  width: 85%; height: 70px; border: 4px solid #0d2027;
+  border-radius: 15px; background: #eefafa;
+  display: flex; justify-content: center; align-items: center;
+  cursor: pointer; position: relative;
 }
-.column{
-  flex:0 0 48%;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+.item img { max-width: 60%; max-height: 60%; }
+.item.selected { border-color: #ec1593; box-shadow: 0 0 12px #ec1593; }
+.item.matched { opacity: 0.7; pointer-events: none; }
+.giggle { animation: giggle .35s }
+@keyframes giggle { 0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)} }
+svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.feedback {
+  position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%);
+  font-size: 1.6rem; font-weight: bold; padding: 6px 12px;
+  border: 3px solid #10b917; border-radius: 18px;
+  background: white; display: none; color: #10b917; z-index: 5;
 }
-.item{
-  flex:1;
-  border:4px solid #0d2027;
-  border-radius:20px;
-  background:#eefafa;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  cursor:pointer;
-  position:relative;
-  padding:8px;
+.guideline {
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 2px;
+  background: rgba(0,0,0,0.1);
+  z-index: 0;
 }
-.item img{
-  max-width:80%;
-  max-height:80%;
+.confetti{
+  position:absolute; width:10px; height:10px;
+  top:0; left:0; animation:fall linear forwards;
 }
-.item.selected{border-color:#ec1593; box-shadow:0 0 12px #ec1593;}
-.item.matched{opacity:0.7; pointer-events:none;}
-.giggle{animation:giggle .35s}
-@keyframes giggle{
-  0%{transform:translateX(0)}
-  25%{transform:translateX(-6px)}
-  50%{transform:translateX(6px)}
-  75%{transform:translateX(-4px)}
-  100%{transform:translateX(0)}
+@keyframes fall{
+  0%{transform:translateY(0) rotate(0deg);}
+  100%{transform:translateY(100vh) rotate(360deg);}
 }
-.feedback{
-  position:absolute;
-  left:50%;
-  bottom:-10px;
-  transform:translateX(-50%);
-  font-size:1.8rem;
-  font-weight:bold;
-  padding:6px 14px;
-  border:3px solid #10b917;
-  border-radius:18px;
-  background:white;
-  display:none;
-  color:#10b917;
-  z-index:5;
+#finalScreen {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  background:rgba(255,255,255,0.95); z-index:100;
+  display:none; flex-direction:column; justify-content:center; align-items:center;
 }
-svg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
+#finalScreen h1 { font-size:3rem; color:#ec1593; margin-bottom:20px; }
+#finalScreen button {
+  padding: 10px 20px; font-size:1.5rem; border:none; border-radius:15px;
+  background:#10b917; color:white; cursor:pointer;
 }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <div class="title">Body Parts Quiz</div>
-    <div class="score">★ <span id="roundNo">1</span>/8 &nbsp; ✓ <span id="score">0</span></div>
+    <div class="title">Body Parts Matching Game</div>
+    <div class="score">★ <span id="score">0</span>/6 ✓</div>
   </div>
   <div class="instruction">Tap and tap on the correct match</div>
   <div class="board" id="board">
+    <div class="guideline"></div>
     <svg id="lineSvg"></svg>
     <div class="column" id="leftColumn"></div>
     <div class="column" id="rightColumn"></div>
     <div class="feedback" id="feedback">✓ Good Job!</div>
   </div>
+</div>
+
+<div id="finalScreen">
+  <h1>Good Job!</h1>
+  <button onclick="playAgain()">Play Again</button>
 </div>
 
 <audio id="correctSound" src="assets/correct.mp3"></audio>
@@ -146,87 +119,57 @@ const allPairs = [
   {part:"eye", use:"seeing", partImg:"assets/eye.png", useImg:"assets/seeing.png"}
 ];
 
-let askedPairs = [];
-let currentPair = null;
-let score = 0;
-let selectedLeft = null;
-let locked = false;
+let score=0, selectedLeft=null;
 
-const leftColumn = document.getElementById("leftColumn");
-const rightColumn = document.getElementById("rightColumn");
-const board = document.getElementById("board");
-const svg = document.getElementById("lineSvg");
-const feedback = document.getElementById("feedback");
-const roundNo = document.getElementById("roundNo");
-const scoreBox = document.getElementById("score");
-const correctSound = document.getElementById("correctSound");
-const wrongSound = document.getElementById("wrongSound");
-const clapSound = document.getElementById("clapSound");
+const leftColumn=document.getElementById("leftColumn");
+const rightColumn=document.getElementById("rightColumn");
+const board=document.getElementById("board");
+const svg=document.getElementById("lineSvg");
+const feedback=document.getElementById("feedback");
+const scoreBox=document.getElementById("score");
+const correctSound=document.getElementById("correctSound");
+const wrongSound=document.getElementById("wrongSound");
+const clapSound=document.getElementById("clapSound");
+const finalScreen=document.getElementById("finalScreen");
 
 function shuffle(array){return array.sort(()=>Math.random()-0.5)}
 
-function loadNextPair(){
-  locked=false;
-  selectedLeft=null;
-  feedback.style.display="none";
-  svg.innerHTML="";
-  leftColumn.innerHTML="";
-  rightColumn.innerHTML="";
-
-  if(askedPairs.length===8){showEndScreen();return;}
-
-  // pick a random pair not yet asked
-  let remaining = allPairs.filter(p=>!askedPairs.includes(p.part));
-  currentPair = remaining[Math.floor(Math.random()*remaining.length)];
-  askedPairs.push(currentPair.part);
-
-  let leftItems = shuffle([currentPair,...allPairs.filter(p=>p.part!==currentPair.part).slice(0,2)]);
-  let rightItems = shuffle([currentPair,...allPairs.filter(p=>p.part!==currentPair.part).slice(0,2)]);
-
+function loadBoard(){
+  leftColumn.innerHTML=""; rightColumn.innerHTML=""; svg.innerHTML=""; feedback.style.display="none";
+  const leftItems = shuffle(allPairs.slice());
+  const rightItems = shuffle(allPairs.slice());
   leftItems.forEach(p=>{
-    let div=document.createElement("div");
-    div.className="item left-item";
-    div.dataset.part=p.part;
-    div.dataset.match=p.use;
+    const div=document.createElement("div");
+    div.className="item left-item"; div.dataset.part=p.part; div.dataset.match=p.use;
     div.innerHTML=`<img src="${p.partImg}" alt="${p.part}">`;
-    div.onclick=()=>selectLeft(div);
-    leftColumn.appendChild(div);
+    div.onclick=()=>selectLeft(div); leftColumn.appendChild(div);
   });
-
   rightItems.forEach(p=>{
-    let div=document.createElement("div");
-    div.className="item right-item";
-    div.dataset.use=p.use;
+    const div=document.createElement("div");
+    div.className="item right-item"; div.dataset.use=p.use;
     div.innerHTML=`<img src="${p.useImg}" alt="${p.use}">`;
-    div.onclick=()=>selectRight(div);
-    rightColumn.appendChild(div);
+    div.onclick=()=>selectRight(div); rightColumn.appendChild(div);
   });
-
-  roundNo.textContent = askedPairs.length;
 }
 
 function selectLeft(item){
-  if(locked || item.classList.contains("matched")) return;
+  if(item.classList.contains("matched")) return;
   document.querySelectorAll(".left-item").forEach(el=>el.classList.remove("selected"));
-  selectedLeft=item;
-  selectedLeft.classList.add("selected");
+  selectedLeft=item; selectedLeft.classList.add("selected");
 }
 
 function selectRight(item){
-  if(locked || item.classList.contains("matched")) return;
+  if(item.classList.contains("matched")) return;
   if(!selectedLeft){item.classList.add("giggle"); setTimeout(()=>item.classList.remove("giggle"),350); return;}
   if(selectedLeft.dataset.match===item.dataset.use){
-    locked=true;
-    score++;
-    selectedLeft.classList.add("matched");
-    item.classList.add("matched");
-    drawLine(selectedLeft,item);
-    feedback.style.display="block";
-    scoreBox.textContent=score;
-    playSound(correctSound);
-    selectedLeft=null;
-    setTimeout(()=>{feedback.style.display="none"; loadNextPair();},800);
-  } else {
+    score++; scoreBox.textContent=score;
+    selectedLeft.classList.add("matched"); item.classList.add("matched");
+    drawLine(selectedLeft,item); feedback.style.display="block"; playSound(correctSound);
+    setTimeout(()=>{
+      feedback.style.display="none"; selectedLeft=null; 
+      if(score===6) {launchConfetti(); playSound(clapSound); setTimeout(()=>{finalScreen.style.display="flex";},1000);}
+    }, 800);
+  }else{
     playSound(wrongSound);
     item.classList.add("giggle"); setTimeout(()=>item.classList.remove("giggle"),350);
   }
@@ -241,21 +184,27 @@ function drawLine(leftEl,rightEl){
   const x2=rightRect.left-boardRect.left;
   const y2=rightRect.top+rightRect.height/2-boardRect.top;
   const line=document.createElementNS("http://www.w3.org/2000/svg","line");
-  line.setAttribute("x1",x1);
-  line.setAttribute("y1",y1);
-  line.setAttribute("x2",x2);
-  line.setAttribute("y2",y2);
+  line.setAttribute("x1",x1); line.setAttribute("y1",y1);
+  line.setAttribute("x2",x2); line.setAttribute("y2",y2);
+  line.setAttribute("stroke","#ec1593"); line.setAttribute("stroke-width","5"); line.setAttribute("stroke-linecap","round");
   svg.appendChild(line);
 }
 
-function showEndScreen(){
-  playSound(clapSound);
-  alert("Excellent! You matched all body parts correctly!"); location.reload();
+function launchConfetti(){
+  for(let i=0;i<100;i++){
+    const confetti=document.createElement("div");
+    confetti.className="confetti";
+    confetti.style.background=`hsl(${Math.random()*360},70%,50%)`;
+    confetti.style.left=Math.random()*100 + "vw";
+    confetti.style.animationDuration=(2+Math.random()*2)+"s";
+    board.appendChild(confetti);
+    setTimeout(()=>confetti.remove(),4000);
+  }
 }
 
 function playSound(sound){sound.currentTime=0; sound.play().catch(()=>{});}
-
-window.onload=()=>{loadNextPair()};
+function playAgain(){finalScreen.style.display="none"; score=0; scoreBox.textContent=score; loadBoard();}
+window.onload=()=>{loadBoard()};
 </script>
 </body>
 </html>
