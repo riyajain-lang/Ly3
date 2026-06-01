@@ -33,63 +33,67 @@
     <img src="/mnt/data/6cd3fc0a-bddb-4cdf-bda5-cfb433628b92.png" class="logo" alt="Innovine Logo">
   </div>
 
-  <!-- Game Slides -->
+  <!-- Slide 1: Shirt (white shirt + blue tie) -->
   <div class="slide" id="slide1">
     <div class="headerBox"><h1>Getting Ready For School</h1></div>
     <div class="instructionBox"><p>Dress up the boy for school</p></div>
     <div class="questionFrame">
-      <img src="/mnt/data/c5538a28-8a04-41bb-97b7-0988c7d58a95.png" alt="Boy with shirt options">
-      <!-- Clickable areas (adjust left, top, width, height % based on image) -->
-      <div class="clickable" data-answer="true" style="top:20%; left:55%; width:20%; height:25%;"></div>
-      <div class="clickable" data-answer="false" style="top:20%; left:20%; width:20%; height:25%;"></div>
+      <img src="/mnt/data/c5538a28-8a04-41bb-97b7-0988c7d58a95.png" alt="Boy holding shirt + tie">
+      <div class="clickable" data-answer="true" style="top:20%; left:50%; width:25%; height:25%;"></div>
+      <div class="clickable" data-answer="false" style="top:20%; left:15%; width:25%; height:25%;"></div>
     </div>
   </div>
 
+  <!-- Slide 2: Pants -->
   <div class="slide" id="slide2">
     <div class="headerBox"><h1>Getting Ready For School</h1></div>
     <div class="instructionBox"><p>Dress up the boy for school</p></div>
     <div class="questionFrame">
-      <img src="/mnt/data/pants.png" alt="Boy with pants options">
+      <img src="/mnt/data/pants.png" alt="Boy holding pants">
       <div class="clickable" data-answer="true" style="top:55%; left:45%; width:30%; height:25%;"></div>
       <div class="clickable" data-answer="false" style="top:55%; left:10%; width:25%; height:25%;"></div>
     </div>
   </div>
 
+  <!-- Slide 3: Socks -->
   <div class="slide" id="slide3">
     <div class="headerBox"><h1>Getting Ready For School</h1></div>
     <div class="instructionBox"><p>Dress up the boy for school</p></div>
     <div class="questionFrame">
-      <img src="/mnt/data/socks.png" alt="Boy with socks options">
+      <img src="/mnt/data/socks.png" alt="Boy holding socks">
       <div class="clickable" data-answer="true" style="top:85%; left:45%; width:15%; height:10%;"></div>
       <div class="clickable" data-answer="false" style="top:85%; left:65%; width:15%; height:10%;"></div>
     </div>
   </div>
 
+  <!-- Slide 4: Shoes -->
   <div class="slide" id="slide4">
     <div class="headerBox"><h1>Getting Ready For School</h1></div>
     <div class="instructionBox"><p>Dress up the boy for school</p></div>
     <div class="questionFrame">
-      <img src="/mnt/data/shoe.png" alt="Boy with shoes options">
+      <img src="/mnt/data/shoe.png" alt="Boy holding shoes">
       <div class="clickable" data-answer="true" style="top:85%; left:40%; width:20%; height:10%;"></div>
       <div class="clickable" data-answer="false" style="top:85%; left:65%; width:20%; height:10%;"></div>
     </div>
   </div>
 
+  <!-- Slide 5: Tie -->
   <div class="slide" id="slide5">
     <div class="headerBox"><h1>Getting Ready For School</h1></div>
     <div class="instructionBox"><p>Dress up the boy for school</p></div>
     <div class="questionFrame">
-      <img src="/mnt/data/tie.png" alt="Boy with tie options">
+      <img src="/mnt/data/tie.png" alt="Boy holding tie">
       <div class="clickable" data-answer="true" style="top:25%; left:55%; width:20%; height:20%;"></div>
       <div class="clickable" data-answer="false" style="top:25%; left:20%; width:20%; height:20%;"></div>
     </div>
   </div>
 
+  <!-- Slide 6: Bag -->
   <div class="slide" id="slide6">
     <div class="headerBox"><h1>Getting Ready For School</h1></div>
     <div class="instructionBox"><p>Dress up the boy for school</p></div>
     <div class="questionFrame">
-      <img src="/mnt/data/bag.png" alt="Boy with bag options">
+      <img src="/mnt/data/bag.png" alt="Boy holding bag">
       <div class="clickable" data-answer="true" style="top:5%; left:60%; width:20%; height:20%;"></div>
       <div class="clickable" data-answer="false" style="top:5%; left:15%; width:20%; height:20%;"></div>
     </div>
@@ -114,7 +118,7 @@ let slides = document.querySelectorAll('.slide');
 let currentSlide = 0;
 let wrongAttempts = 0;
 
-// Show first slide for 2s
+// Show first slide for 2 seconds
 setTimeout(()=>{showSlide(1)},2000);
 
 function showSlide(idx){
