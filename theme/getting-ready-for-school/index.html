@@ -94,7 +94,7 @@ body, html { margin:0; padding:0; height:100%; width:100%; font-family: Arial, s
   <div class="questionFrame">
     <img src="assets/tie-slide-image.png" class="boyImage" alt="Boy Tie">
     <div class="options">
-      <div class="option"><img src="assets/sun-glasse.png" data-answer="false"></div>
+      <div class="option"><img src="/mnt/data/sun-glasse.png" data-answer="false"></div>
       <div class="option"><img src="assets/tie.png" data-answer="true"></div>
     </div>
   </div>
@@ -115,7 +115,7 @@ body, html { margin:0; padding:0; height:100%; width:100%; font-family: Arial, s
 
 <!-- Final Slide -->
 <div class="slide" id="slide7">
-  <img src="/mnt/data/a0662079-f779-4626-bd3f-8d65ceac1c87.png" class="boyImage" style="width:200px; margin-top:50px;" alt="im-ready.png">
+  <img src="/mnt/data/im-ready.png" class="boyImage" style="width:200px; margin-top:50px;" alt="Im Ready">
   <h1>Good Job!</h1>
   <button class="playAgainBtn">Play Again</button>
   <canvas id="confettiCanvas"></canvas>
@@ -129,8 +129,6 @@ body, html { margin:0; padding:0; height:100%; width:100%; font-family: Arial, s
 let slides=document.querySelectorAll('.slide');
 let currentSlide=0;
 let wrongAttempts=0;
-
-// Show first slide for 2 seconds
 setTimeout(()=>{showSlide(1)},2000);
 
 function showSlide(idx){
@@ -163,14 +161,12 @@ function setupOptions(slide){
   });
 }
 
-// Play Again
 document.querySelector('.playAgainBtn').onclick=()=>{
   slides.forEach(s=>s.classList.remove('active'));
   stopConfetti();
   showSlide(1);
 }
 
-// Confetti
 let confettiInterval;
 function startConfetti(){
   slides[7].querySelector('#confettiCanvas').style.display='block';
