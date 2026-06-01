@@ -35,7 +35,6 @@ body, html { margin:0; padding:0; height:100%; width:100%; font-family: Arial, s
   <img src="assets/innovine-logo.png" class="logo" alt="Innovine Logo">
 </div>
 
-<!-- Slides 1-6: Questions -->
 <!-- Slide 1: Shirt -->
 <div class="slide" id="slide1">
   <div class="headerBox"><h1>Getting Ready For School</h1></div>
@@ -116,7 +115,7 @@ body, html { margin:0; padding:0; height:100%; width:100%; font-family: Arial, s
 
 <!-- Final Slide -->
 <div class="slide" id="slide7">
-  <img src="assets/im-ready.png-slide-image.png" class="boyImage" style="width:200px; margin-top:50px;">
+  <img src="/mnt/data/a0662079-f779-4626-bd3f-8d65ceac1c87.png" class="boyImage" style="width:200px; margin-top:50px;" alt="Im Ready">
   <h1>Good Job!</h1>
   <button class="playAgainBtn">Play Again</button>
   <canvas id="confettiCanvas"></canvas>
@@ -151,7 +150,7 @@ function setupOptions(slide){
         opt.style.border='3px solid green';
         setTimeout(()=>{
           if(currentSlide<6) showSlide(currentSlide+1);
-          else { showSlide(7); startConfetti(); } // Correctly advance to final slide
+          else { showSlide(7); startConfetti(); }
         },700);
       } else{
         wrongAttempts++;
