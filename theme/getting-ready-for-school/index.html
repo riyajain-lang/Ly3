@@ -35,6 +35,7 @@ body, html { margin:0; padding:0; height:100%; width:100%; font-family: Arial, s
   <img src="assets/innovine-logo.png" class="logo" alt="Innovine Logo">
 </div>
 
+<!-- Slides 1-6: Questions -->
 <!-- Slide 1: Shirt -->
 <div class="slide" id="slide1">
   <div class="headerBox"><h1>Getting Ready For School</h1></div>
@@ -129,6 +130,8 @@ body, html { margin:0; padding:0; height:100%; width:100%; font-family: Arial, s
 let slides=document.querySelectorAll('.slide');
 let currentSlide=0;
 let wrongAttempts=0;
+
+// Show first slide for 2 seconds
 setTimeout(()=>{showSlide(1)},2000);
 
 function showSlide(idx){
@@ -146,7 +149,10 @@ function setupOptions(slide){
       if(opt.dataset.answer==="true"){
         document.getElementById('correctAudio').play();
         opt.style.border='3px solid green';
-        setTimeout(()=>{if(currentSlide<6) showSlide(currentSlide+1); else startConfetti();},700);
+        setTimeout(()=>{
+          if(currentSlide<6) showSlide(currentSlide+1);
+          else { showSlide(7); startConfetti(); } // Correctly advance to final slide
+        },700);
       } else{
         wrongAttempts++;
         document.getElementById('wrongAudio').play();
@@ -158,12 +164,14 @@ function setupOptions(slide){
   });
 }
 
+// Play Again
 document.querySelector('.playAgainBtn').onclick=()=>{
   slides.forEach(s=>s.classList.remove('active'));
   stopConfetti();
   showSlide(1);
 }
 
+// Confetti
 let confettiInterval;
 function startConfetti(){
   slides[7].querySelector('#confettiCanvas').style.display='block';
@@ -192,5 +200,6 @@ function startConfetti(){
 
 function stopConfetti(){ clearInterval(confettiInterval); slides[7].querySelector('#confettiCanvas').style.display='none'; }
 </script>
+
 </body>
 </html>
