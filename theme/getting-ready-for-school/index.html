@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Ready For School</title>
+<style>
+  /* General Styles */
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Arial', sans-serif; }
+  body, html { height: 100%; width: 100%; overflow: hidden; }
+  body {
+    background: linear-gradient(135deg, #fceabb, #f8b500); /* pastel ombre */
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  #gameContainer { width: 100%; max-width: 600px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+  .slide { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; text-align: center; }
+  .active { display: flex; }
+
+  /* Header & Instructions */
+  .headerBox { background: #fff3e0; padding: 15px; border-radius: 10px; margin-bottom: 15px; width: 90%; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  .headerBox h1 { font-size: 1.5rem; color: #333; margin-bottom: 5px; }
+  .instructionBox { background: #fff; padding: 10px; border-radius: 10px; border: 2px dashed #ff9e80; margin-bottom: 15px; width: 90%; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+  .instructionBox p { font-size: 1.2rem; color: #444; }
+
+  /* Question frame */
+  .questionFrame { background: #fff; border-radius: 15px; border: 3px solid #ffb74d; padding: 15px; width: 90%; max-width: 500px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 0 10px rgba(0,0,0,0.2); margin-bottom: 20px; }
+  .options { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 10px; }
+  .option img { width: 100px; max-width: 45%; border: 3px solid #ffcc80; border-radius: 10px; padding: 5px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+  .option img:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+  .wiggle { animation: wiggle 0.3s; }
+  @keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(10deg); }
+    50% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .glow { box-shadow: 0 0 15px 5px yellow; border-color: yellow; }
+
+  /* Tick and feedback */
+  .tick { width: 50px; height: 50px; position: absolute; top: 10%; right: 10%; display: none; }
+  
+  /* Play Again Button */
+  .playAgainBtn { padding: 10px 20px; font-size: 1.2rem; background: #4db6ac; color: #fff; border: none; border-radius: 10px; cursor: pointer; margin-top: 20px; }
+  .playAgainBtn:hover { background: #26a69a; }
+
+  /* Confetti Canvas */
+  #confettiCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+  /* Logo */
+  .logo { width: 150px; margin-bottom: 20px; }
+  .boyImage { width: 200px; max-width: 90%; margin-bottom: 15px; }
+</style>
+</head>
+<body>
+<div id="gameContainer">
+  <!-- Slide 1: Logo -->
+  <div class="slide active" id="slide0">
+    <img src="assets/innovine-logo.png" class="logo" alt="Innovine Logo">
+  </div>
+
+  <!-- Game Slides -->
+  <div class="slide" id="slide1">
+    <div class="headerBox"><h1>Getting Ready For School</h1></div>
+    <div class="instructionBox"><p>Dress up the boy for school</p></div>
+    <div class="questionFrame">
+      <img src="assets/shirt.png" class="boyImage" alt="Boy with shirt options">
+      <div class="options">
+        <div class="option"><img src="assets/shirt.png" data-answer="false"></div>
+        <div class="option"><img src="assets/tie.png" data-answer="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide2">
+    <div class="headerBox"><h1>Getting Ready For School</h1></div>
+    <div class="instructionBox"><p>Dress up the boy for school</p></div>
+    <div class="questionFrame">
+      <img src="assets/pants.png" class="boyImage" alt="Boy with pants options">
+      <div class="options">
+        <div class="option"><img src="assets/pants.png" data-answer="true"></div>
+        <div class="option"><img src="assets/shorts.png" data-answer="false"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide3">
+    <div class="headerBox"><h1>Getting Ready For School</h1></div>
+    <div class="instructionBox"><p>Dress up the boy for school</p></div>
+    <div class="questionFrame">
+      <img src="assets/socks.png" class="boyImage" alt="Boy with socks options">
+      <div class="options">
+        <div class="option"><img src="assets/socks.png" data-answer="true"></div>
+        <div class="option"><img src="assets/shoe.png" data-answer="false"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide4">
+    <div class="headerBox"><h1>Getting Ready For School</h1></div>
+    <div class="instructionBox"><p>Dress up the boy for school</p></div>
+    <div class="questionFrame">
+      <img src="assets/shoe.png" class="boyImage" alt="Boy with shoes options">
+      <div class="options">
+        <div class="option"><img src="assets/shoe.png" data-answer="true"></div>
+        <div class="option"><img src="assets/socks.png" data-answer="false"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide5">
+    <div class="headerBox"><h1>Getting Ready For School</h1></div>
+    <div class="instructionBox"><p>Dress up the boy for school</p></div>
+    <div class="questionFrame">
+      <img src="assets/tie.png" class="boyImage" alt="Boy with tie options">
+      <div class="options">
+        <div class="option"><img src="assets/tie.png" data-answer="true"></div>
+        <div class="option"><img src="assets/shirt.png" data-answer="false"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide6">
+    <div class="headerBox"><h1>Getting Ready For School</h1></div>
+    <div class="instructionBox"><p>Dress up the boy for school</p></div>
+    <div class="questionFrame">
+      <img src="assets/bag.png" class="boyImage" alt="Boy with bag options">
+      <div class="options">
+        <div class="option"><img src="assets/bag.png" data-answer="true"></div>
+        <div class="option"><img src="assets/shoe.png" data-answer="false"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Slide: Good Job -->
+  <div class="slide" id="slide7">
+    <img src="assets/im-ready.png" class="boyImage" alt="Ready Image">
+    <h1>Good Job!</h1>
+    <button class="playAgainBtn">Play Again</button>
+    <canvas id="confettiCanvas"></canvas>
+  </div>
+</div>
+
+<!-- Audio -->
+<audio id="correctAudio" src="assets/correct.mp3"></audio>
+<audio id="wrongAudio" src="assets/wrong.mp3"></audio>
+<audio id="clapAudio" src="assets/freesound_community-claps-44774.mp3"></audio>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let currentSlide = 0;
+let wrongAttempts = 0;
+
+// Show first slide for 2 seconds
+setTimeout(() => { showSlide(1); }, 2000);
+
+function showSlide(index) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[index].classList.add('active');
+  currentSlide = index;
+  wrongAttempts = 0;
+  if(index >=1 && index <=6){
+    setupOptions(slides[index]);
+  }
+}
+
+function setupOptions(slide){
+  const options = slide.querySelectorAll('.option img');
+  options.forEach(option=>{
+    option.onclick = ()=>{
+      if(option.dataset.answer === "true"){
+        document.getElementById('correctAudio').play();
+        option.style.borderColor = "green";
+        setTimeout(()=>{
+          if(currentSlide<6){
+            showSlide(currentSlide+1);
+          }else{
+            startConfetti();
+          }
+        }, 700);
+      }else{
+        wrongAttempts++;
+        document.getElementById('wrongAudio').play();
+        option.classList.add('wiggle');
+        setTimeout(()=>{option.classList.remove('wiggle');}, 300);
+        if(wrongAttempts>=2){
+          options.forEach(o=>{
+            if(o.dataset.answer === "true"){
+              o.classList.add('glow');
+            }
+          });
+        }
+      }
+    }
+  });
+}
+
+// Play Again Button
+document.querySelector('.playAgainBtn').onclick = ()=>{
+  slides.forEach(s=>s.classList.remove('active'));
+  stopConfetti();
+  showSlide(1);
+}
+
+// Simple Confetti Animation
+let confettiInterval;
+function startConfetti(){
+  slides[7].querySelector('#confettiCanvas').style.display='block';
+  const canvas = slides[7].querySelector('#confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const confetti = [];
+  for(let i=0;i<150;i++){
+    confetti.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*6+2,
+      d: Math.random()*50+10,
+      color:`hsl(${Math.random()*360},100%,50%)`,
+      tilt:Math.random()*10-10,
+      tiltAngleIncrement: Math.random()*0.07+0.05
+    });
+  }
+  confettiInterval = setInterval(()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    confetti.forEach((c,i)=>{
+      ctx.beginPath();
+      ctx.lineWidth = c.r/2;
+      ctx.strokeStyle = c.color;
+      ctx.moveTo(c.x+c.tilt+c.r/4,c.y);
+      ctx.lineTo(c.x+c.tilt,c.y+c.tilt+c.r/4);
+      ctx.stroke();
+      c.tiltAngle += c.tiltAngleIncrement;
+      c.y += (Math.cos(c.d)+3+c.r/2)/2;
+      c.tilt = Math.sin(c.tiltAngle)*15;
+      if(c.y>canvas.height){c.y=-10;c.x=Math.random()*canvas.width;}
+    });
+  }, 20);
+}
+
+function stopConfetti(){
+  clearInterval(confettiInterval);
+  slides[7].querySelector('#confettiCanvas').style.display='none';
+}
+</script>
+</body>
+</html>
