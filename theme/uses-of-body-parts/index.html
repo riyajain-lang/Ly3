@@ -9,13 +9,14 @@ body, html {
   margin:0; padding:0;
   width:100%; height:100%;
   font-family:"Comic Sans MS", sans-serif;
+  display:flex; justify-content:center; align-items:center;
   background:#a0e5f0;
   overflow:hidden;
 }
 .container {
   width:95vw; max-width:1000px; height:95vh;
   background:white; border:6px solid #ec1593;
-  border-radius:15px; padding:20px 15px;
+  border-radius:15px; padding:10px;
   display:flex; flex-direction:column; align-items:center;
   position:relative;
 }
@@ -30,12 +31,13 @@ body, html {
   text-align:center;
 }
 .board {
-  display:flex; justify-content:center; flex:1; width:100%;
-  position:relative; gap:60px;
+  display:flex; justify-content:space-between; flex:1; width:100%;
+  position:relative; padding:10px;
 }
 .column {
-  display:flex; flex-direction:column; justify-content:center; align-items:center;
-  gap:20px;
+  display:flex; flex-direction:column; justify-content:space-around;
+  align-items:center; flex:0 0 48%;
+  gap:15px;
 }
 .item {
   width:120px; height:120px; border:4px solid #0d2027;
@@ -54,6 +56,13 @@ svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; 
   font-size:1.6rem; font-weight:bold; padding:6px 12px;
   border:3px solid #10b917; border-radius:12px;
   background:white; display:none; color:#10b917; z-index:5;
+}
+.guideline {
+  position:absolute;
+  left:50%; top:0; bottom:0;
+  width:2px;
+  background:rgba(0,0,0,0.1);
+  z-index:0;
 }
 .confetti{
   position:absolute; width:10px; height:10px;
@@ -79,20 +88,14 @@ svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; 
 </style>
 </head>
 <body>
-
-<!-- Slide 1: Logo -->
-<div id="logoScreen">
-  <img src="assets/03851793-51a9-4f4c-8874-1f09191d7aca.png" alt="Logo">
-</div>
-
-<!-- Slides 2 & 3: Matching game -->
-<div class="container" id="gameContainer">
+<div class="container">
   <div class="header">
     <div class="title">Body Parts Matching Game</div>
     <div class="score">★ <span id="score">0</span>/6 ✓</div>
   </div>
   <div class="instruction">Match the uses of body parts.</div>
   <div class="board" id="board">
+    <div class="guideline"></div>
     <svg id="lineSvg"></svg>
     <div class="column" id="leftColumn"></div>
     <div class="column" id="rightColumn"></div>
@@ -100,7 +103,6 @@ svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; 
   </div>
 </div>
 
-<!-- Slide 4: Good Job -->
 <div id="finalScreen">
   <h1>Good Job!</h1>
   <button onclick="playAgain()">Play Again</button>
@@ -121,7 +123,10 @@ const allPairs = [
 ];
 
 let score=0, selectedLeft=null, currentSlide=0;
-const slides = [ allPairs.slice(0,3), allPairs.slice(3,6) ];
+const slides = [
+  allPairs.slice(0,3),
+  allPairs.slice(3,6)
+];
 
 const leftColumn=document.getElementById("leftColumn");
 const rightColumn=document.getElementById("rightColumn");
@@ -216,7 +221,7 @@ function launchConfetti(){
   for(let i=0;i<100;i++){
     const confetti=document.createElement("div");
     confetti.className="confetti";
-    confetti.style.background=`hsl(${Math.random()*360},70%,70%)`;
+    confetti.style.background=`hsl(${Math.random()*360},70%,50%)`;
     confetti.style.left=Math.random()*100 + "vw";
     confetti.style.animationDuration=(2+Math.random()*2)+"s";
     board.appendChild(confetti);
