@@ -9,7 +9,6 @@ body, html {
   margin:0; padding:0;
   width:100%; height:100%;
   font-family:"Comic Sans MS", sans-serif;
-  display:flex; justify-content:center; align-items:center;
   background:#a0e5f0;
   overflow:hidden;
 }
@@ -72,20 +71,28 @@ svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; 
   0%{transform:translateY(0) rotate(0deg);}
   100%{transform:translateY(100vh) rotate(360deg);}
 }
-#finalScreen {
+#logoScreen, #finalScreen{
   position:absolute; top:0; left:0; width:100%; height:100%;
-  background:rgba(255,255,255,0.95); z-index:100;
-  display:none; flex-direction:column; justify-content:center; align-items:center;
+  display:flex; justify-content:center; align-items:center;
+  flex-direction:column; z-index:100;
 }
+#logoScreen { background:white; display:none; }
+#logoScreen img { max-width:50%; }
+#finalScreen { background:rgba(255,255,255,0.95); display:none; }
 #finalScreen h1 { font-size:3rem; color:#ec1593; margin-bottom:20px; }
 #finalScreen button {
   padding:10px 20px; font-size:1.5rem; border:none; border-radius:15px;
-  background:#10b917; color:white; cursor:pointer;
+  background:#ec1593; color:white; cursor:pointer;
 }
 </style>
 </head>
 <body>
-<div class="container">
+
+<div id="logoScreen">
+  <img src="assets/innovine-logo.png" alt="Logo">
+</div>
+
+<div class="container" id="gameContainer">
   <div class="header">
     <div class="title">Body Parts Matching Game</div>
     <div class="score">★ <span id="score">0</span>/6 ✓</div>
@@ -121,8 +128,8 @@ const allPairs = [
 
 let score=0, selectedLeft=null, currentSlide=0;
 const slides = [
-  allPairs.slice(0,3),
-  allPairs.slice(3,6)
+  allPairs.slice(0,3), // Slide 2
+  allPairs.slice(3,6)  // Slide 3
 ];
 
 const leftColumn=document.getElementById("leftColumn");
@@ -135,8 +142,17 @@ const correctSound=document.getElementById("correctSound");
 const wrongSound=document.getElementById("wrongSound");
 const clapSound=document.getElementById("clapSound");
 const finalScreen=document.getElementById("finalScreen");
+const logoScreen=document.getElementById("logoScreen");
 
 function shuffle(array){return array.sort(()=>Math.random()-0.5)}
+
+function showLogoThenGame(){
+  logoScreen.style.display='flex';
+  setTimeout(()=>{
+    logoScreen.style.display='none';
+    loadBoard();
+  },2000);
+}
 
 function loadBoard(){
   leftColumn.innerHTML=""; rightColumn.innerHTML=""; svg.innerHTML=""; feedback.style.display="none";
@@ -209,7 +225,7 @@ function launchConfetti(){
   for(let i=0;i<100;i++){
     const confetti=document.createElement("div");
     confetti.className="confetti";
-    confetti.style.background=`hsl(${Math.random()*360},70%,50%)`;
+    confetti.style.background=`hsl(${Math.random()*360},70%,70%)`; // pinkish hue
     confetti.style.left=Math.random()*100 + "vw";
     confetti.style.animationDuration=(2+Math.random()*2)+"s";
     board.appendChild(confetti);
@@ -219,7 +235,7 @@ function launchConfetti(){
 
 function playSound(sound){sound.currentTime=0; sound.play().catch(()=>{});}
 function playAgain(){finalScreen.style.display="none"; score=0; scoreBox.textContent=score; currentSlide=0; loadBoard();}
-window.onload=()=>{loadBoard()};
+window.onload=()=>{showLogoThenGame()};
 </script>
 </body>
 </html>
