@@ -3,31 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shadow Matching Planets Creative Glow</title>
+<title>Planet Puzzle Game</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family: Arial,sans-serif; }
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif;}
 body, html { width:100%; height:100%; overflow:hidden; display:flex; justify-content:center; align-items:center; background:#000; }
-#game-container { width:100%; max-width:600px; height:100%; position:relative; text-align:center; overflow:hidden; }
-.slide { width:100%; height:100%; position:absolute; top:0; left:0; display:none; flex-direction:column; justify-content:flex-start; align-items:center; }
+#game-container { width:100%; max-width:500px; height:100%; text-align:center; position:relative; }
+.slide { width:100%; height:100%; position:absolute; top:0; left:0; display:none; flex-direction:column; justify-content:center; align-items:center; }
 .active { display:flex; }
-.logo-slide { justify-content:center; align-items:center; background:white; }
-.game-slide { background: url('/mnt/data/52f94fe4-4fcf-47ec-b2e8-8ebe1ce59892.png') no-repeat center center/cover; }
+.logo-slide { background:white; justify-content:center; align-items:center; }
+.game-slide { background:url('assets/background.png') no-repeat center center/cover; }
 .instruction-box { margin-top:10px; padding:10px 20px; background:rgba(255,255,255,0.8); border-radius:12px; font-weight:bold; font-size:18px; }
-.shadow-container { position:relative; width:100%; height:70%; margin-top:10px; }
-.shadow { position:absolute; width:70px; height:70px; display:flex; justify-content:center; align-items:center; border-radius:50%; cursor:pointer; }
-.shadow img { width:100%; height:100%; position:absolute; top:0; left:0; }
-.overlay { position:absolute; width:100%; height:100%; top:0; left:0; display:none; pointer-events:none; }
-.planet-options { display:flex; flex-wrap:wrap; justify-content:center; margin-top:10px; }
-.planet-option { margin:5px; width:60px; height:60px; cursor:pointer; transition: transform 0.2s; animation: rotate 4s linear infinite; }
-.planet-option.wrong { animation: shake 0.3s; }
+.puzzle-container { display:flex; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+.piece { width:80px; height:80px; margin:5px; cursor:pointer; transition: transform 0.2s; }
+.piece.wrong { animation: shake 0.3s; }
 @keyframes shake { 0%{transform:translateX(0);}25%{transform:translateX(-10px);}50%{transform:translateX(10px);}75%{transform:translateX(-10px);}100%{transform:translateX(0);} }
-@keyframes rotate { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
-.tick { width:30px; height:30px; position:absolute; display:none; }
+.tick { width:30px; height:30px; margin-top:10px; display:none; }
 .goodjob-slide { justify-content:center; align-items:center; color:white; font-size:24px; }
 button { margin-top:15px; padding:10px 20px; font-size:18px; cursor:pointer; border-radius:10px; border:none; background:#ff6f61; color:white; }
-#progress { margin-top:10px; display:flex; justify-content:center; }
-.star { width:25px; height:25px; margin:2px; opacity:0.3; transition: opacity 0.3s; }
-.star.active { opacity:1; }
 canvas { position:absolute; top:0; left:0; pointer-events:none; }
 </style>
 </head>
@@ -35,108 +27,82 @@ canvas { position:absolute; top:0; left:0; pointer-events:none; }
 <div id="game-container">
 
   <div class="slide logo-slide active">
-    <img src="assets/innovine-logo.png" alt="Logo" style="width:50%;">
+    <img src="assets/innovine-logo.png" style="width:50%;" />
   </div>
 
   <div class="slide game-slide" id="game-slide">
-    <div class="instruction-box">Shadow Matching Planets</div>
-    <div id="progress"></div>
-    <div class="shadow-container" id="shadow-container"></div>
-    <div class="planet-options" id="planet-options"></div>
+    <div class="instruction-box">Assemble the Planet Puzzle</div>
+    <div class="puzzle-container" id="puzzle-container"></div>
+    <div id="tick-container"><img id="tick" src="assets/correct.mp3" class="tick"/></div>
   </div>
 
   <div class="slide goodjob-slide" id="goodjob-slide">
     <h2>Good Job!</h2>
-    <canvas id="confetti-canvas" width="600" height="600"></canvas>
+    <canvas id="confetti-canvas" width="500" height="500"></canvas>
     <button id="play-again">Play Again</button>
   </div>
 
 </div>
 
 <script>
-const planetData = [
-  {name:"mercury.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"10%", left:"20%"},
-  {name:"venus.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"25%", left:"70%"},
-  {name:"earth.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"40%", left:"35%"},
-  {name:"mars.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"55%", left:"60%"},
-  {name:"jupiter.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"70%", left:"25%"},
-  {name:"saturn.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"20%", left:"50%"},
-  {name:"uranus.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"50%", left:"80%"},
-  {name:"neptune.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"65%", left:"45%"}
+// Puzzle data
+const planets = [
+  {name:'earth.png', pieces: ['d8a83220-cbe6-4559-a40a-6997f979bb70.png','assets/earth.png','assets/earth.png','assets/earth.png']},
+  {name:'mars.png', pieces: ['assets/mars.png','assets/mars.png','assets/mars.png','assets/mars.png']}
+  // Add other planets with 3–4 pieces each
 ];
 
-const glowOverlay = "/mnt/data/4d570600-7490-499d-b140-9a265561513f.png";
+let currentIndex=0, selectedCount=0, attempts=0;
 
-let selectedPlanet = null;
-let attempts = {};
-const shadowContainer = document.getElementById('shadow-container');
-const planetOptionsDiv = document.getElementById('planet-options');
-const progressDiv = document.getElementById('progress');
+const puzzleContainer=document.getElementById('puzzle-container');
 
-// Initialize shadows with glow overlay
-planetData.forEach(p=>{
-  const div=document.createElement('div');
-  div.classList.add('shadow');
-  div.style.top=p.top;
-  div.style.left=p.left;
-  div.dataset.planet=p.name;
+function shuffle(arr){ return arr.sort(()=>Math.random()-0.5); }
 
-  const shadowImg=document.createElement('img');
-  shadowImg.src=p.shadow;
-  div.appendChild(shadowImg);
-
-  const overlayImg=document.createElement('img');
-  overlayImg.src=glowOverlay;
-  overlayImg.classList.add('overlay');
-  div.appendChild(overlayImg);
-
-  div.onclick=()=> placePlanet(div);
-  shadowContainer.appendChild(div);
-  attempts[p.name]=0;
-});
-
-// Progress stars
-planetData.forEach(()=>{ const star=document.createElement('img'); star.src='https://i.imgur.com/O0Y8FhT.png'; star.classList.add('star'); progressDiv.appendChild(star); });
-
-function shuffle(array){return array.sort(()=>Math.random()-0.5);}
-function createOptions(){
-  planetOptionsDiv.innerHTML='';
-  shuffle(planetData).forEach(p=>{
+function loadPuzzle(){
+  puzzleContainer.innerHTML='';
+  attempts=0;
+  selectedCount=0;
+  const puzzle=planets[currentIndex];
+  const pieces=shuffle(puzzle.pieces.slice());
+  pieces.forEach((src,i)=>{
     const img=document.createElement('img');
-    img.src='assets/'+p.name;
-    img.classList.add('planet-option');
-    img.onclick=()=> selectPlanet(img,p.name);
-    planetOptionsDiv.appendChild(img);
+    img.src=src;
+    img.classList.add('piece');
+    img.dataset.correct=i;
+    img.onclick=()=>selectPiece(img,i);
+    puzzleContainer.appendChild(img);
   });
 }
 
-function selectPlanet(img,name){selectedPlanet={img,name};}
-
-function placePlanet(shadowDiv){
-  if(!selectedPlanet) return;
-  const overlay = shadowDiv.querySelector('.overlay');
-  if(shadowDiv.dataset.planet===selectedPlanet.name){
-    shadowDiv.appendChild(selectedPlanet.img);
-    selectedPlanet.img.style.position='absolute';
-    selectedPlanet.img.style.top='0';
-    selectedPlanet.img.style.left='0';
-    overlay.style.display='none';
-    document.querySelectorAll('.star')[planetData.findIndex(p=>p.name===selectedPlanet.name)].classList.add('active');
-    selectedPlanet=null;
-    checkCompletion();
+function selectPiece(img,index){
+  const puzzle=planets[currentIndex];
+  if(index===selectedCount){
+    selectedCount++;
+    img.style.border='3px solid green';
+    if(selectedCount===puzzle.pieces.length){
+      document.getElementById('tick').style.display='block';
+      setTimeout(nextPuzzle,500);
+    }
   } else {
-    attempts[selectedPlanet.name]++;
-    selectedPlanet.img.classList.add('wrong');
-    setTimeout(()=> selectedPlanet.img.classList.remove('wrong'),300);
-    if(attempts[selectedPlanet.name]>=2){
-      overlay.style.display='block';
+    attempts++;
+    img.classList.add('wrong');
+    setTimeout(()=>img.classList.remove('wrong'),300);
+    if(attempts>=2){
+      // Highlight correct piece
+      const imgs=document.querySelectorAll('.piece');
+      imgs.forEach((im,i)=>{ if(i===selectedCount) im.style.border='3px solid yellow'; });
     }
   }
 }
 
-function checkCompletion(){
-  const matched=document.querySelectorAll('.shadow img:not(.overlay)').length - planetData.length;
-  if(matched>=planetData.length) showGoodJob();
+function nextPuzzle(){
+  document.getElementById('tick').style.display='none';
+  currentIndex++;
+  if(currentIndex<planets.length){
+    loadPuzzle();
+  } else {
+    showGoodJob();
+  }
 }
 
 function showGoodJob(){
@@ -149,7 +115,7 @@ function playConfetti(){
   const canvas=document.getElementById('confetti-canvas');
   const ctx=canvas.getContext('2d');
   const particles=[];
-  for(let i=0;i<150;i++){
+  for(let i=0;i<100;i++){
     particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*2+1});
   }
   function draw(){
@@ -168,14 +134,13 @@ function playConfetti(){
   draw();
 }
 
-// Start after logo
 setTimeout(()=>{
   document.querySelector('.logo-slide').classList.remove('active');
   document.getElementById('game-slide').classList.add('active');
-  createOptions();
+  loadPuzzle();
 },2000);
 
-document.getElementById('play-again').onclick=()=>{location.reload();};
+document.getElementById('play-again').onclick=()=>{location.reload();}
 </script>
 </body>
 </html>
