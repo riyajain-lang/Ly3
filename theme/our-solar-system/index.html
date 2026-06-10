@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tap and Tap Planets Game</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+  body, html { width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#f0f4f8; overflow:hidden; }
+  .game-container { width:100%; max-width:500px; height:100%; position:relative; }
+  .slide { width:100%; height:100%; display:none; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+  .slide.active { display:flex; }
+  #logo-slide img { width:150px; height:auto; }
+  .question-box { margin-top:20px; font-size:1.5rem; font-weight:bold; color:#4a2c91; }
+  .options { display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px; gap:15px; }
+  .option { width:100px; height:100px; border:3px solid #4a2c91; border-radius:15px; display:flex; justify-content:center; align-items:center; cursor:pointer; transition: transform 0.2s, box-shadow 0.3s; background:#fff; }
+  .option img { width:80%; height:80%; }
+  .option.jiggle { animation: jiggle 0.3s; }
+  @keyframes jiggle { 0%{transform:rotate(0deg);} 25%{transform:rotate(10deg);} 50%{transform:rotate(-10deg);} 75%{transform:rotate(10deg);} 100%{transform:rotate(0deg);} }
+  .option.correct-glow { box-shadow: 0 0 15px 5px green; }
+  .tick { font-size:2rem; color:green; margin-top:15px; }
+  .end-slide { flex-direction:column; justify-content:center; align-items:center; }
+  .play-again-btn { margin-top:20px; padding:10px 20px; font-size:1.2rem; border:none; border-radius:10px; background:#4a2c91; color:#fff; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="game-container">
+  <!-- Slide 1: Logo -->
+  <div class="slide active" id="logo-slide">
+    <img src="3a918bdf-8fb6-476c-9189-b24d89f8c673.png" alt="Innovine Logo">
+  </div>
+
+  <!-- Game slides will be generated dynamically -->
+  <!-- End Slide -->
+  <div class="slide" id="end-slide">
+    <h2>Good Job!</h2>
+    <canvas id="confetti"></canvas>
+    <button class="play-again-btn" onclick="restartGame()">Play Again</button>
+  </div>
+</div>
+
+<!-- Audio -->
+<audio id="correct-sound" src="correct.mp3"></audio>
+<audio id="wrong-sound" src="wrong.mp3"></audio>
+<audio id="clap-sound" src="freesound_community-claps-44774.mp3"></audio>
+
+<script>
+const planets = [
+  {name:"Mercury", img:"planets/mercury.png"},
+  {name:"Venus", img:"planets/venus.png"},
+  {name:"Earth", img:"planets/earth.png"},
+  {name:"Mars", img:"planets/mars.png"},
+  {name:"Jupiter", img:"planets/jupiter.png"},
+  {name:"Saturn", img:"planets/saturn.png"},
+  {name:"Uranus", img:"planets/uranus.png"},
+  {name:"Neptune", img:"planets/neptune.png"}
+];
+
+let currentSlide = 0;
+let wrongAttempts = 0;
+let gameSlides = [];
+
+function createGameSlides() {
+  const container = document.querySelector(".game-container");
+  const shuffledPlanets = planets.sort(() => Math.random()-0.5);
+  shuffledPlanets.forEach((planet,i) => {
+    const slide = document.createElement("div");
+    slide.classList.add("slide");
+    slide.innerHTML = `
+      <div class="question-box">Tap on ${planet.name}!</div>
+      <div class="options">
+        ${generateOptions(planet)}
+      </div>
+      <div class="tick" style="display:none;">✓</div>
+    `;
+    container.insertBefore(slide, document.getElementById("end-slide"));
+    gameSlides.push(slide);
+  });
+}
+
+function generateOptions(correctPlanet) {
+  let options = [correctPlanet];
+  while(options.length < 3){
+    const rand = planets[Math.floor(Math.random()*planets.length)];
+    if(!options.includes(rand)) options.push(rand);
+  }
+  options = options.sort(() => Math.random()-0.5);
+  return options.map(p => `<div class="option" data-name="${p.name}"><img src="${p.img}" alt="${p.name}"></div>`).join("");
+}
+
+function startGame() {
+  setTimeout(() => {
+    document.getElementById("logo-slide").classList.remove("active");
+    showSlide(0);
+  },2000);
+}
+
+function showSlide(index) {
+  document.querySelectorAll(".slide").forEach(s => s.classList.remove("active"));
+  if(index < gameSlides.length){
+    currentSlide = index;
+    wrongAttempts = 0;
+    gameSlides[index].classList.add("active");
+    attachOptionListeners(gameSlides[index]);
+  } else {
+    document.getElementById("end-slide").classList.add("active");
+    playClap();
+    startConfetti();
+  }
+}
+
+function attachOptionListeners(slide){
+  slide.querySelectorAll(".option").forEach(option => {
+    option.onclick = () => {
+      const planetName = slide.querySelector(".question-box").innerText.replace("Tap on ","").replace("!","");
+      if(option.dataset.name === planetName){
+        document.getElementById("correct-sound").play();
+        option.classList.add("correct-glow");
+        slide.querySelector(".tick").style.display="block";
+        setTimeout(()=>showSlide(currentSlide+1),1000);
+      } else {
+        wrongAttempts++;
+        document.getElementById("wrong-sound").play();
+        option.classList.add("jiggle");
+        setTimeout(()=>option.classList.remove("jiggle"),300);
+        if(wrongAttempts>=2){
+          slide.querySelector(`.option[data-name='${planetName}']`).classList.add("correct-glow");
+        }
+      }
+    }
+  });
+}
+
+// Restart
+function restartGame(){
+  gameSlides.forEach(slide=>slide.remove());
+  gameSlides = [];
+  createGameSlides();
+  showSlide(0);
+}
+
+// Confetti
+function startConfetti(){
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 150;
+  const confettis = [];
+  for(let i=0;i<100;i++){
+    confettis.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*6+4,
+      d:Math.random()*canvas.height,
+      color:`hsl(${Math.random()*360},100%,50%)`,
+      tilt:Math.random()*10-10
+    });
+  }
+  let angle = 0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    confettis.forEach(f=>{
+      ctx.beginPath();
+      ctx.lineWidth=f.r/2;
+      ctx.strokeStyle=f.color;
+      ctx.moveTo(f.x+f.tilt,f.y);
+      ctx.lineTo(f.x+f.tilt,f.y+f.r);
+      ctx.stroke();
+    });
+    angle += 0.01;
+    confettis.forEach(f=>{
+      f.x += Math.sin(angle);
+      f.y += 1;
+      if(f.y>canvas.height){ f.y=0; f.x=Math.random()*canvas.width; }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// Clap
+function playClap(){
+  document.getElementById("clap-sound").play();
+}
+
+// Initialize
+createGameSlides();
+startGame();
+</script>
+</body>
+</html>
