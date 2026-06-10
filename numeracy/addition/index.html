@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Addition Game</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+width:100%;
+height:100%;
+overflow:hidden;
+font-family:'Fredoka',sans-serif;
+}
+
+body{
+background:url("assets/background.png") center center/cover no-repeat;
+}
+
+.hidden{
+display:none !important;
+}
+
+/* SPLASH */
+
+#splash{
+width:100%;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#ffffff;
+}
+
+#logo{
+width:min(300px,70vw);
+}
+
+/* GAME */
+
+#game{
+width:100%;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+padding:10px;
+gap:12px;
+}
+
+.title{
+font-size:clamp(28px,5vw,50px);
+color:#7a49b7;
+font-weight:700;
+}
+
+.question-row{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+width:100%;
+}
+
+.group{
+width:30%;
+min-width:100px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+align-items:center;
+gap:5px;
+}
+
+.group img{
+width:min(55px,10vw);
+height:min(55px,10vw);
+object-fit:contain;
+}
+
+.symbol{
+font-size:clamp(30px,6vw,60px);
+font-weight:700;
+color:#444;
+}
+
+.answer-box{
+width:120px;
+height:70px;
+background:#fff;
+border:4px dashed #7a49b7;
+border-radius:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:38px;
+font-weight:700;
+color:#7a49b7;
+}
+
+.options{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+margin-top:10px;
+flex-wrap:wrap;
+}
+
+.option{
+width:80px;
+height:80px;
+border-radius:50%;
+background:white;
+border:4px solid #7a49b7;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:34px;
+font-weight:700;
+cursor:pointer;
+transition:0.3s;
+}
+
+.option:hover{
+transform:scale(1.05);
+}
+
+.feedback{
+height:50px;
+font-size:28px;
+font-weight:700;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.correct{
+color:green;
+}
+
+.wrong{
+color:#ff4444;
+}
+
+.tick{
+font-size:50px;
+animation:bounce .8s infinite;
+}
+
+@keyframes bounce{
+50%{
+transform:translateY(-8px);
+}
+}
+
+.wiggle{
+animation:wiggle .4s;
+}
+
+@keyframes wiggle{
+0%{transform:translateX(0);}
+25%{transform:translateX(-5px);}
+50%{transform:translateX(5px);}
+75%{transform:translateX(-5px);}
+100%{transform:translateX(0);}
+}
+
+.glow{
+animation:glow 1s infinite;
+}
+
+@keyframes glow{
+0%{
+box-shadow:0 0 0px gold;
+}
+50%{
+box-shadow:
+0 0 15px gold,
+0 0 30px gold;
+}
+100%{
+box-shadow:0 0 0px gold;
+}
+}
+
+/* END SCREEN */
+
+#endScreen{
+width:100%;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:25px;
+background:url("assets/background.png") center center/cover no-repeat;
+}
+
+.end-title{
+font-size:clamp(34px,6vw,60px);
+color:#28a745;
+text-align:center;
+}
+
+#restartBtn{
+padding:15px 35px;
+font-size:24px;
+font-family:'Fredoka',sans-serif;
+border:none;
+border-radius:15px;
+background:#7a49b7;
+color:white;
+cursor:pointer;
+}
+
+#restartBtn:hover{
+transform:scale(1.05);
+}
+
+@media (max-width:600px){
+
+.option{
+width:70px;
+height:70px;
+font-size:30px;
+}
+
+.answer-box{
+width:100px;
+height:65px;
+}
+
+.group img{
+width:40px;
+height:40px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SPLASH SCREEN -->
+
+<div id="splash">
+
+<img
+id="logo"
+src="assets/innovine-logo.png"
+alt="Logo">
+
+</div>
+
+<!-- GAME -->
+
+<div id="game" class="hidden">
+
+<div class="title">Addition</div>
+
+<div class="question-row">
+
+<div id="group1" class="group"></div>
+
+<div class="symbol">+</div>
+
+<div id="group2" class="group"></div>
+
+</div>
+
+<div class="symbol">=</div>
+
+<div id="answerBox" class="answer-box">?</div>
+
+<div id="options" class="options"></div>
+
+<div id="feedback" class="feedback"></div>
+
+</div>
+
+<!-- END SCREEN -->
+
+<div id="endScreen" class="hidden">
+
+<div class="end-title">
+🎉 Good Job! 🎉
+</div>
+
+<button id="restartBtn">
+Play Again
+</button>
+
+</div>
+
+<!-- AUDIO -->
+
+<audio id="correctSound">
+<source src="assets/correct.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="wrongSound">
+<source src="assets/wrong.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="clapSound">
+<source src="assets/freesound_community-claps-44774.mp3" type="audio/mpeg">
+</audio>
+
+<!-- CONFETTI -->
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<script>
+
+const objects = [
+"owl.png",
+"panda.png",
+"turtle.png",
+"pumpkin.png",
+"sun.png",
+"car.png"
+];
+
+let questions = [];
+let currentQuestion = 0;
+let wrongAttempts = 0;
+
+const splash = document.getElementById("splash");
+const game = document.getElementById("game");
+const endScreen = document.getElementById("endScreen");
+
+const group1 = document.getElementById("group1");
+const group2 = document.getElementById("group2");
+
+const answerBox = document.getElementById("answerBox");
+const optionsDiv = document.getElementById("options");
+const feedback = document.getElementById("feedback");
+
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+const clapSound = document.getElementById("clapSound");
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+const j=Math.floor(Math.random()*(i+1));
+
+[array[i],array[j]]=[array[j],array[i]];
+}
+
+return array;
+}
+
+function createQuestions(){
+
+questions=[];
+
+while(questions.length<10){
+
+let num1=Math.floor(Math.random()*5)+1;
+let num2=Math.floor(Math.random()*5)+1;
+
+if(num1+num2<=10){
+
+questions.push({
+
+a:num1,
+b:num2,
+answer:num1+num2,
+image:objects[Math.floor(Math.random()*objects.length)]
+
+});
+
+}
+}
+
+shuffle(questions);
+}
+
+function showQuestion(){
+
+if(currentQuestion>=questions.length){
+
+finishGame();
+return;
+}
+
+wrongAttempts=0;
+
+feedback.innerHTML="";
+answerBox.innerHTML="?";
+
+group1.innerHTML="";
+group2.innerHTML="";
+optionsDiv.innerHTML="";
+
+const q=questions[currentQuestion];
+
+for(let i=0;i<q.a;i++){
+
+group1.innerHTML+=`
+<img src="assets/${q.image}">
+`;
+
+}
+
+for(let i=0;i<q.b;i++){
+
+group2.innerHTML+=`
+<img src="assets/${q.image}">
+`;
+
+}
+
+let options=[
+q.answer
+];
+
+while(options.length<3){
+
+let randomNumber=Math.floor(Math.random()*10)+1;
+
+if(!options.includes(randomNumber)){
+
+options.push(randomNumber);
+
+}
+
+}
+
+shuffle(options);
+
+options.forEach(number=>{
+
+const btn=document.createElement("div");
+
+btn.className="option";
+btn.innerHTML=number;
+
+btn.onclick=()=>checkAnswer(number,btn);
+
+optionsDiv.appendChild(btn);
+
+});
+
+}
+
+function checkAnswer(selected,button){
+
+const q=questions[currentQuestion];
+
+if(selected===q.answer){
+
+correctSound.currentTime=0;
+correctSound.play();
+
+answerBox.innerHTML=selected;
+
+feedback.innerHTML=
+'<span class="correct">✅ Good Job!</span>';
+
+setTimeout(()=>{
+
+currentQuestion++;
+showQuestion();
+
+},1200);
+
+}
+else{
+
+wrongSound.currentTime=0;
+wrongSound.play();
+
+wrongAttempts++;
+
+button.classList.add("wiggle");
+
+setTimeout(()=>{
+
+button.classList.remove("wiggle");
+
+},400);
+
+if(wrongAttempts>=2){
+
+document.querySelectorAll(".option").forEach(option=>{
+
+if(Number(option.innerHTML)===q.answer){
+
+option.classList.add("glow");
+
+}
+
+});
+
+}
+
+}
+
+}
+
+function finishGame(){
+
+game.classList.add("hidden");
+
+endScreen.classList.remove("hidden");
+
+clapSound.play();
+
+confetti({
+particleCount:200,
+spread:100,
+origin:{y:0.6}
+});
+
+setTimeout(()=>{
+
+confetti({
+particleCount:150,
+spread:120
+});
+
+},500);
+
+}
+
+document.getElementById("restartBtn")
+.addEventListener("click",()=>{
+
+currentQuestion=0;
+
+createQuestions();
+
+endScreen.classList.add("hidden");
+
+game.classList.remove("hidden");
+
+showQuestion();
+
+});
+
+setTimeout(()=>{
+
+splash.classList.add("hidden");
+
+game.classList.remove("hidden");
+
+createQuestions();
+
+showQuestion();
+
+},2000);
+
+</script>
+
+</body>
+</html>
