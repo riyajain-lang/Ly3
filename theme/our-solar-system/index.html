@@ -3,34 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tap and Tap Planets Game</title>
+<title>Shadow Matching Planets</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
-  body, html { width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#f0f4f8; overflow:hidden; }
-  .game-container { width:100%; max-width:500px; height:100%; position:relative; }
-  .slide { width:100%; height:100%; display:none; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+  body, html { width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#0b0b2f; overflow:hidden; }
+  .game-container {
+    width:100%; max-width:500px; height:100%; position:relative; text-align:center; color:white; 
+  }
+  .slide { width:100%; height:100%; display:none; flex-direction:column; justify-content:center; align-items:center; }
   .slide.active { display:flex; }
+  #logo-slide { background:#ffffff; }
+  .slide.game-slide { 
+    background: url('background.png') no-repeat center center; 
+    background-size: cover;
+  }
   #logo-slide img { width:150px; height:auto; }
-  .question-box { margin-top:20px; font-size:1.5rem; font-weight:bold; color:#4a2c91; }
-  .options { display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px; gap:15px; }
-  .option { width:100px; height:100px; border:3px solid #4a2c91; border-radius:15px; display:flex; justify-content:center; align-items:center; cursor:pointer; transition: transform 0.2s, box-shadow 0.3s; background:#fff; }
-  .option img { width:80%; height:80%; }
-  .option.jiggle { animation: jiggle 0.3s; }
-  @keyframes jiggle { 0%{transform:rotate(0deg);} 25%{transform:rotate(10deg);} 50%{transform:rotate(-10deg);} 75%{transform:rotate(10deg);} 100%{transform:rotate(0deg);} }
-  .option.correct-glow { box-shadow: 0 0 15px 5px green; }
-  .tick { font-size:2rem; color:green; margin-top:15px; }
+  .shadows { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:20px; }
+  .shadow { width:60px; height:60px; background:white; border-radius:50%; display:flex; justify-content:center; align-items:center; }
+  .objects { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:20px; }
+  .object { width:60px; height:60px; cursor:pointer; transition: transform 0.2s, box-shadow 0.3s; }
+  .object.jiggle { animation: jiggle 0.3s; }
+  .shadow.correct-glow { box-shadow:0 0 15px 5px green; }
+  @keyframes jiggle { 0%{transform:rotate(0deg);}25%{transform:rotate(10deg);}50%{transform:rotate(-10deg);}75%{transform:rotate(10deg);}100%{transform:rotate(0deg);} }
+  .tick { font-size:2rem; color:green; margin-top:10px; display:none; }
   .end-slide { flex-direction:column; justify-content:center; align-items:center; }
   .play-again-btn { margin-top:20px; padding:10px 20px; font-size:1.2rem; border:none; border-radius:10px; background:#4a2c91; color:#fff; cursor:pointer; }
+  canvas { position:absolute; top:0; left:0; pointer-events:none; }
 </style>
 </head>
 <body>
 <div class="game-container">
   <!-- Slide 1: Logo -->
   <div class="slide active" id="logo-slide">
-    <img src="3a918bdf-8fb6-476c-9189-b24d89f8c673.png" alt="Innovine Logo">
+    <img src="innovine-logo.png" alt="Logo">
   </div>
 
-  <!-- Game slides will be generated dynamically -->
   <!-- End Slide -->
   <div class="slide" id="end-slide">
     <h2>Good Job!</h2>
@@ -39,112 +46,111 @@
   </div>
 </div>
 
-<!-- Audio -->
 <audio id="correct-sound" src="correct.mp3"></audio>
 <audio id="wrong-sound" src="wrong.mp3"></audio>
 <audio id="clap-sound" src="freesound_community-claps-44774.mp3"></audio>
 
 <script>
-const planets = [
-  {name:"Mercury", img:"planets/mercury.png"},
-  {name:"Venus", img:"planets/venus.png"},
-  {name:"Earth", img:"planets/earth.png"},
-  {name:"Mars", img:"planets/mars.png"},
-  {name:"Jupiter", img:"planets/jupiter.png"},
-  {name:"Saturn", img:"planets/saturn.png"},
-  {name:"Uranus", img:"planets/uranus.png"},
-  {name:"Neptune", img:"planets/neptune.png"}
+const items = [
+  {name:"sun", img:"sun.png"},
+  {name:"mercury", img:"mercury.png"},
+  {name:"venus", img:"venus.png"},
+  {name:"earth", img:"earth.png"},
+  {name:"mars", img:"mars.png"},
+  {name:"jupiter", img:"jupiter.png"},
+  {name:"saturn", img:"saturn.png"},
+  {name:"uranus", img:"uranus.png"},
+  {name:"neptune", img:"neptune.png"},
+  {name:"rocket", img:"rocket.png"}
 ];
 
-let currentSlide = 0;
+let remainingItems = [];
+let currentItem = null;
 let wrongAttempts = 0;
-let gameSlides = [];
 
-function createGameSlides() {
-  const container = document.querySelector(".game-container");
-  const shuffledPlanets = planets.sort(() => Math.random()-0.5);
-  shuffledPlanets.forEach((planet,i) => {
-    const slide = document.createElement("div");
-    slide.classList.add("slide");
-    slide.innerHTML = `
-      <div class="question-box">Tap on ${planet.name}!</div>
-      <div class="options">
-        ${generateOptions(planet)}
-      </div>
-      <div class="tick" style="display:none;">✓</div>
-    `;
-    container.insertBefore(slide, document.getElementById("end-slide"));
-    gameSlides.push(slide);
-  });
-}
-
-function generateOptions(correctPlanet) {
-  let options = [correctPlanet];
-  while(options.length < 3){
-    const rand = planets[Math.floor(Math.random()*planets.length)];
-    if(!options.includes(rand)) options.push(rand);
-  }
-  options = options.sort(() => Math.random()-0.5);
-  return options.map(p => `<div class="option" data-name="${p.name}"><img src="${p.img}" alt="${p.name}"></div>`).join("");
-}
-
-function startGame() {
-  setTimeout(() => {
+function startGame(){
+  setTimeout(()=>{
     document.getElementById("logo-slide").classList.remove("active");
-    showSlide(0);
+    remainingItems = [...items].sort(()=>Math.random()-0.5);
+    showNextItem();
   },2000);
 }
 
-function showSlide(index) {
-  document.querySelectorAll(".slide").forEach(s => s.classList.remove("active"));
-  if(index < gameSlides.length){
-    currentSlide = index;
-    wrongAttempts = 0;
-    gameSlides[index].classList.add("active");
-    attachOptionListeners(gameSlides[index]);
-  } else {
-    document.getElementById("end-slide").classList.add("active");
-    playClap();
-    startConfetti();
-  }
-}
+function showNextItem(){
+  const container = document.querySelector(".game-container");
+  const oldSlide = document.querySelector(".slide.game-slide");
+  if(oldSlide) oldSlide.remove();
 
-function attachOptionListeners(slide){
-  slide.querySelectorAll(".option").forEach(option => {
-    option.onclick = () => {
-      const planetName = slide.querySelector(".question-box").innerText.replace("Tap on ","").replace("!","");
-      if(option.dataset.name === planetName){
-        document.getElementById("correct-sound").play();
-        option.classList.add("correct-glow");
-        slide.querySelector(".tick").style.display="block";
-        setTimeout(()=>showSlide(currentSlide+1),1000);
-      } else {
-        wrongAttempts++;
-        document.getElementById("wrong-sound").play();
-        option.classList.add("jiggle");
-        setTimeout(()=>option.classList.remove("jiggle"),300);
-        if(wrongAttempts>=2){
-          slide.querySelector(`.option[data-name='${planetName}']`).classList.add("correct-glow");
-        }
-      }
-    }
+  if(remainingItems.length === 0){
+    document.getElementById("end-slide").classList.add("active");
+    document.getElementById("clap-sound").play();
+    startConfetti();
+    return;
+  }
+
+  wrongAttempts = 0;
+  currentItem = remainingItems.pop();
+
+  const slide = document.createElement("div");
+  slide.classList.add("slide","game-slide","active");
+  slide.innerHTML = `
+    <div class="shadows" id="shadows"></div>
+    <div class="objects" id="objects"></div>
+    <div class="tick" id="tick">✓</div>
+  `;
+  document.getElementById("end-slide").before(slide);
+
+  const shadowsDiv = slide.querySelector("#shadows");
+  const objectsDiv = slide.querySelector("#objects");
+
+  const shuffledShadows = [...items].sort(()=>Math.random()-0.5);
+  shuffledShadows.forEach(it=>{
+    const shadow = document.createElement("div");
+    shadow.classList.add("shadow");
+    shadow.dataset.name = it.name;
+    shadowsDiv.appendChild(shadow);
+  });
+
+  const shuffledObjects = [currentItem, ...items.filter(i=>i.name!==currentItem.name).slice(0,2)].sort(()=>Math.random()-0.5);
+  shuffledObjects.forEach(it=>{
+    const obj = document.createElement("img");
+    obj.classList.add("object");
+    obj.src = it.img;
+    obj.dataset.name = it.name;
+    obj.onclick = () => checkMatch(obj);
+    objectsDiv.appendChild(obj);
   });
 }
 
-// Restart
-function restartGame(){
-  gameSlides.forEach(slide=>slide.remove());
-  gameSlides = [];
-  createGameSlides();
-  showSlide(0);
+function checkMatch(obj){
+  const shadow = document.querySelector(`.shadow[data-name='${currentItem.name}']`);
+  if(obj.dataset.name === currentItem.name){
+    document.getElementById("correct-sound").play();
+    shadow.classList.add("correct-glow");
+    document.getElementById("tick").style.display="block";
+    setTimeout(showNextItem,1000);
+  } else {
+    wrongAttempts++;
+    document.getElementById("wrong-sound").play();
+    obj.classList.add("jiggle");
+    setTimeout(()=>obj.classList.remove("jiggle"),300);
+    if(wrongAttempts>=2) shadow.classList.add("correct-glow");
+  }
 }
 
-// Confetti
+function restartGame(){
+  document.querySelector(".slide.game-slide")?.remove();
+  document.getElementById("end-slide").classList.remove("active");
+  remainingItems = [...items].sort(()=>Math.random()-0.5);
+  showNextItem();
+}
+
+// Confetti effect
 function startConfetti(){
   const canvas = document.getElementById("confetti");
   const ctx = canvas.getContext("2d");
   canvas.width = canvas.offsetWidth;
-  canvas.height = 150;
+  canvas.height = canvas.offsetHeight;
   const confettis = [];
   for(let i=0;i<100;i++){
     confettis.push({
@@ -178,13 +184,6 @@ function startConfetti(){
   draw();
 }
 
-// Clap
-function playClap(){
-  document.getElementById("clap-sound").play();
-}
-
-// Initialize
-createGameSlides();
 startGame();
 </script>
 </body>
