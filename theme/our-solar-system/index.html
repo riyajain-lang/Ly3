@@ -5,186 +5,167 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shadow Matching Planets</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
-  body, html { width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#0b0b2f; overflow:hidden; }
-  .game-container {
-    width:100%; max-width:500px; height:100%; position:relative; text-align:center; color:white; 
-  }
-  .slide { width:100%; height:100%; display:none; flex-direction:column; justify-content:center; align-items:center; }
-  .slide.active { display:flex; }
-  #logo-slide { background:#ffffff; }
-  .slide.game-slide { 
-    background: url('background.png') no-repeat center center; 
-    background-size: cover;
-  }
-  #logo-slide img { width:150px; height:auto; }
-  .shadows { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:20px; }
-  .shadow { width:60px; height:60px; background:white; border-radius:50%; display:flex; justify-content:center; align-items:center; }
-  .objects { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:20px; }
-  .object { width:60px; height:60px; cursor:pointer; transition: transform 0.2s, box-shadow 0.3s; }
-  .object.jiggle { animation: jiggle 0.3s; }
-  .shadow.correct-glow { box-shadow:0 0 15px 5px green; }
-  @keyframes jiggle { 0%{transform:rotate(0deg);}25%{transform:rotate(10deg);}50%{transform:rotate(-10deg);}75%{transform:rotate(10deg);}100%{transform:rotate(0deg);} }
-  .tick { font-size:2rem; color:green; margin-top:10px; display:none; }
-  .end-slide { flex-direction:column; justify-content:center; align-items:center; }
-  .play-again-btn { margin-top:20px; padding:10px 20px; font-size:1.2rem; border:none; border-radius:10px; background:#4a2c91; color:#fff; cursor:pointer; }
-  canvas { position:absolute; top:0; left:0; pointer-events:none; }
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial,sans-serif;}
+body, html { width:100%; height:100%; overflow:hidden; display:flex; justify-content:center; align-items:center; background:#f7f7f7; }
+#game-container { width:100%; max-width:500px; height:100%; position:relative; text-align:center; }
+.slide { width:100%; height:100%; position:absolute; top:0; left:0; display:none; flex-direction:column; justify-content:center; align-items:center; }
+.active { display:flex; }
+.logo-slide, .goodjob-slide { justify-content:center; align-items:center; }
+.shadow-container { position:relative; width:100%; height:70%; margin-top:10px; }
+.shadow { position:absolute; width:60px; height:60px; display:flex; justify-content:center; align-items:center; border-radius:50%; }
+.planet-options { display:flex; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+.planet-option { margin:5px; width:60px; height:60px; cursor:pointer; transition: transform 0.2s; }
+.planet-option.wrong { animation: shake 0.3s; }
+.tick { width:30px; height:30px; position:absolute; display:none; }
+.instruction-box { padding:10px; background:#fff; border-radius:10px; margin-top:10px; font-size:18px; font-weight:bold; }
+button { margin-top:15px; padding:10px 20px; font-size:16px; cursor:pointer; border-radius:10px; border:none; background:#7a42f4; color:white; }
+@keyframes shake {
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-10px);}
+  50%{transform:translateX(10px);}
+  75%{transform:translateX(-10px);}
+  100%{transform:translateX(0);}
+}
 </style>
 </head>
 <body>
-<div class="game-container">
-  <!-- Slide 1: Logo -->
-  <div class="slide active" id="logo-slide">
-    <img src="innovine-logo.png" alt="Logo">
+<div id="game-container">
+
+  <!-- Logo Slide -->
+  <div class="slide logo-slide active">
+    <img src="assets/innovine-logo.png" alt="Logo" style="width:50%;">
   </div>
 
-  <!-- End Slide -->
-  <div class="slide" id="end-slide">
-    <h2>Good Job!</h2>
-    <canvas id="confetti"></canvas>
-    <button class="play-again-btn" onclick="restartGame()">Play Again</button>
+  <!-- Game Slide -->
+  <div class="slide game-slide" id="game-slide">
+    <div class="instruction-box">Shadow Matching Planets</div>
+    <div class="shadow-container" id="shadow-container"></div>
+    <div class="planet-options" id="planet-options"></div>
   </div>
+
+  <!-- Good Job Slide -->
+  <div class="slide goodjob-slide" id="goodjob-slide">
+    <h2>Good Job!</h2>
+    <canvas id="confetti-canvas" width="500" height="500" style="position:absolute; top:0; left:0;"></canvas>
+    <button id="play-again">Play Again</button>
+  </div>
+
 </div>
 
-<audio id="correct-sound" src="correct.mp3"></audio>
-<audio id="wrong-sound" src="wrong.mp3"></audio>
-<audio id="clap-sound" src="freesound_community-claps-44774.mp3"></audio>
-
 <script>
-const items = [
-  {name:"sun", img:"sun.png"},
-  {name:"mercury", img:"mercury.png"},
-  {name:"venus", img:"venus.png"},
-  {name:"earth", img:"earth.png"},
-  {name:"mars", img:"mars.png"},
-  {name:"jupiter", img:"jupiter.png"},
-  {name:"saturn", img:"saturn.png"},
-  {name:"uranus", img:"uranus.png"},
-  {name:"neptune", img:"neptune.png"},
-  {name:"rocket", img:"rocket.png"}
+// Shadow images (from your uploaded PNGs)
+const planetData = [
+  {name:"mercury.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"10%", left:"20%"},
+  {name:"venus.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"25%", left:"70%"},
+  {name:"earth.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"40%", left:"35%"},
+  {name:"mars.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"55%", left:"60%"},
+  {name:"jupiter.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"70%", left:"25%"},
+  {name:"saturn.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"20%", left:"50%"},
+  {name:"uranus.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"50%", left:"80%"},
+  {name:"neptune.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"65%", left:"45%"}
 ];
 
-let remainingItems = [];
-let currentItem = null;
-let wrongAttempts = 0;
+let selectedPlanet = null;
+let attempts = {};
+const shadowContainer = document.getElementById('shadow-container');
+const planetOptionsDiv = document.getElementById('planet-options');
 
-function startGame(){
-  setTimeout(()=>{
-    document.getElementById("logo-slide").classList.remove("active");
-    remainingItems = [...items].sort(()=>Math.random()-0.5);
-    showNextItem();
-  },2000);
-}
+// Initialize shadows
+planetData.forEach(p=>{
+  const div = document.createElement('div');
+  div.classList.add('shadow');
+  div.style.top = p.top;
+  div.style.left = p.left;
+  div.dataset.planet = p.name;
+  const img = document.createElement('img');
+  img.src = p.shadow;
+  img.style.width="100%";
+  img.style.height="100%";
+  div.appendChild(img);
+  div.onclick = ()=> placePlanet(div);
+  shadowContainer.appendChild(div);
+  attempts[p.name] = 0;
+});
 
-function showNextItem(){
-  const container = document.querySelector(".game-container");
-  const oldSlide = document.querySelector(".slide.game-slide");
-  if(oldSlide) oldSlide.remove();
-
-  if(remainingItems.length === 0){
-    document.getElementById("end-slide").classList.add("active");
-    document.getElementById("clap-sound").play();
-    startConfetti();
-    return;
-  }
-
-  wrongAttempts = 0;
-  currentItem = remainingItems.pop();
-
-  const slide = document.createElement("div");
-  slide.classList.add("slide","game-slide","active");
-  slide.innerHTML = `
-    <div class="shadows" id="shadows"></div>
-    <div class="objects" id="objects"></div>
-    <div class="tick" id="tick">✓</div>
-  `;
-  document.getElementById("end-slide").before(slide);
-
-  const shadowsDiv = slide.querySelector("#shadows");
-  const objectsDiv = slide.querySelector("#objects");
-
-  const shuffledShadows = [...items].sort(()=>Math.random()-0.5);
-  shuffledShadows.forEach(it=>{
-    const shadow = document.createElement("div");
-    shadow.classList.add("shadow");
-    shadow.dataset.name = it.name;
-    shadowsDiv.appendChild(shadow);
-  });
-
-  const shuffledObjects = [currentItem, ...items.filter(i=>i.name!==currentItem.name).slice(0,2)].sort(()=>Math.random()-0.5);
-  shuffledObjects.forEach(it=>{
-    const obj = document.createElement("img");
-    obj.classList.add("object");
-    obj.src = it.img;
-    obj.dataset.name = it.name;
-    obj.onclick = () => checkMatch(obj);
-    objectsDiv.appendChild(obj);
+// Shuffle and display options
+function shuffle(array){return array.sort(()=> Math.random() - 0.5);}
+function createOptions(){
+  planetOptionsDiv.innerHTML='';
+  shuffle(planetData).forEach(p=>{
+    const img=document.createElement('img');
+    img.src='assets/'+p.name;
+    img.classList.add('planet-option');
+    img.onclick=()=> selectPlanet(img,p.name);
+    planetOptionsDiv.appendChild(img);
   });
 }
 
-function checkMatch(obj){
-  const shadow = document.querySelector(`.shadow[data-name='${currentItem.name}']`);
-  if(obj.dataset.name === currentItem.name){
-    document.getElementById("correct-sound").play();
-    shadow.classList.add("correct-glow");
-    document.getElementById("tick").style.display="block";
-    setTimeout(showNextItem,1000);
+function selectPlanet(img,name){selectedPlanet={img,name};}
+
+function placePlanet(shadowDiv){
+  if(!selectedPlanet) return;
+  if(shadowDiv.dataset.planet === selectedPlanet.name){
+    shadowDiv.appendChild(selectedPlanet.img);
+    selectedPlanet.img.style.position='absolute';
+    selectedPlanet.img.style.top='0';
+    selectedPlanet.img.style.left='0';
+    selectedPlanet=null;
+    checkCompletion();
   } else {
-    wrongAttempts++;
-    document.getElementById("wrong-sound").play();
-    obj.classList.add("jiggle");
-    setTimeout(()=>obj.classList.remove("jiggle"),300);
-    if(wrongAttempts>=2) shadow.classList.add("correct-glow");
+    attempts[selectedPlanet.name]++;
+    selectedPlanet.img.classList.add('wrong');
+    setTimeout(()=> selectedPlanet.img.classList.remove('wrong'),300);
+    if(attempts[selectedPlanet.name]>=2){
+      shadowDiv.style.border="3px solid green";
+    }
   }
 }
 
-function restartGame(){
-  document.querySelector(".slide.game-slide")?.remove();
-  document.getElementById("end-slide").classList.remove("active");
-  remainingItems = [...items].sort(()=>Math.random()-0.5);
-  showNextItem();
+function checkCompletion(){
+  const matched = document.querySelectorAll('.shadow img:not([src*="fac35f06"])').length;
+  if(matched>=planetData.length){
+    showGoodJob();
+  }
 }
 
-// Confetti effect
-function startConfetti(){
-  const canvas = document.getElementById("confetti");
-  const ctx = canvas.getContext("2d");
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
-  const confettis = [];
+function showGoodJob(){
+  document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
+  document.getElementById('goodjob-slide').classList.add('active');
+  playConfetti();
+}
+
+function playConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  const ctx=canvas.getContext('2d');
+  const particles=[];
   for(let i=0;i<100;i++){
-    confettis.push({
-      x:Math.random()*canvas.width,
-      y:Math.random()*canvas.height,
-      r:Math.random()*6+4,
-      d:Math.random()*canvas.height,
-      color:`hsl(${Math.random()*360},100%,50%)`,
-      tilt:Math.random()*10-10
-    });
+    particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*6+2, dx:(Math.random()-0.5)*4, dy:Math.random()*2+1});
   }
-  let angle = 0;
   function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    confettis.forEach(f=>{
+    particles.forEach(p=>{
       ctx.beginPath();
-      ctx.lineWidth=f.r/2;
-      ctx.strokeStyle=f.color;
-      ctx.moveTo(f.x+f.tilt,f.y);
-      ctx.lineTo(f.x+f.tilt,f.y+f.r);
-      ctx.stroke();
-    });
-    angle += 0.01;
-    confettis.forEach(f=>{
-      f.x += Math.sin(angle);
-      f.y += 1;
-      if(f.y>canvas.height){ f.y=0; f.x=Math.random()*canvas.width; }
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,0,150,0.7)';
+      ctx.fill();
+      p.x+=p.dx; p.y+=p.dy;
+      if(p.y>canvas.height) p.y=0;
+      if(p.x>canvas.width) p.x=0;
     });
     requestAnimationFrame(draw);
   }
   draw();
 }
 
-startGame();
+// Start game after logo
+setTimeout(()=>{
+  document.querySelector('.logo-slide').classList.remove('active');
+  document.getElementById('game-slide').classList.add('active');
+  createOptions();
+},2000);
+
+// Play Again
+document.getElementById('play-again').onclick = ()=>{location.reload();};
 </script>
 </body>
 </html>
