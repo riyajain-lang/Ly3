@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Creative Shadow Matching Planets</title>
+<title>Shadow Matching Planets Creative Glow</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family: Arial,sans-serif; }
 body, html { width:100%; height:100%; overflow:hidden; display:flex; justify-content:center; align-items:center; background:#000; }
@@ -15,6 +15,8 @@ body, html { width:100%; height:100%; overflow:hidden; display:flex; justify-con
 .instruction-box { margin-top:10px; padding:10px 20px; background:rgba(255,255,255,0.8); border-radius:12px; font-weight:bold; font-size:18px; }
 .shadow-container { position:relative; width:100%; height:70%; margin-top:10px; }
 .shadow { position:absolute; width:70px; height:70px; display:flex; justify-content:center; align-items:center; border-radius:50%; cursor:pointer; }
+.shadow img { width:100%; height:100%; position:absolute; top:0; left:0; }
+.overlay { position:absolute; width:100%; height:100%; top:0; left:0; display:none; pointer-events:none; }
 .planet-options { display:flex; flex-wrap:wrap; justify-content:center; margin-top:10px; }
 .planet-option { margin:5px; width:60px; height:60px; cursor:pointer; transition: transform 0.2s; animation: rotate 4s linear infinite; }
 .planet-option.wrong { animation: shake 0.3s; }
@@ -52,7 +54,6 @@ canvas { position:absolute; top:0; left:0; pointer-events:none; }
 </div>
 
 <script>
-// Planet and shadow data
 const planetData = [
   {name:"mercury.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"10%", left:"20%"},
   {name:"venus.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"25%", left:"70%"},
@@ -64,33 +65,40 @@ const planetData = [
   {name:"neptune.png", shadow:"/mnt/data/fac35f06-a584-47eb-82b9-0e6684e9d46c.png", top:"65%", left:"45%"}
 ];
 
+const glowOverlay = "/mnt/data/4d570600-7490-499d-b140-9a265561513f.png";
+
 let selectedPlanet = null;
 let attempts = {};
 const shadowContainer = document.getElementById('shadow-container');
 const planetOptionsDiv = document.getElementById('planet-options');
 const progressDiv = document.getElementById('progress');
 
-// Initialize shadows
+// Initialize shadows with glow overlay
 planetData.forEach(p=>{
-  const div = document.createElement('div');
+  const div=document.createElement('div');
   div.classList.add('shadow');
-  div.style.top = p.top;
-  div.style.left = p.left;
-  div.dataset.planet = p.name;
-  const img = document.createElement('img');
-  img.src = p.shadow;
-  img.style.width="100%";
-  img.style.height="100%";
-  div.appendChild(img);
-  div.onclick = ()=> placePlanet(div);
+  div.style.top=p.top;
+  div.style.left=p.left;
+  div.dataset.planet=p.name;
+
+  const shadowImg=document.createElement('img');
+  shadowImg.src=p.shadow;
+  div.appendChild(shadowImg);
+
+  const overlayImg=document.createElement('img');
+  overlayImg.src=glowOverlay;
+  overlayImg.classList.add('overlay');
+  div.appendChild(overlayImg);
+
+  div.onclick=()=> placePlanet(div);
   shadowContainer.appendChild(div);
-  attempts[p.name] = 0;
+  attempts[p.name]=0;
 });
 
-// Create progress stars
+// Progress stars
 planetData.forEach(()=>{ const star=document.createElement('img'); star.src='https://i.imgur.com/O0Y8FhT.png'; star.classList.add('star'); progressDiv.appendChild(star); });
 
-function shuffle(array){return array.sort(()=> Math.random()-0.5);}
+function shuffle(array){return array.sort(()=>Math.random()-0.5);}
 function createOptions(){
   planetOptionsDiv.innerHTML='';
   shuffle(planetData).forEach(p=>{
@@ -106,12 +114,13 @@ function selectPlanet(img,name){selectedPlanet={img,name};}
 
 function placePlanet(shadowDiv){
   if(!selectedPlanet) return;
+  const overlay = shadowDiv.querySelector('.overlay');
   if(shadowDiv.dataset.planet===selectedPlanet.name){
     shadowDiv.appendChild(selectedPlanet.img);
     selectedPlanet.img.style.position='absolute';
     selectedPlanet.img.style.top='0';
     selectedPlanet.img.style.left='0';
-    // update star
+    overlay.style.display='none';
     document.querySelectorAll('.star')[planetData.findIndex(p=>p.name===selectedPlanet.name)].classList.add('active');
     selectedPlanet=null;
     checkCompletion();
@@ -120,13 +129,13 @@ function placePlanet(shadowDiv){
     selectedPlanet.img.classList.add('wrong');
     setTimeout(()=> selectedPlanet.img.classList.remove('wrong'),300);
     if(attempts[selectedPlanet.name]>=2){
-      shadowDiv.style.border="3px solid green";
+      overlay.style.display='block';
     }
   }
 }
 
 function checkCompletion(){
-  const matched = document.querySelectorAll('.shadow img:not([src*="fac35f06"])').length;
+  const matched=document.querySelectorAll('.shadow img:not(.overlay)').length - planetData.length;
   if(matched>=planetData.length) showGoodJob();
 }
 
@@ -159,14 +168,14 @@ function playConfetti(){
   draw();
 }
 
-// Start game after logo
+// Start after logo
 setTimeout(()=>{
   document.querySelector('.logo-slide').classList.remove('active');
   document.getElementById('game-slide').classList.add('active');
   createOptions();
 },2000);
 
-document.getElementById('play-again').onclick = ()=>{location.reload();};
+document.getElementById('play-again').onclick=()=>{location.reload();};
 </script>
 </body>
 </html>
