@@ -3,156 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Country on My Map - Fixed</title>
+<title>Country on My Map - Stable</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
 body{
-height:100vh;
+margin:0;
 overflow:hidden;
+font-family:Arial;
+background:white;
 display:flex;
 justify-content:center;
 align-items:center;
-background:white;
-}
-/* SCREEN FIX */
-.screen{
-  width:100%;
-  height:100%;
-  height:-webkit-fill-available;
-  display:none;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
+height:100vh;
 }
 
-.active{
-  display:flex;
-}
-
-/* Logo Screen */
-#logoScreen{
-  background:white;
-}
-
-#logoScreen img{
-  width:320px;
-  max-width:80%;
-}
-
-/* Quiz Screen background */
-#quizScreen{
-  background:url('assets/country-on-my-map-background.png') center/cover no-repeat;
-}
-/* SPLASH */
-#splash{
+#splash,#game,#final{
 position:absolute;
 width:100%;
 height:100%;
-background:white;
 display:flex;
 justify-content:center;
 align-items:center;
+flex-direction:column;
 }
 
-#splash img{
+#game,#final{display:none;}
+
+#logo{
 width:180px;
 }
 
-/* GAME */
-#game{
-display:none;
-width:100%;
-height:100vh;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:10px;
-position:relative;
-z-index:2;
-}
-
-#continentImg{
-width:70%;
-max-width:320px;
-margin-bottom:15px;
-}
-
-#score,#timer,#stars{
-font-weight:bold;
-margin:4px;
-}
-
-#timer{color:red;}
-
-.options{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-width:100%;
-max-width:500px;
+#qimg{
+width:280px;
+margin-bottom:10px;
 }
 
 .option{
-background:#f1f5ff;
-padding:14px;
-border-radius:12px;
-font-size:18px;
+background:#eef3ff;
+padding:12px;
+margin:6px;
+border-radius:10px;
+width:200px;
+text-align:center;
 cursor:pointer;
-transition:0.2s;
 }
 
 .option:active{transform:scale(0.97);}
 
-.shake{animation:shake 0.3s;}
-
-@keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-5px)}
-50%{transform:translateX(5px)}
-75%{transform:translateX(-5px)}
-100%{transform:translateX(0)}
-}
-
-.glow{
-box-shadow:0 0 12px #2ecc71;
-border:2px solid #2ecc71;
-}
-
-/* FINAL */
-#final{
-display:none;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-}
-
-button{
-padding:12px 20px;
-border:none;
-border-radius:10px;
-background:#3498db;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
-
-/* CONFETTI */
-canvas{
-position:fixed;
-top:0;
-left:0;
-pointer-events:none;
-z-index:999;
-}
+#timer{color:red;font-weight:bold;}
+#score{font-weight:bold;}
 </style>
 </head>
 
@@ -160,268 +59,159 @@ z-index:999;
 
 <!-- SPLASH -->
 <div id="splash">
-    <img src="/mnt/data/08a6cbf1-814d-4ffc-8e3b-0500c68da067.png">
+<img id="logo" src="" alt="logo">
 </div>
 
 <!-- GAME -->
 <div id="game">
-
 <div id="score">Score: 0</div>
-<div id="stars">⭐ ⭐ ⭐</div>
-<div id="timer">Time: 60s</div>
-
-<img id="continentImg">
-
-<div class="options" id="options"></div>
+<div id="timer">60</div>
+<img id="qimg">
+<div id="options"></div>
 </div>
 
 <!-- FINAL -->
 <div id="final">
 <h1>🎉 Good Job!</h1>
-<h2 id="finalScore"></h2>
 <button onclick="restart()">Play Again</button>
 </div>
 
-<canvas id="confetti"></canvas>
+<audio id="wrong" src="Ly3/theme/country-on-my-map/assets/wrong.mp3"></audio>
+<audio id="clap" src="Ly3/theme/country-on-my-map/assets/claps.mp3"></audio>
 
 <script>
 
-/* FIXED ASSETS */
-const assets = {
-africa: base + "africa.png",
-asia: base + "asia.png",
-europe: base + "europe.png",
-australia: base + "australia.png",
-northAmerica: base + "north-america.png",
-southAmerica: base + "south-america.png",
-antarctica: base + "antarctica.png",
-background: base + "background.png",
-logo: base + "innovine-logo.png"
-};
+const assetsBase = "Ly3/theme/country-on-my-map/assets/";
 
+const logo = document.getElementById("logo");
+const splash = document.getElementById("splash");
+const game = document.getElementById("game");
+const final = document.getElementById("final");
+
+const qimg = document.getElementById("qimg");
+const optionsBox = document.getElementById("options");
+
+const scoreText = document.getElementById("score");
+const timerText = document.getElementById("timer");
+
+const wrong = document.getElementById("wrong");
+const clap = document.getElementById("clap");
+
+/* SAFE LOAD (IMPORTANT FIX) */
+function safeImg(img, path){
+img.onerror = ()=>{ img.style.display="none"; };
+img.src = path;
+}
+
+/* FIX LOGO */
+safeImg(logo, assetsBase + "innovine-logo.png");
+
+/* QUESTIONS */
 const questions = [
-{img:assets.africa, answer:"Africa"},
-{img:assets.asia, answer:"Asia"},
-{img:assets.europe, answer:"Europe"},
-{img:assets.australia, answer:"Australia"},
-{img:assets.northAmerica, answer:"North America"},
-{img:assets.southAmerica, answer:"South America"},
-{img:assets.antarctica, answer:"Antarctica"}
+{img:"africa.png", ans:"Africa"},
+{img:"asia.png", ans:"Asia"},
+{img:"europe.png", ans:"Europe"},
+{img:"australia.png", ans:"Australia"},
+{img:"north-america.png", ans:"North America"},
+{img:"south-america.png", ans:"South America"},
+{img:"antarctica.png", ans:"Antarctica"}
 ];
 
-let i=0, score=0, attempts=0, time=60, interval;
-let confettiRunning=false;
+let i=0;
+let score=0;
+let time=60;
+let timer;
 
-const img=document.getElementById("continentImg");
-const options=document.getElementById("options");
+function startGame(){
+splash.style.display="none";
+game.style.display="flex";
+loadQ();
+}
 
-const timerBox=document.getElementById("timer");
-const scoreBox=document.getElementById("score");
-const starsBox=document.getElementById("stars");
+setTimeout(startGame,2000);
 
-/* TIMER RESET FIX */
+/* TIMER */
 function startTimer(){
-clearInterval(interval);
+clearInterval(timer);
 time=60;
+timerText.innerText=time;
 
-interval=setInterval(()=>{
+timer=setInterval(()=>{
 time--;
-timerBox.innerText="Time: "+time+"s";
+timerText.innerText=time;
 
 if(time<=0){
-wrong();
+wrong.play();
 next();
 }
 },1000);
 }
 
-/* SPEECH */
-function speak(text){
-let s=new SpeechSynthesisUtterance(text);
-s.rate=0.9;
-speechSynthesis.cancel();
-speechSynthesis.speak(s);
-}
-
-/* LOAD QUESTION */
-function load(){
-attempts=0;
+/* LOAD */
+function loadQ(){
+startTimer();
 
 if(i>=questions.length){
-endGame();
+end();
 return;
 }
 
-startTimer();
-
 let q=questions[i];
-img.src=q.img;
+safeImg(qimg, assetsBase + q.img);
 
-/* voice instruction */
-setTimeout(()=>speak(q.answer),500);
+/* voice */
+speechSynthesis.cancel();
+speechSynthesis.speak(new SpeechSynthesisUtterance(q.ans));
 
-let opts=[
-"Africa","Asia","Europe","Australia",
-"North America","South America","Antarctica"
-];
-
+let opts=["Africa","Asia","Europe","Australia","North America","South America","Antarctica"];
 opts.sort(()=>Math.random()-0.5);
 opts=opts.slice(0,4);
-if(!opts.includes(q.answer)) opts[0]=q.answer;
-
+if(!opts.includes(q.ans)) opts[0]=q.ans;
 opts.sort(()=>Math.random()-0.5);
 
-options.innerHTML="";
+optionsBox.innerHTML="";
 
 opts.forEach(o=>{
 let d=document.createElement("div");
 d.className="option";
 d.innerText=o;
 
-d.onclick=()=>check(d,o,q.answer);
-options.appendChild(d);
+d.onclick=()=>check(o,q.ans);
+
+optionsBox.appendChild(d);
 });
 }
 
 /* CHECK */
-function check(el,sel,correct){
-
-if(sel===correct){
-
+function check(sel,ans){
+if(sel===ans){
 score+=10;
-update();
-
-el.style.background="#d4edda";
-
-setTimeout(()=>next(),700);
-
+scoreText.innerText="Score: "+score;
+next();
 }else{
-
-attempts++;
-wrong();
-
-el.classList.add("shake");
-setTimeout(()=>el.classList.remove("shake"),300);
-
-startTimer(); // reset timer on wrong
-
-if(attempts>=2){
-document.querySelectorAll(".option").forEach(o=>{
-if(o.innerText===correct){
-o.classList.add("glow");
-}
-});
-
-setTimeout(()=>next(),900);
-}
+wrong.play();
+startTimer();
 }
 }
 
-/* WRONG */
-function wrong(){
-attempts++;
-}
-
-/* NEXT */
 function next(){
 i++;
-load();
+loadQ();
 }
 
-/* SCORE */
-function update(){
-scoreBox.innerText="Score: "+score;
-
-if(score<30) starsBox.innerText="⭐";
-else if(score<60) starsBox.innerText="⭐⭐";
-else starsBox.innerText="⭐⭐⭐";
+function end(){
+game.style.display="none";
+final.style.display="flex";
+clap.play();
 }
 
-/* END */
-function endGame(){
-clearInterval(interval);
-document.getElementById("game").style.display="none";
-document.getElementById("final").style.display="flex";
-document.getElementById("finalScore").innerText="Score: "+score;
-
-startConfetti();
-}
-
-/* RESET FIX (IMPORTANT) */
 function restart(){
-
-/* STOP EVERYTHING */
-clearInterval(interval);
-stopConfetti();
-
 i=0;
 score=0;
-attempts=0;
-
-document.getElementById("final").style.display="none";
-document.getElementById("game").style.display="flex";
-
-load();
+final.style.display="none";
+game.style.display="flex";
+loadQ();
 }
-
-/* CONFETTI FIX */
-const canvas=document.getElementById("confetti");
-const ctx=canvas.getContext("2d");
-
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-
-let pieces=[];
-
-function startConfetti(){
-confettiRunning=true;
-pieces=[];
-
-for(let i=0;i<120;i++){
-pieces.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height-canvas.height,
-r:Math.random()*6+3,
-d:Math.random()*4+2,
-c:["#f94144","#f9c74f","#90be6d","#577590"][Math.floor(Math.random()*4)]
-});
-}
-animate();
-}
-
-function stopConfetti(){
-confettiRunning=false;
-pieces=[];
-ctx.clearRect(0,0,canvas.width,canvas.height);
-}
-
-function animate(){
-if(!confettiRunning) return;
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-pieces.forEach(p=>{
-ctx.fillStyle=p.c;
-ctx.beginPath();
-ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-ctx.fill();
-
-p.y+=p.d;
-if(p.y>canvas.height){
-p.y=-10;
-p.x=Math.random()*canvas.width;
-}
-});
-
-requestAnimationFrame(animate);
-}
-
-/* START */
-setTimeout(()=>{
-document.getElementById("splash").style.display="none";
-document.getElementById("game").style.display="flex";
-load();
-},2000);
 
 </script>
 
