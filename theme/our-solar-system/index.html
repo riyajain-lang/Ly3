@@ -12,7 +12,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+font-family:Arial, sans-serif;
 }
 
 html,body{
@@ -22,15 +22,12 @@ overflow:hidden;
 }
 
 body{
-display:flex;
-justify-content:center;
-align-items:center;
-background:#000;
+width:100%;
+height:100%;
 }
 
 #game{
-width:100%;
-max-width:500px;
+width:100vw;
 height:100vh;
 position:relative;
 overflow:hidden;
@@ -40,10 +37,7 @@ overflow:hidden;
 
 .slide{
 position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
+inset:0;
 display:none;
 justify-content:center;
 align-items:center;
@@ -54,82 +48,83 @@ flex-direction:column;
 display:flex;
 }
 
-/* Logo */
+/* Logo Slide */
 
 #logoSlide{
-background:white;
+background:#ffffff;
 }
 
 #logoSlide img{
 width:70%;
-max-width:280px;
+max-width:300px;
 }
 
-/* Game */
+/* Game Slide */
 
 #gameSlide{
 background:url('assets/background-solar-system.png') center center/cover no-repeat;
-padding:15px;
+padding:20px;
 }
 
-.instruction{
-background:rgba(255,255,255,.9);
-padding:12px 20px;
-border-radius:18px;
-font-size:28px;
+.title{
+background:rgba(255,255,255,0.92);
+padding:12px 30px;
+border-radius:20px;
+font-size:clamp(28px,4vw,42px);
 font-weight:bold;
-margin-bottom:15px;
-text-align:center;
+margin-bottom:25px;
 }
 
-.planet-box{
-width:180px;
-height:180px;
+.questionArea{
+width:100%;
+max-width:1100px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+gap:40px;
+}
+
+.planetBox{
+flex:1;
 display:flex;
 justify-content:center;
 align-items:center;
-margin-bottom:20px;
 }
 
-.planet-box img{
-max-width:100%;
-max-height:100%;
+.planetBox img{
+width:min(35vw,280px);
+height:auto;
 object-fit:contain;
 }
 
 .options{
-width:100%;
+flex:1;
+
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
+gap:16px;
 }
 
 .option{
 background:white;
-border-radius:18px;
-padding:15px;
-font-size:24px;
+border-radius:20px;
+padding:22px;
+font-size:clamp(24px,3vw,34px);
 font-weight:bold;
-text-align:center;
 cursor:pointer;
-box-shadow:0 4px 10px rgba(0,0,0,.2);
+text-align:center;
+box-shadow:0 5px 15px rgba(0,0,0,.15);
 user-select:none;
+transition:.2s;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:95px;
 }
 
-.option.correctGlow{
-animation:glow 1s infinite;
-}
-
-@keyframes glow{
-0%{
-box-shadow:0 0 5px #0000FF;
-}
-50%{
-box-shadow:0 0 25px #0000FF;
-}
-100%{
-box-shadow:0 0 5px #0000FF;
-}
+.option:hover{
+transform:scale(1.03);
 }
 
 .wiggle{
@@ -144,14 +139,24 @@ animation:wiggle .35s;
 100%{transform:translateX(0);}
 }
 
+.correctGlow{
+animation:glow 1s infinite;
+}
+
+@keyframes glow{
+0%{box-shadow:0 0 5px #0000FF;}
+50%{box-shadow:0 0 25px #0000FF;}
+100%{box-shadow:0 0 5px #0000FF;}
+}
+
 .tick{
-font-size:70px;
-color:green;
+font-size:80px;
+color:#28a745;
 margin-top:10px;
 display:none;
 }
 
-/* Good Job */
+/* End Slide */
 
 #endSlide{
 background:url('assets/background-solar-system.png') center center/cover no-repeat;
@@ -160,28 +165,50 @@ text-align:center;
 }
 
 #endSlide h1{
-font-size:42px;
+font-size:clamp(40px,6vw,70px);
+text-shadow:2px 2px 8px black;
 margin-bottom:20px;
-text-shadow:2px 2px 5px black;
 }
 
 #playAgain{
-padding:14px 25px;
-font-size:22px;
+padding:16px 30px;
+font-size:28px;
 border:none;
-border-radius:15px;
+border-radius:20px;
 cursor:pointer;
 background:#4CAF50;
 color:white;
+font-weight:bold;
 }
 
 canvas{
 position:absolute;
-top:0;
-left:0;
+inset:0;
 pointer-events:none;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.questionArea{
+flex-direction:column;
+gap:20px;
+}
+
+.planetBox img{
+width:220px;
+}
+
+.options{
 width:100%;
-height:100%;
+}
+
+.option{
+min-height:80px;
+font-size:28px;
+}
+
 }
 
 </style>
@@ -200,17 +227,21 @@ height:100%;
 
 <div id="gameSlide" class="slide">
 
-<div class="instruction">
+<div class="title">
 Who Am I?
 </div>
 
-<div class="planet-box">
+<div class="questionArea">
+
+<div class="planetBox">
 <img id="planetImage">
 </div>
 
 <div class="options" id="options"></div>
 
-<div class="tick" id="tick">
+</div>
+
+<div id="tick" class="tick">
 ✔
 </div>
 
@@ -222,7 +253,7 @@ Who Am I?
 
 <canvas id="confetti"></canvas>
 
-<h1>🎉 Good Job! 🎉</h1>
+<h1>🎉 GOOD JOB! 🎉</h1>
 
 <button id="playAgain">
 Play Again
@@ -232,8 +263,6 @@ Play Again
 
 </div>
 
-<!-- AUDIO -->
-
 <audio id="correctSound" src="assets/correct.mp3"></audio>
 <audio id="wrongSound" src="assets/wrong.mp3"></audio>
 <audio id="clapsSound" src="assets/claps.mp3"></audio>
@@ -242,137 +271,135 @@ Play Again
 
 const questions = [
 
-{
-name:"Mercury",
-image:"assets/mercury.png"
-},
-
-{
-name:"Venus",
-image:"assets/venus.png"
-},
-
-{
-name:"Earth",
-image:"assets/earth.png"
-},
-
-{
-name:"Mars",
-image:"assets/mars.png"
-},
-
-{
-name:"Jupiter",
-image:"assets/jupiter.png"
-},
-
-{
-name:"Saturn",
-image:"assets/saturn.png"
-},
-
-{
-name:"Uranus",
-image:"assets/uranus.png"
-},
-
-{
-name:"Neptune",
-image:"assets/neptune.png"
-},
-
-{
-name:"Sun",
-image:"assets/sun.png"
-}
+{name:"Mercury",image:"assets/mercury.png"},
+{name:"Venus",image:"assets/venus.png"},
+{name:"Earth",image:"assets/earth.png"},
+{name:"Mars",image:"assets/mars.png"},
+{name:"Jupiter",image:"assets/jupiter.png"},
+{name:"Saturn",image:"assets/saturn.png"},
+{name:"Uranus",image:"assets/uranus.png"},
+{name:"Neptune",image:"assets/neptune.png"},
+{name:"Sun",image:"assets/sun.png"}
 
 ];
 
-let current=0;
-let wrongAttempts=0;
+let currentQuestion = 0;
+let wrongAttempts = 0;
 
-const gameSlide=document.getElementById("gameSlide");
-const endSlide=document.getElementById("endSlide");
+const gameSlide = document.getElementById("gameSlide");
+const endSlide = document.getElementById("endSlide");
 
-const planetImage=document.getElementById("planetImage");
-const options=document.getElementById("options");
+const planetImage = document.getElementById("planetImage");
+const optionsDiv = document.getElementById("options");
 
-const correctSound=document.getElementById("correctSound");
-const wrongSound=document.getElementById("wrongSound");
-const clapsSound=document.getElementById("clapsSound");
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+const clapsSound = document.getElementById("clapsSound");
 
 shuffle(questions);
 
-function shuffle(arr){
-for(let i=arr.length-1;i>0;i--){
-let j=Math.floor(Math.random()*(i+1));
-[arr[i],arr[j]]=[arr[j],arr[i]];
+function shuffle(array){
+for(let i=array.length-1;i>0;i--){
+const j=Math.floor(Math.random()*(i+1));
+[array[i],array[j]]=[array[j],array[i]];
 }
 }
 
-function loadQuestion(){
+function playVoice(name){
 
-wrongAttempts=0;
+const fileName =
+`assets/${name.toLowerCase()}.mp3`;
 
-document.getElementById("tick").style.display="none";
+const audio = new Audio(fileName);
 
-const q=questions[current];
+audio.play().catch(()=>{
 
-planetImage.src=q.image;
+const speech =
+new SpeechSynthesisUtterance(
+`Hey, I'm ${name}.`
+);
 
-let choices=[q.name];
+speech.rate = 0.9;
+speech.pitch = 1.1;
 
-while(choices.length<4){
-
-let random=
-questions[Math.floor(Math.random()*questions.length)].name;
-
-if(!choices.includes(random))
-choices.push(random);
-}
-
-shuffle(choices);
-
-options.innerHTML="";
-
-choices.forEach(choice=>{
-
-let btn=document.createElement("div");
-
-btn.className="option";
-
-btn.innerText=choice;
-
-btn.onclick=()=>checkAnswer(btn,choice);
-
-options.appendChild(btn);
+speechSynthesis.cancel();
+speechSynthesis.speak(speech);
 
 });
 
 }
 
-function checkAnswer(btn,choice){
+function loadQuestion(){
 
-const answer=questions[current].name;
+wrongAttempts = 0;
 
-if(choice===answer){
+document.getElementById("tick").style.display="none";
 
+const q = questions[currentQuestion];
+
+planetImage.src = q.image;
+
+playVoice(q.name);
+
+let answers=[q.name];
+
+while(answers.length<4){
+
+let randomName =
+questions[
+Math.floor(Math.random()*questions.length)
+].name;
+
+if(!answers.includes(randomName)){
+answers.push(randomName);
+}
+
+}
+
+shuffle(answers);
+
+optionsDiv.innerHTML="";
+
+answers.forEach(answer=>{
+
+const btn=document.createElement("div");
+
+btn.className="option";
+
+btn.innerText=answer;
+
+btn.onclick=()=>checkAnswer(btn,answer);
+
+optionsDiv.appendChild(btn);
+
+});
+
+}
+
+function checkAnswer(button,answer){
+
+const correctAnswer =
+questions[currentQuestion].name;
+
+if(answer===correctAnswer){
+
+correctSound.currentTime=0;
 correctSound.play();
+
+clapsSound.currentTime=0;
 clapsSound.play();
 
 document.getElementById("tick").style.display="block";
 
 setTimeout(()=>{
 
-current++;
+currentQuestion++;
 
-if(current>=questions.length){
+if(currentQuestion>=questions.length){
 
-showEnd();
+showEndScreen();
 
-}
-else{
+}else{
 
 loadQuestion();
 
@@ -380,26 +407,26 @@ loadQuestion();
 
 },1200);
 
-}
-else{
+}else{
 
+wrongSound.currentTime=0;
 wrongSound.play();
 
-btn.classList.add("wiggle");
+button.classList.add("wiggle");
 
 setTimeout(()=>{
-btn.classList.remove("wiggle");
+button.classList.remove("wiggle");
 },350);
 
 wrongAttempts++;
 
 if(wrongAttempts>=2){
 
-document.querySelectorAll(".option").forEach(o=>{
+document.querySelectorAll(".option").forEach(opt=>{
 
-if(o.innerText===answer){
+if(opt.innerText===correctAnswer){
 
-o.classList.add("correctGlow");
+opt.classList.add("correctGlow");
 
 }
 
@@ -411,7 +438,7 @@ o.classList.add("correctGlow");
 
 }
 
-function showEnd(){
+function showEndScreen(){
 
 gameSlide.classList.remove("active");
 endSlide.classList.add("active");
@@ -420,32 +447,19 @@ startConfetti();
 
 }
 
-document.getElementById("playAgain").onclick=()=>{
-
-location.reload();
-
-};
-
-/* Logo */
-
-setTimeout(()=>{
-
-document.getElementById("logoSlide").classList.remove("active");
-gameSlide.classList.add("active");
-
-loadQuestion();
-
-},2000);
-
-/* Confetti */
-
 function startConfetti(){
 
-const canvas=document.getElementById("confetti");
-const ctx=canvas.getContext("2d");
+const canvas =
+document.getElementById("confetti");
 
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+const ctx =
+canvas.getContext("2d");
+
+canvas.width =
+window.innerWidth;
+
+canvas.height =
+window.innerHeight;
 
 const confetti=[];
 
@@ -456,7 +470,8 @@ confetti.push({
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height-canvas.height,
 r:Math.random()*8+4,
-d:Math.random()*150
+dx:(Math.random()-0.5)*3,
+dy:Math.random()*3+2
 
 });
 
@@ -464,20 +479,36 @@ d:Math.random()*150
 
 function draw(){
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
 confetti.forEach(c=>{
 
 ctx.beginPath();
-ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
-ctx.fillStyle=`hsl(${Math.random()*360},100%,50%)`;
+
+ctx.arc(
+c.x,
+c.y,
+c.r,
+0,
+Math.PI*2
+);
+
+ctx.fillStyle =
+`hsl(${Math.random()*360},100%,50%)`;
+
 ctx.fill();
 
-c.y+=3;
+c.x += c.dx;
+c.y += c.dy;
 
-if(c.y>canvas.height){
+if(c.y > canvas.height){
 
-c.y=-20;
+c.y = -20;
 
 }
 
@@ -490,6 +521,24 @@ requestAnimationFrame(draw);
 draw();
 
 }
+
+document.getElementById("playAgain")
+.onclick=()=>{
+
+location.reload();
+
+};
+
+setTimeout(()=>{
+
+document.getElementById("logoSlide")
+.classList.remove("active");
+
+gameSlide.classList.add("active");
+
+loadQuestion();
+
+},2000);
 
 </script>
 
