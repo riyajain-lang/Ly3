@@ -1,209 +1,511 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fixed Map Game</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Country On My Map</title>
 
 <style>
-body{
+*{
 margin:0;
-font-family:Arial;
-background:#ffffff;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+width:100vw;
 height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
 overflow:hidden;
 }
 
-/* FORCE VISIBILITY */
-#splash,#game,#final{
+/* SCREENS */
+
+#splash,
+#game,
+#final{
 position:absolute;
+top:0;
+left:0;
 width:100%;
 height:100%;
 display:flex;
+flex-direction:column;
 justify-content:center;
 align-items:center;
+}
+
+#game,
+#final{
+display:none;
+}
+
+/* SPLASH */
+
+#splash{
+background:white;
+}
+
+#logo{
+width:280px;
+max-width:80%;
+}
+
+/* GAME */
+
+#game{
+background:url("assets/background.png") center center/cover no-repeat;
+padding:10px;
+}
+
+.topBar{
+width:100%;
+max-width:900px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+font-size:22px;
+font-weight:bold;
+}
+
+#timer{
+color:red;
+}
+
+#stars{
+color:gold;
+}
+
+.questionArea{
+display:flex;
 flex-direction:column;
+align-items:center;
+justify-content:center;
+width:100%;
 }
 
-#game{display:none;}
-#final{display:none;}
-
-img{
-max-width:250px;
+#qimg{
+width:65vw;
+max-width:400px;
+max-height:35vh;
+object-fit:contain;
+margin-bottom:15px;
 }
 
-/* OPTIONS */
+#options{
+width:100%;
+max-width:500px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
 .option{
-background:#eef3ff;
-padding:12px;
-margin:6px;
-border-radius:10px;
-width:220px;
+background:white;
+padding:14px;
+border-radius:14px;
+font-size:22px;
+font-weight:bold;
 text-align:center;
+cursor:pointer;
+box-shadow:0 3px 8px rgba(0,0,0,.2);
+user-select:none;
 }
 
-#timer{color:red;font-weight:bold;}
-#score{font-weight:bold;}
+.option:hover{
+transform:scale(1.02);
+}
+
+.correct{
+background:#7dff8f !important;
+}
+
+.glow{
+animation:glow 1s infinite;
+}
+
+@keyframes glow{
+0%{box-shadow:0 0 5px lime;}
+50%{box-shadow:0 0 25px lime;}
+100%{box-shadow:0 0 5px lime;}
+}
+
+.shake{
+animation:shake .4s;
+}
+
+@keyframes shake{
+0%{transform:translateX(0);}
+25%{transform:translateX(-8px);}
+50%{transform:translateX(8px);}
+75%{transform:translateX(-8px);}
+100%{transform:translateX(0);}
+}
+
+/* FEEDBACK */
+
+#feedback{
+height:40px;
+font-size:30px;
+font-weight:bold;
+margin:5px;
+color:green;
+}
+
+/* FINAL */
+
+#final{
+background:white;
+}
+
+#final h1{
+font-size:50px;
+margin-bottom:20px;
+color:#28a745;
+}
+
+#playAgain{
+padding:15px 30px;
+font-size:24px;
+border:none;
+border-radius:12px;
+background:#4caf50;
+color:white;
+cursor:pointer;
+}
+
+/* CONFETTI */
+
+.confetti{
+position:absolute;
+width:10px;
+height:10px;
+top:-10px;
+animation:fall 4s linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh) rotate(720deg);
+}
+}
+
+@media(max-width:600px){
+
+.option{
+font-size:18px;
+padding:12px;
+}
+
+.topBar{
+font-size:18px;
+}
+
+#qimg{
+max-height:30vh;
+}
+
+}
 </style>
 </head>
 
 <body>
 
+<!-- SPLASH -->
+
 <div id="splash">
-  <h2>Loading Game...</h2>
+<img id="logo" src="assets/innovine-logo.png">
 </div>
+
+<!-- GAME -->
 
 <div id="game">
-  <div id="score">Score: 0</div>
-  <div id="timer">60</div>
 
-  <!-- SAFE IMAGE AREA -->
-  <div id="imgBox">
-    <h3 id="fallbackText">Loading Question...</h3>
-    <img id="qimg" style="display:none;">
-  </div>
-
-  <div id="options"></div>
+<div class="topBar">
+<div id="score">⭐ 0</div>
+<div id="stars">🌟</div>
+<div id="timer">60</div>
 </div>
+
+<div id="feedback"></div>
+
+<div class="questionArea">
+<img id="qimg">
+<div id="options"></div>
+</div>
+
+</div>
+
+<!-- FINAL -->
 
 <div id="final">
-  <h1>Good Job 🎉</h1>
-  <button onclick="restart()">Play Again</button>
+<h1>🎉 GOOD JOB! 🎉</h1>
+<button id="playAgain">Play Again</button>
 </div>
+
+<!-- AUDIO -->
+
+<audio id="claps" src="assets/claps.mp3"></audio>
+<audio id="wrong" src="assets/wrong.mp3"></audio>
 
 <script>
 
-const base = "Ly3/theme/country-on-my-map/assets/";
-
 const questions = [
-{img:"africa.png", ans:"Africa"},
-{img:"asia.png", ans:"Asia"},
-{img:"europe.png", ans:"Europe"},
-{img:"australia.png", ans:"Australia"},
-{img:"north-america.png", ans:"North America"},
-{img:"south-america.png", ans:"South America"},
-{img:"antarctica.png", ans:"Antarctica"}
+{img:"africa.png",ans:"Africa"},
+{img:"asia.png",ans:"Asia"},
+{img:"europe.png",ans:"Europe"},
+{img:"australia.png",ans:"Australia"},
+{img:"north-america.png",ans:"North America"},
+{img:"south-america.png",ans:"South America"},
+{img:"antarctica.png",ans:"Antarctica"}
 ];
 
-let i=0;
-let score=0;
-let timer;
-let time=60;
+let current = 0;
+let score = 0;
+let wrongAttempts = 0;
+let timer = null;
+let timeLeft = 60;
 
-const game=document.getElementById("game");
-const splash=document.getElementById("splash");
-const final=document.getElementById("final");
+const qimg = document.getElementById("qimg");
+const optionsDiv = document.getElementById("options");
+const scoreBox = document.getElementById("score");
+const timerBox = document.getElementById("timer");
+const feedback = document.getElementById("feedback");
 
-const img=document.getElementById("qimg");
-const fallback=document.getElementById("fallbackText");
-const options=document.getElementById("options");
-const scoreBox=document.getElementById("score");
-const timerBox=document.getElementById("timer");
+const claps = document.getElementById("claps");
+const wrong = document.getElementById("wrong");
 
-/* SAFE IMAGE LOADER (IMPORTANT FIX) */
-function loadImage(path){
-img.style.display="block";
-fallback.style.display="none";
+shuffle(questions);
 
-img.onerror=()=>{
-fallback.style.display="block";
-fallback.innerText="Image missing: "+path;
-img.style.display="none";
-};
-
-img.src=base+path;
-}
-
-/* START ALWAYS */
 setTimeout(()=>{
-splash.style.display="none";
-game.style.display="flex";
-loadQ();
-},1500);
+document.getElementById("splash").style.display="none";
+document.getElementById("game").style.display="flex";
+loadQuestion();
+},2000);
 
-/* TIMER */
+function shuffle(arr){
+for(let i=arr.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+}
+
 function startTimer(){
+
 clearInterval(timer);
-time=60;
-timerBox.innerText=time;
 
-timer=setInterval(()=>{
-time--;
-timerBox.innerText=time;
+timeLeft = 60;
 
-if(time<=0){
-next();
+timerBox.innerText = timeLeft;
+
+timer = setInterval(()=>{
+
+timeLeft--;
+
+timerBox.innerText=timeLeft;
+
+if(timeLeft<=0){
+
+clearInterval(timer);
+
+startTimer();
+
 }
+
 },1000);
+
 }
 
-/* LOAD QUESTION */
-function loadQ(){
+function speak(text){
 
-if(i>=questions.length){
-end();
+speechSynthesis.cancel();
+
+let msg = new SpeechSynthesisUtterance(
+"Find " + text
+);
+
+msg.rate = 0.9;
+
+speechSynthesis.speak(msg);
+
+}
+
+function loadQuestion(){
+
+if(current>=questions.length){
+
+endGame();
 return;
 }
 
+wrongAttempts = 0;
+
+feedback.innerHTML="";
+
 startTimer();
 
-let q=questions[i];
-loadImage(q.img);
+let q = questions[current];
 
-fallback.innerText="What is this continent?";
+qimg.src = "assets/" + q.img;
 
-speechSynthesis.cancel();
-speechSynthesis.speak(new SpeechSynthesisUtterance(q.ans));
+speak(q.ans);
 
-let opts=["Africa","Asia","Europe","Australia","North America","South America","Antarctica"];
-opts.sort(()=>Math.random()-0.5);
-opts=opts.slice(0,4);
-if(!opts.includes(q.ans)) opts[0]=q.ans;
-opts.sort(()=>Math.random()-0.5);
+let choices = [
+"Africa",
+"Asia",
+"Europe",
+"Australia",
+"North America",
+"South America",
+"Antarctica"
+];
 
-options.innerHTML="";
+choices = choices.filter(x=>x!==q.ans);
 
-opts.forEach(o=>{
-let d=document.createElement("div");
-d.className="option";
-d.innerText=o;
+shuffle(choices);
 
-d.onclick=()=>{
-if(o===q.ans){
-score+=10;
-scoreBox.innerText="Score: "+score;
-next();
-}else{
-startTimer();
-}
-};
+choices = choices.slice(0,3);
 
-options.appendChild(d);
+choices.push(q.ans);
+
+shuffle(choices);
+
+optionsDiv.innerHTML="";
+
+choices.forEach(choice=>{
+
+let btn = document.createElement("div");
+
+btn.className="option";
+
+btn.innerText=choice;
+
+btn.onclick=()=>checkAnswer(btn,choice,q.ans);
+
+optionsDiv.appendChild(btn);
+
 });
+
 }
 
-/* NEXT */
-function next(){
-i++;
-loadQ();
+function checkAnswer(btn,selected,correct){
+
+if(selected===correct){
+
+clearInterval(timer);
+
+feedback.innerHTML="✅ Good Job!";
+
+btn.classList.add("correct");
+
+score += 10;
+
+scoreBox.innerHTML="⭐ " + score;
+
+try{
+claps.currentTime=0;
+claps.play();
+}catch(e){}
+
+setTimeout(()=>{
+
+current++;
+
+loadQuestion();
+
+},1200);
+
+}
+else{
+
+wrongAttempts++;
+
+try{
+wrong.currentTime=0;
+wrong.play();
+}catch(e){}
+
+btn.classList.add("shake");
+
+setTimeout(()=>{
+btn.classList.remove("shake");
+},400);
+
+startTimer();
+
+if(wrongAttempts>=2){
+
+document.querySelectorAll(".option")
+.forEach(o=>{
+
+if(o.innerText===correct){
+
+o.classList.add("glow");
+
 }
 
-/* END */
-function end(){
-game.style.display="none";
-final.style.display="flex";
+});
+
 }
 
-/* RESTART */
-function restart(){
-i=0;
+}
+
+}
+
+function endGame(){
+
+document.getElementById("game").style.display="none";
+document.getElementById("final").style.display="flex";
+
+launchConfetti();
+
+}
+
+function launchConfetti(){
+
+for(let i=0;i<120;i++){
+
+let c=document.createElement("div");
+
+c.className="confetti";
+
+c.style.left=Math.random()*100+"vw";
+
+c.style.background=
+`hsl(${Math.random()*360},100%,50%)`;
+
+c.style.animationDuration=
+(2+Math.random()*3)+"s";
+
+document.body.appendChild(c);
+
+setTimeout(()=>{
+
+c.remove();
+
+},5000);
+
+}
+
+}
+
+document.getElementById("playAgain").onclick=()=>{
+
+current=0;
 score=0;
-final.style.display="none";
-game.style.display="flex";
-loadQ();
-}
+
+scoreBox.innerHTML="⭐ 0";
+
+shuffle(questions);
+
+document.getElementById("final").style.display="none";
+document.getElementById("game").style.display="flex";
+
+loadQuestion();
+
+};
 
 </script>
 
