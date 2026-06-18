@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Country on My Map - Pro</title>
+<title>Country on My Map - Fixed</title>
 
 <style>
 *{
@@ -19,7 +19,7 @@ overflow:hidden;
 display:flex;
 justify-content:center;
 align-items:center;
-background:#fff;
+background:white;
 }
 
 /* SPLASH */
@@ -27,7 +27,7 @@ background:#fff;
 position:absolute;
 width:100%;
 height:100%;
-background:#fff;
+background:white;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -47,30 +47,22 @@ justify-content:center;
 align-items:center;
 text-align:center;
 padding:10px;
-}
-
-#timer{
-font-size:20px;
-font-weight:bold;
-color:#e74c3c;
-margin-bottom:10px;
-}
-
-#score{
-font-size:18px;
-margin-bottom:10px;
-}
-
-#stars{
-font-size:22px;
-margin-bottom:10px;
+position:relative;
+z-index:2;
 }
 
 #continentImg{
-width:65%;
-max-width:300px;
+width:70%;
+max-width:320px;
 margin-bottom:15px;
 }
+
+#score,#timer,#stars{
+font-weight:bold;
+margin:4px;
+}
+
+#timer{color:red;}
 
 .options{
 display:grid;
@@ -81,11 +73,10 @@ max-width:500px;
 }
 
 .option{
-background:#f3f6ff;
+background:#f1f5ff;
 padding:14px;
 border-radius:12px;
 font-size:18px;
-font-weight:bold;
 cursor:pointer;
 transition:0.2s;
 }
@@ -103,7 +94,7 @@ transition:0.2s;
 }
 
 .glow{
-box-shadow:0 0 15px #2ecc71;
+box-shadow:0 0 12px #2ecc71;
 border:2px solid #2ecc71;
 }
 
@@ -113,12 +104,7 @@ display:none;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-}
-
-#final h1{
-color:#2ecc71;
-font-size:30px;
-margin-bottom:10px;
+text-align:center;
 }
 
 button{
@@ -126,15 +112,18 @@ padding:12px 20px;
 border:none;
 border-radius:10px;
 background:#3498db;
-color:#fff;
+color:white;
 font-size:16px;
+cursor:pointer;
 }
 
+/* CONFETTI */
 canvas{
 position:fixed;
 top:0;
 left:0;
 pointer-events:none;
+z-index:999;
 }
 </style>
 </head>
@@ -143,7 +132,7 @@ pointer-events:none;
 
 <!-- SPLASH -->
 <div id="splash">
-    <img src="Ly3/theme/country-on-my-map/assets/innovine-logo.png">
+    <img src="/mnt/data/08a6cbf1-814d-4ffc-8e3b-0500c68da067.png">
 </div>
 
 <!-- GAME -->
@@ -156,114 +145,104 @@ pointer-events:none;
 <img id="continentImg">
 
 <div class="options" id="options"></div>
-
 </div>
 
 <!-- FINAL -->
 <div id="final">
 <h1>🎉 Good Job!</h1>
 <h2 id="finalScore"></h2>
-<button onclick="restartGame()">Play Again</button>
+<button onclick="restart()">Play Again</button>
 </div>
 
 <canvas id="confetti"></canvas>
 
-<!-- AUDIO -->
-<audio id="correctSound" src="Ly3/theme/country-on-my-map/assets/correct.mp3"></audio>
-<audio id="wrongSound" src="Ly3/theme/country-on-my-map/assets/wrong.mp3"></audio>
-<audio id="clapSound" src="Ly3/theme/country-on-my-map/assets/claps.mp3"></audio>
-
 <script>
 
+/* FIXED ASSETS */
+const assets = {
+background: "/mnt/data/background(1).png",
+africa: "/mnt/data/africa.png",
+asia: "/mnt/data/asia.png",
+europe: "/mnt/data/europe.png",
+australia: "/mnt/data/australia.png",
+northAmerica: "/mnt/data/north-america.png",
+southAmerica: "/mnt/data/south-america.png",
+antarctica: "/mnt/data/antarctica.png"
+};
+
 const questions = [
-{img:"africa.png", answer:"Africa"},
-{img:"asia.png", answer:"Asia"},
-{img:"europe.png", answer:"Europe"},
-{img:"australia.png", answer:"Australia"},
-{img:"north-america.png", answer:"North America"},
-{img:"south-america.png", answer:"South America"},
-{img:"antarctica.png", answer:"Antarctica"}
+{img:assets.africa, answer:"Africa"},
+{img:assets.asia, answer:"Asia"},
+{img:assets.europe, answer:"Europe"},
+{img:assets.australia, answer:"Australia"},
+{img:assets.northAmerica, answer:"North America"},
+{img:assets.southAmerica, answer:"South America"},
+{img:assets.antarctica, answer:"Antarctica"}
 ];
 
-let current=0;
-let attempts=0;
-let score=0;
-let timer=60;
-let interval;
-
-const base="Ly3/theme/country-on-my-map/assets/";
+let i=0, score=0, attempts=0, time=60, interval;
+let confettiRunning=false;
 
 const img=document.getElementById("continentImg");
-const optionsDiv=document.getElementById("options");
+const options=document.getElementById("options");
 
 const timerBox=document.getElementById("timer");
 const scoreBox=document.getElementById("score");
 const starsBox=document.getElementById("stars");
 
-const correctSound=document.getElementById("correctSound");
-const wrongSound=document.getElementById("wrongSound");
-const clapSound=document.getElementById("clapSound");
+/* TIMER RESET FIX */
+function startTimer(){
+clearInterval(interval);
+time=60;
 
-document.getElementById("splash").style.display="flex";
+interval=setInterval(()=>{
+time--;
+timerBox.innerText="Time: "+time+"s";
 
-setTimeout(()=>{
-document.getElementById("splash").style.display="none";
-document.getElementById("game").style.display="flex";
-loadQ();
-},2000);
+if(time<=0){
+wrong();
+next();
+}
+},1000);
+}
 
 /* SPEECH */
 function speak(text){
 let s=new SpeechSynthesisUtterance(text);
 s.rate=0.9;
+speechSynthesis.cancel();
 speechSynthesis.speak(s);
 }
 
-/* TIMER */
-function startTimer(){
-clearInterval(interval);
-timer=60;
-timerBox.innerText="Time: "+timer+"s";
-
-interval=setInterval(()=>{
-timer--;
-timerBox.innerText="Time: "+timer+"s";
-
-if(timer<=0){
-wrongSound.play();
-nextQuestion(); // auto skip
-}
-},1000);
-}
-
 /* LOAD QUESTION */
-function loadQ(){
+function load(){
 attempts=0;
 
-if(current>=questions.length){
-showFinal();
+if(i>=questions.length){
+endGame();
 return;
 }
 
 startTimer();
 
-let q=questions[current];
-img.src=base+q.img;
+let q=questions[i];
+img.src=q.img;
 
 /* voice instruction */
-setTimeout(()=>{
-speak(q.answer);
-},500);
+setTimeout(()=>speak(q.answer),500);
 
-/* options */
-let opts=["Africa","Asia","Europe","Australia","North America","South America","Antarctica"];
+let opts=[
+"Africa","Asia","Europe","Australia",
+"North America","South America","Antarctica"
+];
+
 opts.sort(()=>Math.random()-0.5);
 opts=opts.slice(0,4);
 if(!opts.includes(q.answer)) opts[0]=q.answer;
 
 opts.sort(()=>Math.random()-0.5);
 
-optionsDiv.innerHTML="";
+options.innerHTML="";
 
 opts.forEach(o=>{
 let d=document.createElement("div");
@@ -271,112 +250,125 @@ d.className="option";
 d.innerText=o;
 
 d.onclick=()=>check(d,o,q.answer);
-
-optionsDiv.appendChild(d);
+options.appendChild(d);
 });
 }
 
 /* CHECK */
-function check(el,selected,correct){
+function check(el,sel,correct){
 
-if(selected===correct){
+if(sel===correct){
 
-correctSound.play();
 score+=10;
-updateScore();
+update();
 
 el.style.background="#d4edda";
 
-setTimeout(()=>{
-nextQuestion();
-},800);
+setTimeout(()=>next(),700);
 
 }else{
 
 attempts++;
-wrongSound.play();
-el.classList.add("shake");
+wrong();
 
+el.classList.add("shake");
 setTimeout(()=>el.classList.remove("shake"),300);
 
-/* reset timer on wrong */
-startTimer();
+startTimer(); // reset timer on wrong
 
 if(attempts>=2){
-let all=document.querySelectorAll(".option");
-all.forEach(o=>{
+document.querySelectorAll(".option").forEach(o=>{
 if(o.innerText===correct){
 o.classList.add("glow");
 }
 });
 
-setTimeout(()=>nextQuestion(),1000);
+setTimeout(()=>next(),900);
 }
 }
 }
 
-function nextQuestion(){
-current++;
-loadQ();
+/* WRONG */
+function wrong(){
+attempts++;
 }
 
-function updateScore(){
+/* NEXT */
+function next(){
+i++;
+load();
+}
+
+/* SCORE */
+function update(){
 scoreBox.innerText="Score: "+score;
 
-if(score<=20){
-starsBox.innerText="⭐";
-}
-else if(score<=50){
-starsBox.innerText="⭐⭐";
-}
-else{
-starsBox.innerText="⭐⭐⭐";
-}
+if(score<30) starsBox.innerText="⭐";
+else if(score<60) starsBox.innerText="⭐⭐";
+else starsBox.innerText="⭐⭐⭐";
 }
 
-/* FINAL */
-function showFinal(){
+/* END */
+function endGame(){
 clearInterval(interval);
 document.getElementById("game").style.display="none";
 document.getElementById("final").style.display="flex";
 document.getElementById("finalScore").innerText="Score: "+score;
 
-clapSound.play();
 startConfetti();
 }
 
-/* RESTART */
-function restartGame(){
-current=0;
+/* RESET FIX (IMPORTANT) */
+function restart(){
+
+/* STOP EVERYTHING */
+clearInterval(interval);
+stopConfetti();
+
+i=0;
 score=0;
+attempts=0;
+
 document.getElementById("final").style.display="none";
 document.getElementById("game").style.display="flex";
-loadQ();
+
+load();
 }
 
-/* CONFETTI */
+/* CONFETTI FIX */
 const canvas=document.getElementById("confetti");
 const ctx=canvas.getContext("2d");
+
 canvas.width=innerWidth;
 canvas.height=innerHeight;
 
 let pieces=[];
 
 function startConfetti(){
+confettiRunning=true;
 pieces=[];
+
 for(let i=0;i<120;i++){
 pieces.push({
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height-canvas.height,
-r:Math.random()*6+4,
-d:Math.random()*5+2,
+r:Math.random()*6+3,
+d:Math.random()*4+2,
 c:["#f94144","#f9c74f","#90be6d","#577590"][Math.floor(Math.random()*4)]
 });
 }
-draw();
+animate();
 }
 
-function draw(){
+function stopConfetti(){
+confettiRunning=false;
+pieces=[];
+ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function animate(){
+if(!confettiRunning) return;
+
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
 pieces.forEach(p=>{
@@ -392,8 +384,15 @@ p.x=Math.random()*canvas.width;
 }
 });
 
-requestAnimationFrame(draw);
+requestAnimationFrame(animate);
 }
+
+/* START */
+setTimeout(()=>{
+document.getElementById("splash").style.display="none";
+document.getElementById("game").style.display="flex";
+load();
+},2000);
 
 </script>
 
