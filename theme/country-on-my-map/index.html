@@ -21,7 +21,35 @@ justify-content:center;
 align-items:center;
 background:white;
 }
+/* SCREEN FIX */
+.screen{
+  width:100%;
+  height:100%;
+  height:-webkit-fill-available;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
 
+.active{
+  display:flex;
+}
+
+/* Logo Screen */
+#logoScreen{
+  background:white;
+}
+
+#logoScreen img{
+  width:320px;
+  max-width:80%;
+}
+
+/* Quiz Screen background */
+#quizScreen{
+  background:url('assets/country-on-my-map-background.png') center/cover no-repeat;
+}
 /* SPLASH */
 #splash{
 position:absolute;
