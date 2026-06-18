@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Country on My Map - Stable</title>
+<title>Fixed Map Game</title>
 
 <style>
 body{
 margin:0;
-overflow:hidden;
 font-family:Arial;
-background:white;
+background:#ffffff;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+overflow:hidden;
 }
 
+/* FORCE VISIBILITY */
 #splash,#game,#final{
 position:absolute;
 width:100%;
@@ -27,28 +27,22 @@ align-items:center;
 flex-direction:column;
 }
 
-#game,#final{display:none;}
+#game{display:none;}
+#final{display:none;}
 
-#logo{
-width:180px;
+img{
+max-width:250px;
 }
 
-#qimg{
-width:280px;
-margin-bottom:10px;
-}
-
+/* OPTIONS */
 .option{
 background:#eef3ff;
 padding:12px;
 margin:6px;
 border-radius:10px;
-width:200px;
+width:220px;
 text-align:center;
-cursor:pointer;
 }
-
-.option:active{transform:scale(0.97);}
 
 #timer{color:red;font-weight:bold;}
 #score{font-weight:bold;}
@@ -57,56 +51,32 @@ cursor:pointer;
 
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
-<img id="logo" src="" alt="logo">
+  <h2>Loading Game...</h2>
 </div>
 
-<!-- GAME -->
 <div id="game">
-<div id="score">Score: 0</div>
-<div id="timer">60</div>
-<img id="qimg">
-<div id="options"></div>
+  <div id="score">Score: 0</div>
+  <div id="timer">60</div>
+
+  <!-- SAFE IMAGE AREA -->
+  <div id="imgBox">
+    <h3 id="fallbackText">Loading Question...</h3>
+    <img id="qimg" style="display:none;">
+  </div>
+
+  <div id="options"></div>
 </div>
 
-<!-- FINAL -->
 <div id="final">
-<h1>🎉 Good Job!</h1>
-<button onclick="restart()">Play Again</button>
+  <h1>Good Job 🎉</h1>
+  <button onclick="restart()">Play Again</button>
 </div>
-
-<audio id="wrong" src="Ly3/theme/country-on-my-map/assets/wrong.mp3"></audio>
-<audio id="clap" src="Ly3/theme/country-on-my-map/assets/claps.mp3"></audio>
 
 <script>
 
-const assetsBase = "Ly3/theme/country-on-my-map/assets/";
+const base = "Ly3/theme/country-on-my-map/assets/";
 
-const logo = document.getElementById("logo");
-const splash = document.getElementById("splash");
-const game = document.getElementById("game");
-const final = document.getElementById("final");
-
-const qimg = document.getElementById("qimg");
-const optionsBox = document.getElementById("options");
-
-const scoreText = document.getElementById("score");
-const timerText = document.getElementById("timer");
-
-const wrong = document.getElementById("wrong");
-const clap = document.getElementById("clap");
-
-/* SAFE LOAD (IMPORTANT FIX) */
-function safeImg(img, path){
-img.onerror = ()=>{ img.style.display="none"; };
-img.src = path;
-}
-
-/* FIX LOGO */
-safeImg(logo, assetsBase + "innovine-logo.png");
-
-/* QUESTIONS */
 const questions = [
 {img:"africa.png", ans:"Africa"},
 {img:"asia.png", ans:"Asia"},
@@ -119,47 +89,71 @@ const questions = [
 
 let i=0;
 let score=0;
-let time=60;
 let timer;
+let time=60;
 
-function startGame(){
+const game=document.getElementById("game");
+const splash=document.getElementById("splash");
+const final=document.getElementById("final");
+
+const img=document.getElementById("qimg");
+const fallback=document.getElementById("fallbackText");
+const options=document.getElementById("options");
+const scoreBox=document.getElementById("score");
+const timerBox=document.getElementById("timer");
+
+/* SAFE IMAGE LOADER (IMPORTANT FIX) */
+function loadImage(path){
+img.style.display="block";
+fallback.style.display="none";
+
+img.onerror=()=>{
+fallback.style.display="block";
+fallback.innerText="Image missing: "+path;
+img.style.display="none";
+};
+
+img.src=base+path;
+}
+
+/* START ALWAYS */
+setTimeout(()=>{
 splash.style.display="none";
 game.style.display="flex";
 loadQ();
-}
-
-setTimeout(startGame,2000);
+},1500);
 
 /* TIMER */
 function startTimer(){
 clearInterval(timer);
 time=60;
-timerText.innerText=time;
+timerBox.innerText=time;
 
 timer=setInterval(()=>{
 time--;
-timerText.innerText=time;
+timerBox.innerText=time;
 
 if(time<=0){
-wrong.play();
 next();
 }
 },1000);
 }
 
-/* LOAD */
+/* LOAD QUESTION */
 function loadQ(){
-startTimer();
 
 if(i>=questions.length){
 end();
 return;
 }
 
-let q=questions[i];
-safeImg(qimg, assetsBase + q.img);
+startTimer();
 
-/* voice */
+let q=questions[i];
+loadImage(q.img);
+
+fallback.innerText="What is this continent?";
+
 speechSynthesis.cancel();
 speechSynthesis.speak(new SpeechSynthesisUtterance(q.ans));
 
@@ -169,42 +163,40 @@ opts=opts.slice(0,4);
 if(!opts.includes(q.ans)) opts[0]=q.ans;
 opts.sort(()=>Math.random()-0.5);
 
-optionsBox.innerHTML="";
+options.innerHTML="";
 
 opts.forEach(o=>{
 let d=document.createElement("div");
 d.className="option";
 d.innerText=o;
 
-d.onclick=()=>check(o,q.ans);
+d.onclick=()=>{
+if(o===q.ans){
+score+=10;
+scoreBox.innerText="Score: "+score;
+next();
+}else{
+startTimer();
+}
+};
 
-optionsBox.appendChild(d);
+options.appendChild(d);
 });
 }
 
-/* CHECK */
-function check(sel,ans){
-if(sel===ans){
-score+=10;
-scoreText.innerText="Score: "+score;
-next();
-}else{
-wrong.play();
-startTimer();
-}
-}
-
+/* NEXT */
 function next(){
 i++;
 loadQ();
 }
 
+/* END */
 function end(){
 game.style.display="none";
 final.style.display="flex";
-clap.play();
 }
 
+/* RESTART */
 function restart(){
 i=0;
 score=0;
