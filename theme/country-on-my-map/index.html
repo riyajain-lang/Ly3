@@ -7,11 +7,12 @@
 <title>Country On My Map</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+font-family:Arial, sans-serif;
 }
 
 body{
@@ -55,28 +56,69 @@ max-width:80%;
 /* GAME */
 
 #game{
-background:url("assets/background.png") center center/cover no-repeat;
+background:linear-gradient(
+180deg,
+#87ceeb 0%,
+#c8f0ff 60%,
+#ffffff 100%
+);
 padding:10px;
 }
 
-.topBar{
+/* TOP PANEL */
+
+.topPanel{
 width:100%;
 max-width:900px;
 display:flex;
-justify-content:space-between;
-align-items:center;
+flex-direction:column;
+gap:10px;
 margin-bottom:10px;
+}
+
+.instructionBox{
+background:white;
+border:4px solid #ffb347;
+border-radius:20px;
+padding:12px;
+text-align:center;
+font-size:20px;
+font-weight:bold;
+box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+
+.statsRow{
+display:flex;
+gap:10px;
+}
+
+.statBox{
+flex:1;
+background:white;
+border:4px solid #6ec6ff;
+border-radius:18px;
+padding:10px;
+text-align:center;
 font-size:22px;
 font-weight:bold;
+box-shadow:0 4px 10px rgba(0,0,0,.15);
 }
 
 #timer{
 color:red;
 }
 
-#stars{
-color:gold;
+/* FEEDBACK */
+
+#feedback{
+height:40px;
+font-size:32px;
+font-weight:bold;
+margin:5px;
+color:green;
 }
+
+/* QUESTION AREA */
 
 .questionArea{
 display:flex;
@@ -87,39 +129,49 @@ width:100%;
 }
 
 #qimg{
-width:65vw;
-max-width:400px;
-max-height:35vh;
+width:70vw;
+max-width:420px;
+max-height:32vh;
 object-fit:contain;
 margin-bottom:15px;
 }
 
+/* OPTIONS */
+
 #options{
 width:100%;
-max-width:500px;
+max-width:600px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
+gap:12px;
 }
 
 .option{
 background:white;
-padding:14px;
-border-radius:14px;
+padding:16px;
+border-radius:20px;
 font-size:22px;
 font-weight:bold;
 text-align:center;
 cursor:pointer;
-box-shadow:0 3px 8px rgba(0,0,0,.2);
 user-select:none;
+
+border:4px solid #ff8ec7;
+
+box-shadow:
+0 4px 8px rgba(0,0,0,.15),
+0 0 0 4px rgba(255,255,255,.8) inset;
+
+transition:.2s;
 }
 
 .option:hover{
-transform:scale(1.02);
+transform:scale(1.03);
 }
 
 .correct{
-background:#7dff8f !important;
+background:#8cff9d !important;
+border-color:#28a745 !important;
 }
 
 .glow{
@@ -127,9 +179,15 @@ animation:glow 1s infinite;
 }
 
 @keyframes glow{
-0%{box-shadow:0 0 5px lime;}
-50%{box-shadow:0 0 25px lime;}
-100%{box-shadow:0 0 5px lime;}
+0%{
+box-shadow:0 0 5px lime;
+}
+50%{
+box-shadow:0 0 25px lime;
+}
+100%{
+box-shadow:0 0 5px lime;
+}
 }
 
 .shake{
@@ -144,33 +202,24 @@ animation:shake .4s;
 100%{transform:translateX(0);}
 }
 
-/* FEEDBACK */
-
-#feedback{
-height:40px;
-font-size:30px;
-font-weight:bold;
-margin:5px;
-color:green;
-}
-
-/* FINAL */
+/* FINAL SCREEN */
 
 #final{
 background:white;
 }
 
 #final h1{
-font-size:50px;
-margin-bottom:20px;
+font-size:48px;
 color:#28a745;
+margin-bottom:20px;
+text-align:center;
 }
 
 #playAgain{
 padding:15px 30px;
 font-size:24px;
 border:none;
-border-radius:12px;
+border-radius:15px;
 background:#4caf50;
 color:white;
 cursor:pointer;
@@ -192,22 +241,29 @@ transform:translateY(110vh) rotate(720deg);
 }
 }
 
+/* MOBILE */
+
 @media(max-width:600px){
+
+.instructionBox{
+font-size:16px;
+}
+
+.statBox{
+font-size:18px;
+}
 
 .option{
 font-size:18px;
 padding:12px;
 }
 
-.topBar{
-font-size:18px;
-}
-
 #qimg{
-max-height:30vh;
+max-height:28vh;
 }
 
 }
+
 </style>
 </head>
 
@@ -223,17 +279,28 @@ max-height:30vh;
 
 <div id="game">
 
-<div class="topBar">
-<div id="score">⭐ 0</div>
-<div id="stars">🌟</div>
-<div id="timer">60</div>
+<div class="topPanel">
+
+<div class="instructionBox">
+🌍 Listen carefully and choose the correct continent!
+</div>
+
+<div class="statsRow">
+<div class="statBox" id="score">⭐ 0</div>
+<div class="statBox" id="stars">🌟</div>
+<div class="statBox" id="timer">60</div>
+</div>
+
 </div>
 
 <div id="feedback"></div>
 
 <div class="questionArea">
-<img id="qimg">
+
+<img id="qimg" src="">
+
 <div id="options"></div>
+
 </div>
 
 </div>
@@ -252,6 +319,8 @@ max-height:30vh;
 
 <script>
 
+/* QUESTIONS */
+
 const questions = [
 {img:"africa.png",ans:"Africa"},
 {img:"asia.png",ans:"Asia"},
@@ -262,35 +331,49 @@ const questions = [
 {img:"antarctica.png",ans:"Antarctica"}
 ];
 
+/* VARIABLES */
+
 let current = 0;
 let score = 0;
 let wrongAttempts = 0;
 let timer = null;
 let timeLeft = 60;
 
+/* ELEMENTS */
+
 const qimg = document.getElementById("qimg");
 const optionsDiv = document.getElementById("options");
 const scoreBox = document.getElementById("score");
+const starsBox = document.getElementById("stars");
 const timerBox = document.getElementById("timer");
 const feedback = document.getElementById("feedback");
 
 const claps = document.getElementById("claps");
 const wrong = document.getElementById("wrong");
 
+/* SHUFFLE */
+
+function shuffle(array){
+for(let i=array.length-1;i>0;i--){
+const j=Math.floor(Math.random()*(i+1));
+[array[i],array[j]]=[array[j],array[i]];
+}
+}
+
 shuffle(questions);
 
+/* SPLASH */
+
 setTimeout(()=>{
+
 document.getElementById("splash").style.display="none";
 document.getElementById("game").style.display="flex";
+
 loadQuestion();
+
 },2000);
 
-function shuffle(arr){
-for(let i=arr.length-1;i>0;i--){
-let j=Math.floor(Math.random()*(i+1));
-[arr[i],arr[j]]=[arr[j],arr[i]];
-}
-}
+/* TIMER */
 
 function startTimer(){
 
@@ -298,13 +381,13 @@ clearInterval(timer);
 
 timeLeft = 60;
 
-timerBox.innerText = timeLeft;
+timerBox.innerHTML = timeLeft;
 
 timer = setInterval(()=>{
 
 timeLeft--;
 
-timerBox.innerText=timeLeft;
+timerBox.innerHTML = timeLeft;
 
 if(timeLeft<=0){
 
@@ -318,12 +401,14 @@ startTimer();
 
 }
 
+/* SPEAK */
+
 function speak(text){
 
 speechSynthesis.cancel();
 
 let msg = new SpeechSynthesisUtterance(
-"Find " + text
+"Look at the map and choose " + text
 );
 
 msg.rate = 0.9;
@@ -332,17 +417,20 @@ speechSynthesis.speak(msg);
 
 }
 
+/* LOAD QUESTION */
+
 function loadQuestion(){
 
-if(current>=questions.length){
+if(current >= questions.length){
 
 endGame();
 return;
+
 }
 
 wrongAttempts = 0;
 
-feedback.innerHTML="";
+feedback.innerHTML = "";
 
 startTimer();
 
@@ -352,7 +440,7 @@ qimg.src = "assets/" + q.img;
 
 speak(q.ans);
 
-let choices = [
+let options = [
 "Africa",
 "Asia",
 "Europe",
@@ -362,33 +450,35 @@ let choices = [
 "Antarctica"
 ];
 
-choices = choices.filter(x=>x!==q.ans);
+options = options.filter(x=>x!==q.ans);
 
-shuffle(choices);
+shuffle(options);
 
-choices = choices.slice(0,3);
+options = options.slice(0,3);
 
-choices.push(q.ans);
+options.push(q.ans);
 
-shuffle(choices);
+shuffle(options);
 
 optionsDiv.innerHTML="";
 
-choices.forEach(choice=>{
+options.forEach(option=>{
 
-let btn = document.createElement("div");
+let btn=document.createElement("div");
 
 btn.className="option";
 
-btn.innerText=choice;
+btn.innerText=option;
 
-btn.onclick=()=>checkAnswer(btn,choice,q.ans);
+btn.onclick=()=>checkAnswer(btn,option,q.ans);
 
 optionsDiv.appendChild(btn);
 
 });
 
 }
+
+/* ANSWER */
 
 function checkAnswer(btn,selected,correct){
 
@@ -403,6 +493,16 @@ btn.classList.add("correct");
 score += 10;
 
 scoreBox.innerHTML="⭐ " + score;
+
+if(score>=60){
+starsBox.innerHTML="🌟🌟🌟";
+}
+else if(score>=30){
+starsBox.innerHTML="🌟🌟";
+}
+else{
+starsBox.innerHTML="🌟";
+}
 
 try{
 claps.currentTime=0;
@@ -454,6 +554,8 @@ o.classList.add("glow");
 
 }
 
+/* END */
+
 function endGame(){
 
 document.getElementById("game").style.display="none";
@@ -462,6 +564,8 @@ document.getElementById("final").style.display="flex";
 launchConfetti();
 
 }
+
+/* CONFETTI */
 
 function launchConfetti(){
 
@@ -482,23 +586,24 @@ c.style.animationDuration=
 document.body.appendChild(c);
 
 setTimeout(()=>{
-
 c.remove();
-
 },5000);
 
 }
 
 }
 
+/* PLAY AGAIN */
+
 document.getElementById("playAgain").onclick=()=>{
 
 current=0;
 score=0;
 
-scoreBox.innerHTML="⭐ 0";
-
 shuffle(questions);
+
+scoreBox.innerHTML="⭐ 0";
+starsBox.innerHTML="🌟";
 
 document.getElementById("final").style.display="none";
 document.getElementById("game").style.display="flex";
