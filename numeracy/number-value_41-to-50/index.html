@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Number Value 41-50</title>
+<title>Number Value Game</title>
 
 <style>
 *{box-sizing:border-box;font-family:Arial;}
@@ -11,7 +11,7 @@
 body{
 margin:0;
 overflow:hidden;
-background:url("assets/background-number-value.png") center/cover no-repeat;
+background:#fff;
 }
 
 /* SPLASH */
@@ -30,60 +30,66 @@ z-index:999;
 display:none;
 height:100vh;
 width:100%;
-padding:10px;
 text-align:center;
+padding:10px;
 }
 .active{display:block;}
 
-/* INSTRUCTION BOX */
+/* INSTRUCTION */
 .instruction{
-background:#fff;
-padding:12px;
-border-radius:14px;
+background:#ffffff;
+border-radius:12px;
+padding:10px;
 width:90%;
 max-width:420px;
 margin:10px auto;
+box-shadow:0 2px 8px rgba(0,0,0,0.2);
 font-size:14px;
-box-shadow:0 3px 8px rgba(0,0,0,0.2);
 }
 
 /* NUMBER */
 .number{
-font-size:40px;
+font-size:38px;
 font-weight:bold;
-background:#fff;
+margin-top:10px;
+}
+
+/* OUTER MAIN FRAME */
+.abacus-box{
 display:inline-block;
-padding:10px 25px;
-border-radius:12px;
-margin-top:25px;
+border:2px solid #000;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
 }
 
-/* GRID */
-.wrapper{
+/* HEADER T O */
+.header{
 display:flex;
-justify-content:center;
-gap:40px;
-margin-top:15px;
-}
-
-.column{
-display:flex;
-flex-direction:column;
-align-items:center;
-}
-
-.label{
+justify-content:space-around;
 font-weight:bold;
 margin-bottom:5px;
 }
 
-/* BALLS */
+/* GRID */
+.grid{
+display:flex;
+}
+
+.col{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:5px 15px;
+border:1px solid #000;
+}
+
 .ball{
-width:26px;
-height:26px;
+width:22px;
+height:22px;
 border-radius:50%;
 border:2px solid #3498db;
-margin:4px;
+margin:3px;
 background:#fff;
 transition:0.2s;
 }
@@ -94,8 +100,8 @@ transform:scale(1.1);
 }
 
 .ball.glow{
-box-shadow:0 0 10px 4px lime;
 animation:blink 0.6s infinite alternate;
+box-shadow:0 0 10px 3px lime;
 }
 
 @keyframes blink{
@@ -103,43 +109,36 @@ from{opacity:1;}
 to{opacity:0.3;}
 }
 
-/* BUTTON */
-button{
-padding:10px 18px;
+/* SMALL ANSWER BOX */
+.answer-box{
+display:flex;
+justify-content:center;
+gap:30px;
+margin-top:10px;
+}
+
+.small-box{
+border:2px solid #000;
+padding:8px 20px;
+border-radius:8px;
+min-width:80px;
+}
+
+/* SUBMIT */
+.submit{
+margin-top:15px;
+padding:10px 25px;
 border:none;
 border-radius:10px;
 background:#6c5ce7;
 color:white;
 font-size:16px;
-margin-top:12px;
-}
-
-/* FEEDBACK */
-#tick{
-font-size:26px;
-color:green;
-display:none;
-margin-top:8px;
-}
-
-/* SHAKE */
-.shake{
-animation:shake 0.3s;
-}
-
-@keyframes shake{
-0%{transform:translateX(0);}
-25%{transform:translateX(-5px);}
-50%{transform:translateX(5px);}
-75%{transform:translateX(-5px);}
-100%{transform:translateX(0);}
 }
 
 /* FINAL */
 #final{
 display:none;
 height:100vh;
-background:#fff;
 flex-direction:column;
 align-items:center;
 justify-content:center;
@@ -171,32 +170,39 @@ to{transform:translateY(110vh) rotate(360deg);}
 <!-- GAME -->
 <div class="screen active" id="game">
 
-<!-- INSTRUCTION -->
 <div class="instruction">
 <b>Instruction:</b> Count and colour the balls by tapping them.
 </div>
 
-<!-- NUMBER (shifted down properly) -->
 <div class="number" id="num">41</div>
-<div id="tick">✔ Good Job</div>
 
-<div class="wrapper">
+<!-- ABACUS -->
+<div class="abacus-box">
+
+<div class="header">
+<div>T</div>
+<div>O</div>
+</div>
+
+<div class="grid">
 
 <!-- TENS -->
-<div class="column">
-<div class="label">T</div>
-<div id="tens"></div>
-</div>
+<div class="col" id="tens"></div>
 
 <!-- ONES -->
-<div class="column">
-<div class="label">O</div>
-<div id="ones"></div>
-</div>
+<div class="col" id="ones"></div>
 
 </div>
+</div>
 
-<button onclick="submitAns()">Submit</button>
+<!-- ANSWER BOX -->
+<div class="answer-box">
+<div class="small-box">T: <span id="tval">0</span></div>
+<div class="small-box">O: <span id="oval">0</span></div>
+</div>
+
+<button class="submit" onclick="submitAns()">Submit ⭐</button>
+
 </div>
 
 <!-- FINAL -->
@@ -216,13 +222,7 @@ questions=questions.sort(()=>Math.random()-0.5);
 let index=0;
 let score=0;
 
-function getCounts(){
-let tens = document.querySelectorAll("#tens .ball.active").length;
-let ones = document.querySelectorAll("#ones .ball.active").length;
-return {tens, ones};
-}
-
-function createBalls(){
+function createBoard(){
 
 document.getElementById("tens").innerHTML="";
 document.getElementById("ones").innerHTML="";
@@ -240,70 +240,61 @@ b.className="ball";
 b.onclick=()=>b.classList.toggle("active");
 document.getElementById("ones").appendChild(b);
 }
+
+updateUI();
 }
+
+function updateUI(){
+let t=document.querySelectorAll("#tens .active").length;
+let o=document.querySelectorAll("#ones .active").length;
+
+document.getElementById("tval").innerText=t;
+document.getElementById("oval").innerText=o;
+}
+
+document.addEventListener("click",updateUI);
 
 function loadQ(){
 document.getElementById("num").innerText=questions[index];
-document.getElementById("tick").style.display="none";
-createBalls();
+createBoard();
 }
 
 function submitAns(){
 
 let num=questions[index];
-let correctT=Math.floor(num/10);
-let correctO=num%10;
+let t=Math.floor(num/10);
+let o=num%10;
 
-let {tens,ones}=getCounts();
+let tsel=document.querySelectorAll("#tens .active").length;
+let osel=document.querySelectorAll("#ones .active").length;
 
-if(tens===correctT && ones===correctO){
+if(tsel===t && osel===o){
 
 document.getElementById("clap").play();
-document.getElementById("tick").style.display="block";
-
 score++;
 
-setTimeout(()=>{
 index++;
 if(index>=questions.length){
 endGame();
 }else{
 loadQ();
 }
-},900);
 
 }else{
 
 document.getElementById("wrong").play();
-document.getElementById("game").classList.add("shake");
 
-setTimeout(()=>{
-document.getElementById("game").classList.remove("shake");
-},300);
+let tballs=document.querySelectorAll("#tens .ball");
+let oballs=document.querySelectorAll("#ones .ball");
 
-glowMissing(correctT,correctO);
-}
+for(let i=tsel;i<t;i++){
+if(tballs[i]) tballs[i].classList.add("glow");
 }
 
-function glowMissing(t,o){
-
-let tensBalls=document.querySelectorAll("#tens .ball");
-let onesBalls=document.querySelectorAll("#ones .ball");
-
-let tCount=0;
-for(let i=0;i<10;i++){
-if(tCount<t && !tensBalls[i].classList.contains("active")){
-tensBalls[i].classList.add("glow");
-tCount++;
-}
+for(let i=osel;i<o;i++){
+if(oballs[i]) oballs[i].classList.add("glow");
 }
 
-let oCount=0;
-for(let i=0;i<10;i++){
-if(oCount<o && !onesBalls[i].classList.contains("active")){
-onesBalls[i].classList.add("glow");
-oCount++;
-}
 }
 }
 
@@ -319,7 +310,7 @@ location.reload();
 }
 
 function confetti(){
-for(let i=0;i<50;i++){
+for(let i=0;i<60;i++){
 let c=document.createElement("div");
 c.className="confetti";
 c.style.left=Math.random()*100+"vw";
