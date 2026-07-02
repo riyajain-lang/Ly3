@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materials Game</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  width:100%;height:100%;overflow:hidden;
+  font-family:"Comic Sans MS","Trebuchet MS",Arial,sans-serif;
+}
+
+#splash{
+  position:fixed;inset:0;background:white;
+  display:flex;align-items:center;justify-content:center;z-index:10;
+}
+#splash img{max-width:45%;max-height:45%}
+
+#game{
+  width:100vw;height:100vh;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  padding:2vh 3vw;
+  background:
+    radial-gradient(circle at top left,#ffe1f2 0%,transparent 32%),
+    radial-gradient(circle at top right,#d9f4ff 0%,transparent 35%),
+    radial-gradient(circle at bottom left,#fff4b8 0%,transparent 35%),
+    radial-gradient(circle at bottom right,#d8ffd8 0%,transparent 35%),
+    linear-gradient(135deg,#fffdf5,#eef8ff);
+  position:relative;
+}
+
+h1{
+  font-size:clamp(30px,5vw,58px);
+  color:#6a1b9a;
+  background:linear-gradient(135deg,#fff176,#ffd6ec,#b2ebf2);
+  border:5px solid #ff8ac9;
+  border-radius:28px;
+  padding:10px 36px;
+  margin-bottom:2vh;
+  box-shadow:0 6px 0 #c77dff,0 10px 18px rgba(0,0,0,.18);
+  text-shadow:2px 2px white;
+}
+
+#question{
+  font-size:clamp(22px,3.2vw,36px);
+  color:#00695c;
+  background:white;
+  border:4px dashed #ffb703;
+  border-radius:22px;
+  padding:10px 24px;
+  margin-bottom:5vh;
+  font-weight:bold;
+}
+
+.cards{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:clamp(18px,6vw,95px);
+}
+
+.card{
+  width:clamp(115px,22vw,220px);
+  height:clamp(120px,20vw,210px);
+  background:linear-gradient(160deg,#ffffff,#fff3cd);
+  border:6px solid #00b4d8;
+  border-radius:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 8px 0 #0077b6,0 12px 20px rgba(0,0,0,.18);
+  padding:14px;
+}
+
+.card:nth-child(2){
+  border-color:#f72585;
+  box-shadow:0 8px 0 #b5179e,0 12px 20px rgba(0,0,0,.18);
+}
+
+.card:nth-child(3){
+  border-color:#70e000;
+  box-shadow:0 8px 0 #38b000,0 12px 20px rgba(0,0,0,.18);
+}
+
+.card img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+
+.shake{animation:shake .35s}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-9px)}
+  50%{transform:translateX(9px)}
+  75%{transform:translateX(-9px)}
+}
+
+.glow{
+  animation:glow 1s infinite alternate;
+  border-color:#00c853!important;
+}
+@keyframes glow{
+  from{box-shadow:0 0 10px #00c853}
+  to{box-shadow:0 0 35px #00c853}
+}
+
+#feedback{
+  position:absolute;
+  bottom:5vh;
+  font-size:clamp(34px,6vw,72px);
+  font-weight:bold;
+  color:#00a000;
+  text-shadow:3px 3px white;
+}
+
+#end{
+  display:none;
+  position:fixed;
+  inset:0;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  z-index:5;
+  background:
+    radial-gradient(circle at top left,#ffe1f2 0%,transparent 32%),
+    radial-gradient(circle at top right,#d9f4ff 0%,transparent 35%),
+    radial-gradient(circle at bottom left,#fff4b8 0%,transparent 35%),
+    radial-gradient(circle at bottom right,#d8ffd8 0%,transparent 35%),
+    linear-gradient(135deg,#fffdf5,#eef8ff);
+}
+
+#end h2{
+  font-size:clamp(48px,9vw,100px);
+  color:#ff4081;
+  background:linear-gradient(135deg,#fff176,#ffd6ec,#b2ebf2);
+  border:6px solid #7b1fa2;
+  padding:22px 42px;
+  border-radius:35px;
+  margin-bottom:35px;
+  box-shadow:0 8px 0 #7b1fa2;
+}
+
+#playAgain{
+  font-family:"Comic Sans MS","Trebuchet MS",Arial,sans-serif;
+  font-size:clamp(24px,3vw,36px);
+  padding:15px 42px;
+  border:none;
+  background:linear-gradient(135deg,#ffca28,#ff80ab,#80deea);
+  color:#4a148c;
+  border-radius:45px;
+  cursor:pointer;
+  font-weight:bold;
+  box-shadow:0 6px 0 #7b1fa2,0 10px 18px rgba(0,0,0,.2);
+}
+
+#playAgain:active{
+  transform:translateY(5px);
+  box-shadow:0 2px 0 #7b1fa2;
+}
+
+canvas{position:fixed;inset:0;pointer-events:none;z-index:20}
+
+@media(max-width:650px){
+  h1{font-size:30px;padding:8px 18px}
+  #question{font-size:20px;margin-bottom:4vh}
+  .cards{gap:12px}
+  .card{width:30vw;height:30vw;padding:10px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="splash">
+  <img src="assets/innovine-logo.png" alt="Logo">
+</div>
+
+<div id="game">
+  <h1>🌈 Materials Hunt 🌈</h1>
+  <div id="question"></div>
+  <div class="cards" id="cards"></div>
+  <div id="feedback"></div>
+</div>
+
+<div id="end">
+  <h2>🎉 Good Job! 🎉</h2>
+  <button id="playAgain">Play Again</button>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+const materials=[
+  {name:"Plastic", img:"assets/plastic.png"},
+  {name:"Wood", img:"assets/wood.png"},
+  {name:"Metal", img:"assets/metal.png"},
+  {name:"Fabric", img:"assets/fabric.png"},
+  {name:"Paper", img:"assets/paper.png"},
+  {name:"Glass", img:"assets/glass.png"}
+];
+
+let questions=[], current=0, wrongAttempts=0, locked=false;
+
+const splash=document.getElementById("splash");
+const game=document.getElementById("game");
+const question=document.getElementById("question");
+const cards=document.getElementById("cards");
+const feedback=document.getElementById("feedback");
+const end=document.getElementById("end");
+const playAgain=document.getElementById("playAgain");
+
+const claps=new Audio("assets/claps.mp3");
+const wrong=new Audio("assets/wrong.mp3");
+
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-0.5);
+}
+
+function startGame(){
+  questions=shuffle([...materials]);
+  current=0;
+  end.style.display="none";
+  game.style.display="flex";
+  loadQuestion();
+}
+
+function loadQuestion(){
+  locked=false;
+  wrongAttempts=0;
+  feedback.textContent="";
+  cards.innerHTML="";
+
+  const answer=questions[current];
+  question.textContent=`Tap on the objects made up of ${answer.name}.`;
+
+  let options=[answer];
+
+  while(options.length<3){
+    let random=materials[Math.floor(Math.random()*materials.length)];
+    if(!options.some(o=>o.name===random.name)){
+      options.push(random);
+    }
+  }
+
+  options=shuffle(options);
+
+  options.forEach(item=>{
+    const card=document.createElement("div");
+    card.className="card";
+
+    const img=document.createElement("img");
+    img.src=item.img;
+    img.alt=item.name;
+
+    card.appendChild(img);
+    card.onclick=()=>checkAnswer(card,item.name,answer.name);
+    cards.appendChild(card);
+  });
+}
+
+function checkAnswer(card,selected,answer){
+  if(locked) return;
+
+  if(selected===answer){
+    locked=true;
+    feedback.textContent="✓ Good Job!";
+    claps.currentTime=0;
+    claps.play().catch(()=>{});
+
+    setTimeout(()=>{
+      current++;
+      if(current>=questions.length){
+        showEnd();
+      }else{
+        loadQuestion();
+      }
+    },1200);
+  }else{
+    wrongAttempts++;
+    wrong.currentTime=0;
+    wrong.play().catch(()=>{});
+    card.classList.add("shake");
+    setTimeout(()=>card.classList.remove("shake"),400);
+
+    if(wrongAttempts>=2){
+      document.querySelectorAll(".card").forEach(c=>{
+        const img=c.querySelector("img");
+        if(img.alt===answer){
+          c.classList.add("glow");
+        }
+      });
+    }
+  }
+}
+
+function showEnd(){
+  game.style.display="none";
+  end.style.display="flex";
+  claps.currentTime=0;
+  claps.play().catch(()=>{});
+  startConfetti();
+}
+
+playAgain.onclick=()=>{
+  stopConfetti();
+  startGame();
+};
+
+setTimeout(()=>{
+  splash.style.display="none";
+  startGame();
+},2000);
+
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+let confetti=[], confettiTimer;
+
+function resizeCanvas(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+}
+window.addEventListener("resize",resizeCanvas);
+resizeCanvas();
+
+function startConfetti(){
+  confetti=[];
+  for(let i=0;i<140;i++){
+    confetti.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height-canvas.height,
+      r:Math.random()*7+4,
+      s:Math.random()*3+2
+    });
+  }
+  animateConfetti();
+}
+
+function animateConfetti(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  confetti.forEach(p=>{
+    ctx.fillRect(p.x,p.y,p.r,p.r);
+    p.y+=p.s;
+    if(p.y>canvas.height)p.y=-10;
+  });
+  confettiTimer=requestAnimationFrame(animateConfetti);
+}
+
+function stopConfetti(){
+  cancelAnimationFrame(confettiTimer);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+</script>
+
+</body>
+</html>
