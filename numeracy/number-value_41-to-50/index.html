@@ -1,329 +1,563 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Number Value Game</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Build the Number Using Blocks</title>
 
 <style>
-*{box-sizing:border-box;font-family:Arial;}
-
-body{
-margin:0;
-overflow:hidden;
-background:#fff;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* SPLASH */
-#splash{
-position:fixed;
-inset:0;
-background:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:999;
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
 }
 
-/* SCREEN */
-.screen{
-display:none;
-height:100vh;
-width:100%;
-text-align:center;
-padding:10px;
-}
-.active{display:block;}
-
-/* INSTRUCTION */
-.instruction{
-background:#ffffff;
-border-radius:12px;
-padding:10px;
-width:90%;
-max-width:420px;
-margin:10px auto;
-box-shadow:0 2px 8px rgba(0,0,0,0.2);
-font-size:14px;
+body {
+  background: url("assets/background-number-value.png") center/cover no-repeat;
 }
 
-/* NUMBER */
-.number{
-font-size:38px;
-font-weight:bold;
-margin-top:10px;
+#splash {
+  position: fixed;
+  inset: 0;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
-/* OUTER MAIN FRAME */
-.abacus-box{
-display:inline-block;
-border:2px solid #000;
-padding:10px;
-border-radius:10px;
-margin-top:10px;
+#splash img {
+  width: 180px;
+  max-width: 55vw;
 }
 
-/* HEADER T O */
-.header{
-display:flex;
-justify-content:space-around;
-font-weight:bold;
-margin-bottom:5px;
+.screen {
+  width: 100vw;
+  height: 100vh;
+  padding: 1.5vh 2vw;
+  display: none;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* GRID */
-.grid{
-display:flex;
+h1 {
+  font-size: clamp(20px, 4vw, 42px);
+  background: rgba(255,255,255,0.85);
+  padding: 6px 18px;
+  border-radius: 18px;
+  color: #263238;
 }
 
-.col{
-display:flex;
-flex-direction:column;
-align-items:center;
-padding:5px 15px;
-border:1px solid #000;
+.instruction {
+  font-size: clamp(13px, 2vw, 22px);
+  margin: 0.7vh 0;
+  background: rgba(255,255,255,0.85);
+  padding: 5px 14px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: bold;
 }
 
-.ball{
-width:22px;
-height:22px;
-border-radius:50%;
-border:2px solid #3498db;
-margin:3px;
-background:#fff;
-transition:0.2s;
+.number-card {
+  font-size: clamp(34px, 7vw, 70px);
+  font-weight: 900;
+  color: #111;
+  background: white;
+  padding: 4px 36px;
+  border-radius: 22px;
+  border: 4px solid #263238;
+  margin-bottom: 1vh;
 }
 
-.ball.active{
-background:gold;
-transform:scale(1.1);
+.game-area {
+  width: 96vw;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: 1.5vw;
+  min-height: 0;
 }
 
-.ball.glow{
-animation:blink 0.6s infinite alternate;
-box-shadow:0 0 10px 3px lime;
+.zone {
+  background: rgba(255,255,255,0.82);
+  border: 3px solid #37474f;
+  border-radius: 22px;
+  padding: 1vh 1vw;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
-@keyframes blink{
-from{opacity:1;}
-to{opacity:0.3;}
+.zone-title {
+  text-align: center;
+  font-size: clamp(15px, 2.2vw, 25px);
+  font-weight: 900;
+  margin-bottom: 0.7vh;
+  color: #263238;
 }
 
-/* SMALL ANSWER BOX */
-.answer-box{
-display:flex;
-justify-content:center;
-gap:30px;
-margin-top:10px;
+.box-row {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1vw;
+  min-height: 0;
 }
 
-.small-box{
-border:2px solid #000;
-padding:8px 20px;
-border-radius:8px;
-min-width:80px;
+.build-box, .select-box {
+  border: 3px dashed #455a64;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.7vh 0.5vw;
+  min-height: 0;
 }
 
-/* SUBMIT */
-.submit{
-margin-top:15px;
-padding:10px 25px;
-border:none;
-border-radius:10px;
-background:#6c5ce7;
-color:white;
-font-size:16px;
+.label {
+  font-weight: 900;
+  font-size: clamp(15px, 2.3vw, 25px);
+  color: #263238;
+  margin-bottom: 0.4vh;
 }
 
-/* FINAL */
-#final{
-display:none;
-height:100vh;
-flex-direction:column;
-align-items:center;
-justify-content:center;
+.stack-area {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 3px;
+  min-height: 0;
 }
 
-/* CONFETTI */
-.confetti{
-position:fixed;
-width:8px;
-height:8px;
-top:-10px;
-animation:fall 3s linear infinite;
+.select-stack {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
 }
 
-@keyframes fall{
-to{transform:translateY(110vh) rotate(360deg);}
+.block {
+  width: clamp(42px, 7vw, 78px);
+  height: clamp(24px, 4.2vw, 42px);
+  border-radius: 10px;
+  font-weight: 900;
+  font-size: clamp(13px, 2vw, 23px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  box-shadow: inset 0 3px 0 rgba(255,255,255,0.55), 0 4px 6px rgba(0,0,0,0.25);
 }
 
+.block::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  width: 22px;
+  height: 8px;
+  border-radius: 8px 8px 0 0;
+  background: inherit;
+}
+
+.ten-block {
+  background: linear-gradient(#64b5f6, #1976d2);
+  color: white;
+}
+
+.one-block {
+  background: linear-gradient(#ffca28, #f57f17);
+  color: #222;
+}
+
+.block:active {
+  transform: scale(0.94);
+}
+
+.used {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.glow {
+  animation: glow 0.8s infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 6px 3px gold; }
+  to { box-shadow: 0 0 18px 8px orange; }
+}
+
+.shake {
+  animation: shake 0.35s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-8px); }
+  100% { transform: translateX(0); }
+}
+
+.submit-btn, .play-btn {
+  margin-top: 1vh;
+  padding: 9px 34px;
+  border: none;
+  border-radius: 30px;
+  background: #2e7d32;
+  color: white;
+  font-size: clamp(18px, 3vw, 32px);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #1b5e20;
+}
+
+.feedback {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(42px, 9vw, 95px);
+  font-weight: 900;
+  color: #2e7d32;
+  background: rgba(255,255,255,0.5);
+  z-index: 50;
+  text-align: center;
+}
+
+#finalScreen {
+  position: fixed;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255,255,255,0.92);
+  z-index: 90;
+  text-align: center;
+}
+
+#finalScreen h2 {
+  font-size: clamp(34px, 7vw, 80px);
+  color: #2e7d32;
+  margin-bottom: 25px;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+@media (max-height: 620px) {
+  .block {
+    height: 24px;
+    font-size: 13px;
+  }
+
+  .label {
+    font-size: 14px;
+  }
+
+  .instruction {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
-<img src="assets/innovine-logo.png" style="width:160px;">
+  <img src="assets/logo.png" alt="Logo">
 </div>
 
-<!-- GAME -->
-<div class="screen active" id="game">
+<div class="screen" id="gameScreen">
+  <h1>BUILD THE NUMBER USING BLOCKS</h1>
+  <div class="instruction">Tap the blocks to build the number. Tens go in Tens. Ones go in Ones.</div>
+  <div class="number-card" id="targetNumber">47</div>
 
-<div class="instruction">
-<b>Instruction:</b> Count and colour the balls by tapping them.
+  <div class="game-area" id="gameArea">
+    <div class="zone">
+      <div class="zone-title">BUILD AREA</div>
+      <div class="box-row">
+        <div class="build-box">
+          <div class="label">TENS</div>
+          <div class="stack-area" id="builtTens"></div>
+        </div>
+        <div class="build-box">
+          <div class="label">ONES</div>
+          <div class="stack-area" id="builtOnes"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="zone">
+      <div class="zone-title">SELECT BLOCKS</div>
+      <div class="box-row">
+        <div class="select-box">
+          <div class="label">TENS</div>
+          <div class="select-stack" id="tensOptions"></div>
+        </div>
+        <div class="select-box">
+          <div class="label">ONES</div>
+          <div class="select-stack" id="onesOptions"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="submit-btn" onclick="checkAnswer()">SUBMIT</button>
 </div>
 
-<div class="number" id="num">41</div>
+<div class="feedback" id="feedback"></div>
 
-<!-- ABACUS -->
-<div class="abacus-box">
-
-<div class="header">
-<div>T</div>
-<div>O</div>
+<div id="finalScreen">
+  <h2>Good Job!<br>You completed the game!</h2>
+  <button class="play-btn" onclick="restartGame()">PLAY AGAIN</button>
 </div>
 
-<div class="grid">
+<canvas id="confettiCanvas"></canvas>
 
-<!-- TENS -->
-<div class="col" id="tens"></div>
-
-<!-- ONES -->
-<div class="col" id="ones"></div>
-
-</div>
-</div>
-
-<!-- ANSWER BOX -->
-<div class="answer-box">
-<div class="small-box">T: <span id="tval">0</span></div>
-<div class="small-box">O: <span id="oval">0</span></div>
-</div>
-
-<button class="submit" onclick="submitAns()">Submit ⭐</button>
-
-</div>
-
-<!-- FINAL -->
-<div id="final">
-<h1>🎉 Score: <span id="score"></span>/10</h1>
-<button onclick="restart()">Play Again</button>
-</div>
-
-<audio id="clap" src="assets/claps.mp3"></audio>
-<audio id="wrong" src="assets/wrong.mp3"></audio>
+<audio id="clapsSound" src="assets/claps.mp3"></audio>
+<audio id="wrongSound" src="assets/wrong.mp3"></audio>
 
 <script>
+const questions = [41,42,43,44,45,46,47,48,49,50];
 
-let questions=[41,42,43,44,45,46,47,48,49,50];
-questions=questions.sort(()=>Math.random()-0.5);
+let shuffledQuestions = [];
+let currentIndex = 0;
+let target = 0;
+let selectedTens = 0;
+let selectedOnes = 0;
+let wrongAttempts = 0;
 
-let index=0;
-let score=0;
+const targetNumber = document.getElementById("targetNumber");
+const builtTens = document.getElementById("builtTens");
+const builtOnes = document.getElementById("builtOnes");
+const tensOptions = document.getElementById("tensOptions");
+const onesOptions = document.getElementById("onesOptions");
+const feedback = document.getElementById("feedback");
+const gameArea = document.getElementById("gameArea");
+const clapsSound = document.getElementById("clapsSound");
+const wrongSound = document.getElementById("wrongSound");
 
-function createBoard(){
+window.onload = () => {
+  setTimeout(() => {
+    document.getElementById("splash").style.display = "none";
+    document.getElementById("gameScreen").style.display = "flex";
+    startGame();
+  }, 2000);
+};
 
-document.getElementById("tens").innerHTML="";
-document.getElementById("ones").innerHTML="";
-
-for(let i=0;i<10;i++){
-let b=document.createElement("div");
-b.className="ball";
-b.onclick=()=>b.classList.toggle("active");
-document.getElementById("tens").appendChild(b);
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
 }
 
-for(let i=0;i<10;i++){
-let b=document.createElement("div");
-b.className="ball";
-b.onclick=()=>b.classList.toggle("active");
-document.getElementById("ones").appendChild(b);
+function startGame() {
+  shuffledQuestions = shuffle([...questions]);
+  currentIndex = 0;
+  loadQuestion();
 }
 
-updateUI();
+function loadQuestion() {
+  target = shuffledQuestions[currentIndex];
+  targetNumber.textContent = target;
+
+  selectedTens = 0;
+  selectedOnes = 0;
+  wrongAttempts = 0;
+
+  builtTens.innerHTML = "";
+  builtOnes.innerHTML = "";
+  tensOptions.innerHTML = "";
+  onesOptions.innerHTML = "";
+
+  createBlocks();
 }
 
-function updateUI(){
-let t=document.querySelectorAll("#tens .active").length;
-let o=document.querySelectorAll("#ones .active").length;
+function createBlocks() {
+  for (let i = 0; i < 6; i++) {
+    const block = document.createElement("div");
+    block.className = "block ten-block";
+    block.textContent = "10";
+    block.onclick = () => selectTen(block);
+    tensOptions.appendChild(block);
+  }
 
-document.getElementById("tval").innerText=t;
-document.getElementById("oval").innerText=o;
+  for (let i = 0; i < 10; i++) {
+    const block = document.createElement("div");
+    block.className = "block one-block";
+    block.textContent = "1";
+    block.onclick = () => selectOne(block);
+    onesOptions.appendChild(block);
+  }
 }
 
-document.addEventListener("click",updateUI);
+function selectTen(block) {
+  if (selectedTens >= 6) return;
+  selectedTens++;
+  block.classList.add("used");
 
-function loadQ(){
-document.getElementById("num").innerText=questions[index];
-createBoard();
+  const newBlock = document.createElement("div");
+  newBlock.className = "block ten-block";
+  newBlock.textContent = "10";
+  builtTens.appendChild(newBlock);
 }
 
-function submitAns(){
+function selectOne(block) {
+  if (selectedOnes >= 10) return;
+  selectedOnes++;
+  block.classList.add("used");
 
-let num=questions[index];
-let t=Math.floor(num/10);
-let o=num%10;
-
-let tsel=document.querySelectorAll("#tens .active").length;
-let osel=document.querySelectorAll("#ones .active").length;
-
-if(tsel===t && osel===o){
-
-document.getElementById("clap").play();
-score++;
-
-index++;
-if(index>=questions.length){
-endGame();
-}else{
-loadQ();
+  const newBlock = document.createElement("div");
+  newBlock.className = "block one-block";
+  newBlock.textContent = "1";
+  builtOnes.appendChild(newBlock);
 }
 
-}else{
+function checkAnswer() {
+  const correctTens = Math.floor(target / 10);
+  const correctOnes = target % 10;
 
-document.getElementById("wrong").play();
+  if (selectedTens === correctTens && selectedOnes === correctOnes) {
+    showCorrect();
+  } else {
+    wrongAttempts++;
+    playSound(wrongSound);
+    gameArea.classList.add("shake");
 
-let tballs=document.querySelectorAll("#tens .ball");
-let oballs=document.querySelectorAll("#ones .ball");
+    setTimeout(() => {
+      gameArea.classList.remove("shake");
+    }, 400);
 
-for(let i=tsel;i<t;i++){
-if(tballs[i]) tballs[i].classList.add("glow");
+    if (wrongAttempts >= 2) {
+      glowRemainingBlocks(correctTens, correctOnes);
+    }
+  }
 }
 
-for(let i=osel;i<o;i++){
-if(oballs[i]) oballs[i].classList.add("glow");
+function glowRemainingBlocks(correctTens, correctOnes) {
+  const needTens = Math.max(0, correctTens - selectedTens);
+  const needOnes = Math.max(0, correctOnes - selectedOnes);
+
+  const tenBlocks = [...tensOptions.children].filter(b => !b.classList.contains("used"));
+  const oneBlocks = [...onesOptions.children].filter(b => !b.classList.contains("used"));
+
+  tenBlocks.forEach(b => b.classList.remove("glow"));
+  oneBlocks.forEach(b => b.classList.remove("glow"));
+
+  tenBlocks.slice(0, needTens).forEach(b => b.classList.add("glow"));
+  oneBlocks.slice(0, needOnes).forEach(b => b.classList.add("glow"));
 }
 
-}
+function showCorrect() {
+  playSound(clapsSound);
+  feedback.innerHTML = "✓<br>Good Job!";
+  feedback.style.display = "flex";
+
+  setTimeout(() => {
+    feedback.style.display = "none";
+    currentIndex++;
+
+    if (currentIndex < shuffledQuestions.length) {
+      loadQuestion();
+    } else {
+      showFinalScreen();
+    }
+  }, 2000);
 }
 
-function endGame(){
-document.getElementById("game").style.display="none";
-document.getElementById("final").style.display="flex";
-document.getElementById("score").innerText=score;
-confetti();
+function playSound(sound) {
+  sound.currentTime = 0;
+  sound.play().catch(() => {});
 }
 
-function restart(){
-location.reload();
+function showFinalScreen() {
+  document.getElementById("gameScreen").style.display = "none";
+  document.getElementById("finalScreen").style.display = "flex";
+  playSound(clapsSound);
+  startConfetti();
 }
 
-function confetti(){
-for(let i=0;i<60;i++){
-let c=document.createElement("div");
-c.className="confetti";
-c.style.left=Math.random()*100+"vw";
-c.style.background=["red","blue","green","orange"][Math.floor(Math.random()*4)];
-c.style.animationDuration=(2+Math.random()*3)+"s";
-document.body.appendChild(c);
-}
+function restartGame() {
+  stopConfetti();
+  document.getElementById("finalScreen").style.display = "none";
+  document.getElementById("gameScreen").style.display = "flex";
+  startGame();
 }
 
-setTimeout(()=>{
-document.getElementById("splash").style.display="none";
-},2000);
+const canvas = document.getElementById("confettiCanvas");
+const ctx = canvas.getContext("2d");
+let confetti = [];
+let confettiAnimation;
 
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+function startConfetti() {
+  confetti = [];
+
+  for (let i = 0; i < 140; i++) {
+    confetti.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      size: Math.random() * 8 + 4,
+      speed: Math.random() * 3 + 2,
+      color: `hsl(${Math.random() * 360}, 90%, 55%)`
+    });
+  }
+
+  animateConfetti();
+}
+
+function animateConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  confetti.forEach(c => {
+    ctx.fillStyle = c.color;
+    ctx.fillRect(c.x, c.y, c.size, c.size);
+    c.y += c.speed;
+
+    if (c.y > canvas.height) {
+      c.y = -10;
+      c.x = Math.random() * canvas.width;
+    }
+  });
+
+  confettiAnimation = requestAnimationFrame(animateConfetti);
+}
+
+function stopConfetti() {
+  cancelAnimationFrame(confettiAnimation);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 </script>
 
 </body>
