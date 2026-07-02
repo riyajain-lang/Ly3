@@ -20,10 +20,7 @@ html,body{
 
 #game{
   width:100vw;height:100vh;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
+  display:none;flex-direction:column;align-items:center;text-align:center;
   padding:2vh 3vw;
   background:
     radial-gradient(circle at top left,#ffe1f2 0%,transparent 32%),
@@ -40,21 +37,40 @@ h1{
   background:linear-gradient(135deg,#fff176,#ffd6ec,#b2ebf2);
   border:5px solid #ff8ac9;
   border-radius:28px;
-  padding:10px 36px;
-  margin-bottom:2vh;
+  padding:8px 36px;
+  margin-bottom:1.5vh;
   box-shadow:0 6px 0 #c77dff,0 10px 18px rgba(0,0,0,.18);
   text-shadow:2px 2px white;
 }
 
 #question{
-  font-size:clamp(22px,3.2vw,36px);
+  font-size:clamp(21px,3vw,34px);
   color:#00695c;
   background:white;
   border:4px dashed #ffb703;
   border-radius:22px;
-  padding:10px 24px;
-  margin-bottom:5vh;
+  padding:9px 22px;
+  margin-bottom:2vh;
   font-weight:bold;
+}
+
+#soundBtn{
+  font-family:"Comic Sans MS","Trebuchet MS",Arial,sans-serif;
+  font-size:clamp(22px,3vw,34px);
+  padding:12px 36px;
+  border:none;
+  background:linear-gradient(135deg,#ffca28,#ff80ab,#80deea);
+  color:#4a148c;
+  border-radius:45px;
+  cursor:pointer;
+  margin-bottom:4vh;
+  font-weight:bold;
+  box-shadow:0 6px 0 #7b1fa2,0 10px 18px rgba(0,0,0,.2);
+}
+
+#soundBtn:active{
+  transform:translateY(5px);
+  box-shadow:0 2px 0 #7b1fa2;
 }
 
 .cards{
@@ -113,7 +129,7 @@ h1{
 
 #feedback{
   position:absolute;
-  bottom:5vh;
+  bottom:4vh;
   font-size:clamp(34px,6vw,72px);
   font-weight:bold;
   color:#00a000;
@@ -121,13 +137,8 @@ h1{
 }
 
 #end{
-  display:none;
-  position:fixed;
-  inset:0;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
+  display:none;position:fixed;inset:0;
+  align-items:center;justify-content:center;flex-direction:column;text-align:center;
   z-index:5;
   background:
     radial-gradient(circle at top left,#ffe1f2 0%,transparent 32%),
@@ -169,10 +180,12 @@ h1{
 canvas{position:fixed;inset:0;pointer-events:none;z-index:20}
 
 @media(max-width:650px){
-  h1{font-size:30px;padding:8px 18px}
-  #question{font-size:20px;margin-bottom:4vh}
-  .cards{gap:12px}
-  .card{width:30vw;height:30vw;padding:10px}
+  #game{padding:2vh 2vw}
+  h1{font-size:28px;padding:7px 16px}
+  #question{font-size:18px;margin-bottom:1.5vh}
+  #soundBtn{font-size:20px;padding:10px 28px;margin-bottom:3vh}
+  .cards{gap:10px}
+  .card{width:30vw;height:30vw;padding:10px;border-radius:24px}
 }
 </style>
 </head>
@@ -186,6 +199,7 @@ canvas{position:fixed;inset:0;pointer-events:none;z-index:20}
 <div id="game">
   <h1>🌈 Materials Hunt 🌈</h1>
   <div id="question"></div>
+  <button id="soundBtn">🔊 Play</button>
   <div class="cards" id="cards"></div>
   <div id="feedback"></div>
 </div>
@@ -199,15 +213,16 @@ canvas{position:fixed;inset:0;pointer-events:none;z-index:20}
 
 <script>
 const materials=[
-  {name:"Plastic", img:"assets/plastic.png"},
-  {name:"Wood", img:"assets/wood.png"},
-  {name:"Metal", img:"assets/metal.png"},
-  {name:"Fabric", img:"assets/fabric.png"},
-  {name:"Paper", img:"assets/paper.png"},
-  {name:"Glass", img:"assets/glass.png"}
+  {name:"Plastic", img:"assets/plastic.png", audio:"assets/plastic-audio.mp3"},
+  {name:"Wood", img:"assets/wood.png", audio:"assets/wood-audio.mp3"},
+  {name:"Metal", img:"assets/metal.png", audio:"assets/metal-audio.mp3"},
+  {name:"Fabric", img:"assets/fabric.png", audio:"assets/fabric-audio.mp3"},
+  {name:"Paper", img:"assets/paper.png", audio:"assets/paper-audio.mp3"},
+  {name:"Glass", img:"assets/glass.png", audio:"assets/glass-audio.mp3"}
 ];
 
 let questions=[], current=0, wrongAttempts=0, locked=false;
+let currentAudio=null;
 
 const splash=document.getElementById("splash");
 const game=document.getElementById("game");
@@ -216,6 +231,7 @@ const cards=document.getElementById("cards");
 const feedback=document.getElementById("feedback");
 const end=document.getElementById("end");
 const playAgain=document.getElementById("playAgain");
+const soundBtn=document.getElementById("soundBtn");
 
 const claps=new Audio("assets/claps.mp3");
 const wrong=new Audio("assets/wrong.mp3");
@@ -230,6 +246,15 @@ function startGame(){
   end.style.display="none";
   game.style.display="flex";
   loadQuestion();
+}
+
+function playQuestionAudio(){
+  if(currentAudio){
+    currentAudio.pause();
+    currentAudio.currentTime=0;
+  }
+  currentAudio=new Audio(questions[current].audio);
+  currentAudio.play().catch(()=>{});
 }
 
 function loadQuestion(){
@@ -264,6 +289,8 @@ function loadQuestion(){
     card.onclick=()=>checkAnswer(card,item.name,answer.name);
     cards.appendChild(card);
   });
+
+  setTimeout(playQuestionAudio,500);
 }
 
 function checkAnswer(card,selected,answer){
@@ -300,6 +327,8 @@ function checkAnswer(card,selected,answer){
     }
   }
 }
+
+soundBtn.onclick=playQuestionAudio;
 
 function showEnd(){
   game.style.display="none";
