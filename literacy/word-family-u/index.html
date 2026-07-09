@@ -1,862 +1,1206 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 
-<meta name="viewport"
+<meta
+name="viewport"
 content="width=device-width,
 initial-scale=1.0,
 maximum-scale=1.0,
 user-scalable=no">
 
-<title>Word Family -un</title>
+<title>Word Family U</title>
+
 
 <style>
 
-/* ------------------------------
-   BASIC PAGE SETTINGS
------------------------------- */
+/* ==============================
+   BASIC SETTINGS
+============================== */
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
 
 html,
 body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
+
+width:100%;
+height:100%;
+
+overflow:hidden;
+
 }
 
 body{
-    font-family:"Arial Rounded MT Bold",
-    "Comic Sans MS",
-    Arial,
-    sans-serif;
 
-    background:#ffffff;
-    touch-action:manipulation;
+font-family:
+"Comic Sans MS",
+"Arial Rounded MT Bold",
+Arial,
+sans-serif;
+
+background:#ffffff;
+
+touch-action:manipulation;
+
 }
 
-/* ------------------------------
+
+/* ==============================
    COMMON SCREEN
------------------------------- */
+============================== */
 
 .screen{
-    position:absolute;
-    top:0;
-    left:0;
 
-    width:100%;
-    height:100%;
+position:absolute;
 
-    display:none;
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+display:none;
+
 }
 
 .screen.active{
-    display:flex;
+
+display:flex;
+
 }
 
-/* ------------------------------
-   SLIDE 1 - LOGO
------------------------------- */
+
+/* ==============================
+   SLIDE 1
+   LOGO SCREEN
+============================== */
 
 #splashScreen{
 
-    background:#ffffff;
+background:#ffffff;
 
-    align-items:center;
-    justify-content:center;
+align-items:center;
+
+justify-content:center;
+
 }
 
 #splashLogo{
 
-    width:250px;
-    max-width:65%;
+width:250px;
 
-    height:auto;
+max-width:65%;
+
+height:auto;
+
 }
 
-/* ------------------------------
+
+/* ==============================
    GAME SCREEN
------------------------------- */
+============================== */
 
 #gameScreen{
 
-    flex-direction:column;
+flex-direction:column;
 
-    align-items:center;
+align-items:center;
 
-    background:
-    url("assets/background-word-family-u.png")
-    center center / cover no-repeat;
+background:
 
-    padding:
-    max(8px,2vh)
-    max(10px,2vw);
+url("assets/background-word-family-u.png")
+
+center center /
+
+cover
+
+no-repeat;
+
+padding:12px;
+
+}
+
+
+/* ==============================
+   TOP AREA
+============================== */
+
+.topArea{
+
+position:relative;
+
+width:100%;
+
+min-height:75px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
 
 }
 
-/* ------------------------------
-   TOP BAR
------------------------------- */
 
-.topBar{
-
-    width:100%;
-    max-width:1100px;
-
-    display:flex;
-
-    justify-content:space-between;
-    align-items:center;
-
-    min-height:45px;
-
-    padding:5px 12px;
-
-}
+/* ==============================
+   CENTRE TITLE
+============================== */
 
 .gameTitle{
 
-    color:#7b42bb;
+background:#365ec0;
 
-    font-size:
-    clamp(19px,3.5vw,31px);
+color:#ffffff;
 
-    text-shadow:
-    2px 2px 0 #ffffff;
+font-size:40px;
+
+font-weight:bold;
+
+padding:7px 28px;
+
+border-radius:5px;
+
+text-align:center;
+
+box-shadow:
+
+0 6px 0
+
+rgba(73,40,130,0.25);
+
+text-shadow:
+
+2px 2px 0
+
+rgba(0,0,0,0.15);
+
+}
+
+
+/* ==============================
+   QUESTION NUMBER
+============================== */
+
+.progressBox{
+
+position:absolute;
+
+right:25px;
+
+top:7px;
+
+background:#ffffff;
+
+color:#5937a4;
+
+border:4px solid #b587e8;
+
+border-radius:28px;
+
+padding:8px 19px;
+
+font-size:25px;
+
+font-weight:bold;
+
+box-shadow:
+
+0 5px 0
+
+rgba(100,57,150,0.18);
+
+}
+
+
+/* ==============================
+   INSTRUCTION
+============================== */
+
+.instructionBox{
+
+width:75%;
+
+max-width:1200px;
+
+min-height:85px;
+
+background:
+
+rgba(255,255,255,0.97);
+
+border:
+
+5px solid
+
+#ffad33;
+
+border-radius:34px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:10px 20px;
+
+margin-top:5px;
+
+box-shadow:
+
+0 9px 0
+
+rgba(170,85,110,0.20);
+
+}
+
+
+#instructionText{
+
+font-size:36px;
+
+color:#3e317e;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+
+/* ==============================
+   OPTION AREA
+============================== */
+
+#optionsArea{
+
+width:92%;
+
+max-width:1550px;
+
+flex:1;
+
+display:grid;
+
+grid-template-columns:
+
+repeat(4,1fr);
+
+gap:50px;
+
+align-items:center;
+
+justify-items:center;
+
+padding:25px 5px;
+
+}
+
+
+/* ==============================
+   IMAGE OPTION
+============================== */
+
+.option{
+
+position:relative;
+
+width:100%;
+
+max-width:290px;
+
+height:250px;
+
+border:
+
+7px solid
+
+#ffffff;
+
+border-radius:35px;
+
+background:
+
+rgba(255,255,255,0.97);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+cursor:pointer;
+
+overflow:hidden;
+
+box-shadow:
+
+0 12px 0
+
+rgba(112,65,142,0.25);
+
+transition:
+
+transform 0.15s;
+
+}
+
+
+.option:active{
+
+transform:
+
+translateY(7px);
+
+box-shadow:
+
+0 5px 0
+
+rgba(112,65,142,0.25);
+
+}
+
+
+.option img{
+
+width:84%;
+
+height:84%;
+
+object-fit:contain;
+
+pointer-events:none;
+
+user-select:none;
+
+-webkit-user-drag:none;
+
+}
+
+
+/* ==============================
+   WRONG WIGGLE
+============================== */
+
+.option.wiggle{
+
+border-color:#ff6e76;
+
+animation:
+
+wiggle
+
+0.45s ease;
+
+}
+
+
+@keyframes wiggle{
+
+0%{
+
+transform:
+
+translateX(0);
+
+}
+
+20%{
+
+transform:
+
+translateX(-13px)
+
+rotate(-2deg);
+
+}
+
+40%{
+
+transform:
+
+translateX(13px)
+
+rotate(2deg);
+
+}
+
+60%{
+
+transform:
+
+translateX(-9px);
+
+}
+
+80%{
+
+transform:
+
+translateX(9px);
+
+}
+
+100%{
+
+transform:
+
+translateX(0);
+
+}
+
+}
+
+
+/* ==============================
+   CORRECT HINT GLOW
+============================== */
+
+.option.hintGlow{
+
+border-color:#ffe028;
+
+animation:
+
+hintGlow
+
+0.75s infinite alternate;
+
+}
+
+
+@keyframes hintGlow{
+
+from{
+
+transform:
+
+scale(1);
+
+box-shadow:
+
+0 0 12px
+
+7px
+
+rgba(255,222,38,0.65);
+
+}
+
+
+to{
+
+transform:
+
+scale(1.06);
+
+box-shadow:
+
+0 0 30px
+
+15px
+
+rgba(255,222,38,1);
+
+}
+
+}
+
+
+/* ==============================
+   CORRECT IMAGE
+============================== */
+
+.option.correct{
+
+border-color:#21c76a;
+
+background:#eafff1;
+
+transform:
+
+scale(1.05);
+
+box-shadow:
+
+0 0 28px
+
+12px
+
+rgba(32,199,105,0.60);
+
+}
+
+
+/* ==============================
+   GREEN TICK
+============================== */
+
+.greenTick{
+
+position:absolute;
+
+top:10px;
+
+right:10px;
+
+width:65px;
+
+height:65px;
+
+border-radius:50%;
+
+background:#21c76a;
+
+border:5px solid white;
+
+color:white;
+
+font-size:43px;
+
+font-weight:bold;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+box-shadow:
+
+0 4px 8px
+
+rgba(0,0,0,0.25);
+
+animation:
+
+tickPop
+
+0.4s ease;
+
+}
+
+
+@keyframes tickPop{
+
+from{
+
+transform:
+
+scale(0)
+
+rotate(-180deg);
+
+}
+
+to{
+
+transform:
+
+scale(1)
+
+rotate(0);
+
+}
+
+}
+
+
+/* ==============================
+   FEEDBACK
+============================== */
+
+#feedback{
+
+width:100%;
+
+height:55px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:34px;
+
+font-weight:bold;
+
+color:#149755;
+
+text-shadow:
+
+2px 2px 0
+
+white;
+
+}
+
+
+/* ==============================
+   FINAL SCREEN
+============================== */
+
+#endScreen{
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+text-align:center;
+
+background:
+
+url("assets/background-word-family-u.png")
+
+center center /
+
+cover
+
+no-repeat;
+
+overflow:hidden;
+
+}
+
+
+.endCard{
+
+position:relative;
+
+z-index:5;
+
+width:600px;
+
+max-width:88%;
+
+background:
+
+rgba(255,255,255,0.97);
+
+border:
+
+8px solid
+
+#ffc539;
+
+border-radius:40px;
+
+padding:40px 20px;
+
+box-shadow:
+
+0 12px 0
+
+rgba(160,91,111,0.22);
+
+}
+
+
+.star{
+
+font-size:90px;
+
+animation:
+
+starMove
+
+0.8s infinite alternate;
+
+}
+
+
+@keyframes starMove{
+
+from{
+
+transform:
+
+translateY(0)
+
+rotate(-6deg);
+
+}
+
+to{
+
+transform:
+
+translateY(-12px)
+
+rotate(6deg);
+
+}
+
+}
+
+
+.goodJob{
+
+font-size:70px;
+
+font-weight:bold;
+
+color:#7141aa;
+
+text-shadow:
+
+4px 4px 0
+
+#ffe350;
+
+margin:5px;
+
+}
+
+
+.completedText{
+
+font-size:28px;
+
+color:#555555;
+
+margin:
+
+12px 0
+
+30px;
+
+}
+
+
+#playAgainButton{
+
+border:none;
+
+background:#20bd67;
+
+color:white;
+
+font-family:inherit;
+
+font-size:30px;
+
+font-weight:bold;
+
+border-radius:32px;
+
+padding:
+
+15px 38px;
+
+cursor:pointer;
+
+box-shadow:
+
+0 8px 0
+
+#118847;
+
+}
+
+
+#playAgainButton:active{
+
+transform:
+
+translateY(6px);
+
+box-shadow:
+
+0 2px 0
+
+#118847;
+
+}
+
+
+/* ==============================
+   CONFETTI
+============================== */
+
+#confettiCanvas{
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+z-index:2;
+
+pointer-events:none;
+
+}
+
+
+/* ==============================
+   TABLETS
+============================== */
+
+@media(max-width:1100px){
+
+.gameTitle{
+
+font-size:32px;
 
 }
 
 .progressBox{
 
-    background:#ffffff;
+font-size:20px;
 
-    color:#6542a8;
-
-    border:3px solid #bd91e9;
-
-    border-radius:20px;
-
-    padding:5px 14px;
-
-    font-size:
-    clamp(14px,2.5vw,20px);
-
-    box-shadow:
-    0 4px 0 rgba(93,56,132,0.18);
+right:10px;
 
 }
 
-/* ------------------------------
-   INSTRUCTION
------------------------------- */
+#instructionText{
 
-.instructionBox{
-
-    width:min(94%,850px);
-
-    background:
-    rgba(255,255,255,0.96);
-
-    border:4px solid #ffb547;
-
-    border-radius:22px;
-
-    text-align:center;
-
-    padding:
-    clamp(8px,1.6vh,15px)
-    10px;
-
-    margin:
-    clamp(3px,1vh,10px)
-    auto;
-
-    box-shadow:
-    0 6px 0 rgba(177,107,21,0.17);
+font-size:29px;
 
 }
 
-.instruction{
+#optionsArea{
 
-    color:#4c347b;
-
-    font-size:
-    clamp(18px,3.3vw,29px);
-
-    line-height:1.25;
+gap:20px;
 
 }
-
-/* ------------------------------
-   OPTIONS AREA
------------------------------- */
-
-.optionsArea{
-
-    width:min(96%,1000px);
-
-    flex:1;
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(4,1fr);
-
-    gap:
-    clamp(8px,2vw,20px);
-
-    align-items:center;
-
-    justify-items:center;
-
-    padding:
-    clamp(5px,1.3vh,13px)
-    0;
-
-}
-
-/* ------------------------------
-   IMAGE OPTION
------------------------------- */
 
 .option{
 
-    position:relative;
-
-    width:100%;
-
-    max-width:210px;
-
-    height:
-    min(31vh,230px);
-
-    min-height:125px;
-
-    border:5px solid #ffffff;
-
-    border-radius:25px;
-
-    background:
-    rgba(255,255,255,0.96);
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    cursor:pointer;
-
-    box-shadow:
-    0 8px 0
-    rgba(76,52,123,0.20);
-
-    transition:
-    transform 0.15s ease,
-    border 0.15s ease;
-
-    overflow:hidden;
+height:210px;
 
 }
 
-.option:active{
-
-    transform:
-    translateY(5px);
-
-    box-shadow:
-    0 3px 0
-    rgba(76,52,123,0.20);
-
 }
 
-.option img{
 
-    width:82%;
-    height:82%;
-
-    object-fit:contain;
-
-    pointer-events:none;
-
-    user-select:none;
-
-    -webkit-user-drag:none;
-
-}
-
-/* ------------------------------
-   WRONG ANIMATION
------------------------------- */
-
-.option.wiggle{
-
-    border-color:#ff6c73;
-
-    animation:
-    wiggleAnimation 0.45s ease;
-
-}
-
-@keyframes wiggleAnimation{
-
-    0%{
-        transform:
-        translateX(0);
-    }
-
-    20%{
-        transform:
-        translateX(-10px)
-        rotate(-2deg);
-    }
-
-    40%{
-        transform:
-        translateX(10px)
-        rotate(2deg);
-    }
-
-    60%{
-        transform:
-        translateX(-7px)
-        rotate(-1deg);
-    }
-
-    80%{
-        transform:
-        translateX(7px)
-        rotate(1deg);
-    }
-
-    100%{
-        transform:
-        translateX(0);
-    }
-
-}
-
-/* ------------------------------
-   CORRECT GLOW AFTER
-   TWO WRONG ATTEMPTS
------------------------------- */
-
-.option.hintGlow{
-
-    border-color:#ffd52e;
-
-    animation:
-    glowAnimation
-    0.8s infinite alternate;
-
-}
-
-@keyframes glowAnimation{
-
-    from{
-
-        transform:
-        scale(1);
-
-        box-shadow:
-        0 0 10px
-        5px rgba(255,220,42,0.65);
-
-    }
-
-    to{
-
-        transform:
-        scale(1.05);
-
-        box-shadow:
-        0 0 25px
-        12px rgba(255,220,42,0.95);
-
-    }
-
-}
-
-/* ------------------------------
-   CORRECT ANSWER
------------------------------- */
-
-.option.correct{
-
-    border-color:#26c76f;
-
-    background:#eafff2;
-
-    transform:
-    scale(1.04);
-
-    box-shadow:
-    0 0 22px
-    9px rgba(38,199,111,0.55);
-
-}
-
-/* ------------------------------
-   GREEN TICK
------------------------------- */
-
-.tick{
-
-    position:absolute;
-
-    top:8px;
-    right:8px;
-
-    width:
-    clamp(38px,6vw,58px);
-
-    height:
-    clamp(38px,6vw,58px);
-
-    border-radius:50%;
-
-    background:#24c76f;
-
-    color:white;
-
-    display:flex;
-
-    justify-content:center;
-    align-items:center;
-
-    font-size:
-    clamp(25px,4vw,40px);
-
-    border:4px solid white;
-
-    box-shadow:
-    0 3px 8px
-    rgba(0,0,0,0.25);
-
-    animation:
-    tickPop
-    0.4s ease;
-
-}
-
-@keyframes tickPop{
-
-    0%{
-
-        transform:
-        scale(0)
-        rotate(-180deg);
-
-    }
-
-    100%{
-
-        transform:
-        scale(1)
-        rotate(0);
-
-    }
-
-}
-
-/* ------------------------------
-   FEEDBACK
------------------------------- */
-
-.feedback{
-
-    height:
-    clamp(34px,6vh,55px);
-
-    width:100%;
-
-    text-align:center;
-
-    display:flex;
-
-    justify-content:center;
-    align-items:center;
-
-    font-size:
-    clamp(20px,3.7vw,31px);
-
-    font-weight:bold;
-
-    color:#1ca65c;
-
-    text-shadow:
-    2px 2px 0 white;
-
-}
-
-/* ------------------------------
-   LAST SCREEN
------------------------------- */
-
-#endScreen{
-
-    flex-direction:column;
-
-    justify-content:center;
-    align-items:center;
-
-    text-align:center;
-
-    background:
-    url("assets/background-word-family-u.png")
-    center center / cover no-repeat;
-
-    padding:20px;
-
-    overflow:hidden;
-
-}
-
-.endCard{
-
-    position:relative;
-
-    z-index:5;
-
-    width:min(88%,600px);
-
-    background:
-    rgba(255,255,255,0.97);
-
-    border:7px solid #ffc839;
-
-    border-radius:35px;
-
-    padding:
-    clamp(25px,5vh,50px)
-    20px;
-
-    box-shadow:
-    0 10px 0
-    rgba(161,96,20,0.20);
-
-}
-
-.endStar{
-
-    font-size:
-    clamp(55px,12vw,100px);
-
-    animation:
-    starBounce
-    1s infinite alternate;
-
-}
-
-@keyframes starBounce{
-
-    from{
-
-        transform:
-        translateY(0)
-        rotate(-5deg);
-
-    }
-
-    to{
-
-        transform:
-        translateY(-10px)
-        rotate(5deg);
-
-    }
-
-}
-
-.goodJob{
-
-    color:#7140ad;
-
-    font-size:
-    clamp(42px,8vw,75px);
-
-    margin:
-    8px 0 13px;
-
-    text-shadow:
-    3px 3px 0 #ffe563;
-
-}
-
-.completedText{
-
-    color:#525252;
-
-    font-size:
-    clamp(18px,3.4vw,27px);
-
-    margin-bottom:
-    clamp(20px,4vh,35px);
-
-}
-
-.playAgainButton{
-
-    border:none;
-
-    border-radius:30px;
-
-    background:#24bf69;
-
-    color:white;
-
-    padding:
-    14px 36px;
-
-    font-family:inherit;
-
-    font-size:
-    clamp(20px,4vw,30px);
-
-    cursor:pointer;
-
-    box-shadow:
-    0 7px 0 #12864a;
-
-}
-
-.playAgainButton:active{
-
-    transform:
-    translateY(5px);
-
-    box-shadow:
-    0 2px 0 #12864a;
-
-}
-
-/* ------------------------------
-   CONFETTI CANVAS
------------------------------- */
-
-#confettiCanvas{
-
-    position:absolute;
-
-    top:0;
-    left:0;
-
-    width:100%;
-    height:100%;
-
-    pointer-events:none;
-
-    z-index:2;
-
-}
-
-/* ------------------------------
+/* ==============================
    MOBILE PORTRAIT
------------------------------- */
+============================== */
 
-@media
-(max-width:700px){
+@media(max-width:700px){
 
-    .optionsArea{
+#gameScreen{
 
-        grid-template-columns:
-        repeat(2,1fr);
-
-        gap:10px;
-
-        width:94%;
-
-    }
-
-    .option{
-
-        height:
-        min(25vh,190px);
-
-        min-height:110px;
-
-        border-radius:19px;
-
-    }
-
-    .topBar{
-
-        min-height:38px;
-
-        padding:
-        2px 6px;
-
-    }
+padding:7px;
 
 }
 
-/* ------------------------------
-   SHORT LANDSCAPE SCREENS
------------------------------- */
+.topArea{
 
-@media
-(max-height:500px){
-
-    .topBar{
-
-        min-height:30px;
-
-    }
-
-    .instructionBox{
-
-        padding:5px;
-
-        margin:2px;
-
-    }
-
-    .optionsArea{
-
-        padding:3px 0;
-
-    }
-
-    .option{
-
-        height:
-        min(48vh,175px);
-
-        min-height:90px;
-
-    }
-
-    .feedback{
-
-        height:28px;
-
-    }
+min-height:58px;
 
 }
 
-/* ------------------------------
-   VERY SMALL PHONES
------------------------------- */
+.gameTitle{
 
-@media
-(max-width:360px){
+font-size:24px;
 
-    .option{
+padding:
 
-        min-height:95px;
+7px 15px;
 
-    }
+}
 
-    .instruction{
+.progressBox{
 
-        font-size:17px;
+font-size:15px;
 
-    }
+padding:
+
+6px 11px;
+
+right:3px;
+
+top:5px;
+
+border-width:3px;
+
+}
+
+.instructionBox{
+
+width:95%;
+
+min-height:60px;
+
+border-width:4px;
+
+padding:6px;
+
+margin-top:2px;
+
+}
+
+#instructionText{
+
+font-size:21px;
+
+}
+
+#optionsArea{
+
+width:95%;
+
+grid-template-columns:
+
+repeat(2,1fr);
+
+gap:13px;
+
+padding:
+
+12px 3px;
+
+}
+
+.option{
+
+height:
+
+min(24vh,180px);
+
+min-height:110px;
+
+border-radius:23px;
+
+border-width:5px;
+
+}
+
+.greenTick{
+
+width:45px;
+
+height:45px;
+
+font-size:30px;
+
+border-width:3px;
+
+}
+
+#feedback{
+
+height:38px;
+
+font-size:24px;
+
+}
+
+}
+
+
+/* ==============================
+   SHORT LANDSCAPE DEVICES
+============================== */
+
+@media(max-height:520px){
+
+#gameScreen{
+
+padding:5px;
+
+}
+
+.topArea{
+
+min-height:48px;
+
+}
+
+.gameTitle{
+
+font-size:24px;
+
+padding:
+
+4px 18px;
+
+}
+
+.progressBox{
+
+font-size:16px;
+
+padding:
+
+4px 10px;
+
+}
+
+.instructionBox{
+
+min-height:48px;
+
+padding:4px;
+
+margin:2px;
+
+}
+
+#instructionText{
+
+font-size:22px;
+
+}
+
+#optionsArea{
+
+padding:5px;
+
+gap:18px;
+
+}
+
+.option{
+
+height:
+
+min(47vh,175px);
+
+min-height:90px;
+
+}
+
+#feedback{
+
+height:27px;
+
+font-size:20px;
+
+}
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
-<!-- =================================
+
+<!-- ==============================
      SLIDE 1
-     WHITE LOGO SCREEN
-================================= -->
+============================== -->
 
 <section
 id="splashScreen"
 class="screen active">
 
 <img
+
 id="splashLogo"
+
 src="assets/innovine-logo.png"
-alt="Innovine Logo">
+
+alt="Innovine">
 
 </section>
 
 
-<!-- =================================
+
+<!-- ==============================
      GAME SCREEN
-================================= -->
+============================== -->
 
 <section
 id="gameScreen"
 class="screen">
 
-<div class="topBar">
+
+<div class="topArea">
+
 
 <div class="gameTitle">
 
-Word Family -un
+Word Family U
 
 </div>
+
 
 <div
 id="progressBox"
 class="progressBox">
 
-1 / 9
+1 / 12
 
 </div>
 
+
 </div>
+
 
 
 <div class="instructionBox">
 
-<div class="instruction">
 
-Tap on the images ending with
-<strong>"un"</strong>
+<div id="instructionText">
 
-</div>
+Tap on the image ending with "un"
 
 </div>
 
 
-<div
-id="optionsArea"
-class="optionsArea">
+</div>
+
+
+
+<div id="optionsArea">
 
 </div>
 
 
-<div
-id="feedback"
-class="feedback">
+
+<div id="feedback">
 
 </div>
+
 
 </section>
 
 
-<!-- =================================
+
+<!-- ==============================
      FINAL SCREEN
-================================= -->
+============================== -->
 
 <section
 id="endScreen"
 class="screen">
+
 
 <canvas
 id="confettiCanvas">
 
 </canvas>
 
+
 <div class="endCard">
 
-<div class="endStar">
+
+<div class="star">
 
 🌟
 
 </div>
+
 
 <div class="goodJob">
 
@@ -864,271 +1208,391 @@ Good Job!
 
 </div>
 
+
 <div class="completedText">
 
 You completed the
-<strong>-un</strong>
-word family game!
+
+<strong>
+
+Word Family U
+
+</strong>
+
+game!
 
 </div>
 
+
 <button
+
 id="playAgainButton"
-class="playAgainButton"
+
 type="button">
 
 Play Again
 
 </button>
 
+
 </div>
+
 
 </section>
 
 
-<!-- =================================
-     LOCAL AUDIO FILES
-================================= -->
+
+<!-- ==============================
+     AUDIO
+============================== -->
 
 <audio
+
 id="clapsSound"
+
 preload="auto">
 
 <source
+
 src="assets/claps.mp3"
+
 type="audio/mpeg">
 
 </audio>
+
 
 
 <audio
+
 id="wrongSound"
+
 preload="auto">
 
 <source
+
 src="assets/wrong.mp3"
+
 type="audio/mpeg">
 
 </audio>
+
 
 
 <script>
 
-/* ==================================
-   QUESTION BANK
 
-   The correct answer is written
-   first inside every question.
+/* ==============================
+   ALL WORD FAMILIES
+============================== */
 
-   The images are automatically
-   shuffled before being displayed.
-================================== */
+var familyWords={
 
-var questionBank = [
 
-{
+"un":[
 
-correct:"sun",
-
-options:[
 "sun",
-"cub",
-"hut",
-"mug"
-]
 
-},
-
-{
-
-correct:"bun",
-
-options:[
 "bun",
-"cut",
-"rug",
-"tub"
-]
 
-},
+"gun"
 
-{
+],
 
-correct:"gun",
 
-options:[
-"gun",
-"nut",
-"rub",
-"tug"
-]
+"ug":[
 
-},
-
-{
-
-correct:"sun",
-
-options:[
-"sun",
-"cut",
-"tub",
-"cub"
-]
-
-},
-
-{
-
-correct:"bun",
-
-options:[
-"bun",
 "mug",
-"hut",
-"rug"
-]
 
-},
-
-{
-
-correct:"gun",
-
-options:[
-"gun",
-"tug",
-"nut",
-"cub"
-]
-
-},
-
-{
-
-correct:"sun",
-
-options:[
-"sun",
-"rub",
-"mug",
-"hut"
-]
-
-},
-
-{
-
-correct:"bun",
-
-options:[
-"bun",
-"tub",
-"cut",
-"tug"
-]
-
-},
-
-{
-
-correct:"gun",
-
-options:[
-"gun",
 "rug",
-"cub",
+
+"tug"
+
+],
+
+
+"ut":[
+
+"cut",
+
+"hut",
+
 "nut"
+
+],
+
+
+"ub":[
+
+"cub",
+
+"rub",
+
+"tub"
+
 ]
+
+
+};
+
+
+
+/* ==============================
+   12 QUESTIONS
+
+   3 FOR EACH FAMILY
+============================== */
+
+var questionBank=[
+
+
+{
+
+family:"un",
+
+correct:"sun"
+
+},
+
+
+{
+
+family:"un",
+
+correct:"bun"
+
+},
+
+
+{
+
+family:"un",
+
+correct:"gun"
+
+},
+
+
+
+{
+
+family:"ug",
+
+correct:"mug"
+
+},
+
+
+{
+
+family:"ug",
+
+correct:"rug"
+
+},
+
+
+{
+
+family:"ug",
+
+correct:"tug"
+
+},
+
+
+
+{
+
+family:"ut",
+
+correct:"cut"
+
+},
+
+
+{
+
+family:"ut",
+
+correct:"hut"
+
+},
+
+
+{
+
+family:"ut",
+
+correct:"nut"
+
+},
+
+
+
+{
+
+family:"ub",
+
+correct:"cub"
+
+},
+
+
+{
+
+family:"ub",
+
+correct:"rub"
+
+},
+
+
+{
+
+family:"ub",
+
+correct:"tub"
 
 }
+
 
 ];
 
 
-/* ==================================
-   GAME VARIABLES
-================================== */
 
-var shuffledQuestions = [];
+/* ==============================
+   VARIABLES
+============================== */
 
-var currentQuestion = 0;
+var gameQuestions=[];
 
-var wrongAttempts = 0;
+var currentQuestion=0;
 
-var answerLocked = false;
+var wrongAttempts=0;
 
-var confettiTimer = null;
+var answerLocked=false;
+
+var confettiAnimation=null;
 
 
-/* ==================================
-   PAGE ELEMENTS
-================================== */
 
-var splashScreen =
+/* ==============================
+   ELEMENTS
+============================== */
+
+var splashScreen=
+
 document.getElementById(
+
 "splashScreen"
+
 );
 
-var gameScreen =
+
+var gameScreen=
+
 document.getElementById(
+
 "gameScreen"
+
 );
 
-var endScreen =
+
+var endScreen=
+
 document.getElementById(
+
 "endScreen"
+
 );
 
-var optionsArea =
+
+var instructionText=
+
 document.getElementById(
-"optionsArea"
+
+"instructionText"
+
 );
 
-var progressBox =
+
+var progressBox=
+
 document.getElementById(
+
 "progressBox"
+
 );
 
-var feedback =
+
+var optionsArea=
+
 document.getElementById(
+
+"optionsArea"
+
+);
+
+
+var feedback=
+
+document.getElementById(
+
 "feedback"
+
 );
 
-var clapsSound =
+
+var clapsSound=
+
 document.getElementById(
+
 "clapsSound"
+
 );
 
-var wrongSound =
+
+var wrongSound=
+
 document.getElementById(
+
 "wrongSound"
+
 );
 
-var playAgainButton =
+
+var playAgainButton=
+
 document.getElementById(
+
 "playAgainButton"
+
 );
 
 
-/* ==================================
-   SHUFFLE FUNCTION
-================================== */
 
-function shuffleArray(array){
+/* ==============================
+   SHUFFLE
+============================== */
 
-var copiedArray =
-array.slice();
+function shuffleArray(
+
+originalArray
+
+){
+
+
+var array=
+
+originalArray.slice();
+
 
 var i;
 
-var randomIndex;
-
-var temporaryValue;
 
 for(
 
-i=copiedArray.length-1;
+i=array.length-1;
 
 i>0;
 
@@ -1136,178 +1600,411 @@ i--
 
 ){
 
-randomIndex =
+
+var randomNumber=
+
 Math.floor(
-Math.random()*(i+1)
+
+Math.random()
+
+*
+
+(i+1)
+
 );
 
-temporaryValue =
-copiedArray[i];
 
-copiedArray[i] =
-copiedArray[randomIndex];
+var temporary=
 
-copiedArray[randomIndex] =
-temporaryValue;
+array[i];
+
+
+array[i]=
+
+array[randomNumber];
+
+
+array[randomNumber]=
+
+temporary;
+
 
 }
 
-return copiedArray;
+
+return array;
+
 
 }
 
 
-/* ==================================
-   SHOW ONLY ONE SCREEN
-================================== */
+
+/* ==============================
+   CHANGE SCREEN
+============================== */
 
 function showScreen(
-screenToShow
+
+selectedScreen
+
 ){
 
-splashScreen.className =
+
+splashScreen.className=
+
 "screen";
 
-gameScreen.className =
+
+gameScreen.className=
+
 "screen";
 
-endScreen.className =
+
+endScreen.className=
+
 "screen";
 
-screenToShow.className =
+
+selectedScreen.className=
+
 "screen active";
+
 
 }
 
 
-/* ==================================
-   AUDIO
-================================== */
 
-function playSound(
-sound
+/* ==============================
+   PLAY AUDIO
+============================== */
+
+function playAudio(
+
+audioElement
+
 ){
+
 
 try{
 
-sound.pause();
 
-sound.currentTime=0;
+audioElement.pause();
 
-var soundPromise =
-sound.play();
+
+audioElement.currentTime=0;
+
+
+var audioPromise=
+
+audioElement.play();
+
 
 if(
-soundPromise
+
+audioPromise
+
 ){
 
-soundPromise.catch(
+
+audioPromise.catch(
+
 function(){}
+
 );
 
-}
 
 }
+
+
+}
+
 
 catch(error){
 
-/* Game continues silently
-if audio is unavailable */
-
-}
 
 }
 
 
-/* ==================================
-   PRELOAD ALL IMAGES
-================================== */
+}
+
+
+
+/* ==============================
+   PRELOAD IMAGES
+============================== */
 
 function preloadImages(){
 
-var imageNames = [
+
+var allImages=[
+
+"sun",
 
 "bun",
-"cub",
-"cut",
+
 "gun",
-"hut",
+
 "mug",
-"nut",
-"rub",
+
 "rug",
-"sun",
-"tub",
-"tug"
+
+"tug",
+
+"cut",
+
+"hut",
+
+"nut",
+
+"cub",
+
+"rub",
+
+"tub"
 
 ];
 
+
 var i;
 
+
 for(
+
 i=0;
-i<imageNames.length;
+
+i<allImages.length;
+
 i++
+
 ){
 
-var image =
+
+var image=
+
 new Image();
 
-image.src =
-"assets/" +
-imageNames[i] +
+
+image.src=
+
+"assets/"
+
++
+
+allImages[i]
+
++
+
 ".png";
 
-}
 
 }
 
 
-/* ==================================
-   START THE GAME
-================================== */
+}
+
+
+
+/* ==============================
+   START GAME
+============================== */
 
 function startGame(){
 
+
 stopConfetti();
 
-shuffledQuestions =
+
+gameQuestions=
+
 shuffleArray(
+
 questionBank
+
 );
+
 
 currentQuestion=0;
 
+
 wrongAttempts=0;
+
 
 answerLocked=false;
 
+
 feedback.innerHTML="";
 
+
 showScreen(
+
 gameScreen
+
 );
 
+
 showQuestion();
+
 
 }
 
 
-/* ==================================
-   SHOW ONE QUESTION
-================================== */
+
+/* ==============================
+   CREATE FOUR OPTIONS
+
+   ONLY ONE IMAGE BELONGS
+   TO THE TARGET FAMILY
+============================== */
+
+function makeOptions(
+
+question
+
+){
+
+
+var options=[
+
+question.correct
+
+];
+
+
+var familyNames=[
+
+"un",
+
+"ug",
+
+"ut",
+
+"ub"
+
+];
+
+
+var i;
+
+
+for(
+
+i=0;
+
+i<familyNames.length;
+
+i++
+
+){
+
+
+var family=
+
+familyNames[i];
+
+
+if(
+
+family
+
+!==
+
+question.family
+
+){
+
+
+var choices=
+
+familyWords[family];
+
+
+var randomWord=
+
+choices[
+
+Math.floor(
+
+Math.random()
+
+*
+
+choices.length
+
+)
+
+];
+
+
+options.push(
+
+randomWord
+
+);
+
+
+}
+
+
+}
+
+
+return shuffleArray(
+
+options
+
+);
+
+
+}
+
+
+
+/* ==============================
+   SHOW QUESTION
+============================== */
 
 function showQuestion(){
 
+
 answerLocked=false;
+
 
 wrongAttempts=0;
 
+
 feedback.innerHTML="";
+
 
 optionsArea.innerHTML="";
 
-progressBox.innerHTML =
+
+var question=
+
+gameQuestions[
+
+currentQuestion
+
+];
+
+
+instructionText.innerHTML=
+
+'Tap on the image ending with '
+
++
+
+'<strong>"'
+
++
+
+question.family
+
++
+
+'"</strong>';
+
+
+progressBox.innerHTML=
 
 (currentQuestion+1)
 
@@ -1317,20 +2014,15 @@ progressBox.innerHTML =
 
 +
 
-shuffledQuestions.length;
+gameQuestions.length;
 
 
-var question =
+var options=
 
-shuffledQuestions[
-currentQuestion
-];
+makeOptions(
 
+question
 
-var shuffledOptions =
-
-shuffleArray(
-question.options
 );
 
 
@@ -1341,59 +2033,59 @@ for(
 
 i=0;
 
-i<shuffledOptions.length;
+i<options.length;
 
 i++
 
 ){
 
+
 createOption(
 
-shuffledOptions[i],
+options[i],
 
-question.correct
+question
 
 );
 
-}
 
 }
 
 
-/* ==================================
-   CREATE IMAGE OPTION
-================================== */
+}
+
+
+
+/* ==============================
+   CREATE IMAGE BUTTON
+============================== */
 
 function createOption(
 
 word,
 
-correctWord
+question
 
 ){
 
-var optionButton =
+
+var optionButton=
 
 document.createElement(
+
 "button"
+
 );
 
 
-optionButton.type =
+optionButton.type=
+
 "button";
 
 
-optionButton.className =
+optionButton.className=
+
 "option";
-
-
-optionButton.setAttribute(
-
-"aria-label",
-
-word
-
-);
 
 
 optionButton.setAttribute(
@@ -1405,14 +2097,26 @@ word
 );
 
 
-var optionImage =
+optionButton.setAttribute(
 
-document.createElement(
-"img"
+"aria-label",
+
+word
+
 );
 
 
-optionImage.src =
+
+var image=
+
+document.createElement(
+
+"img"
+
+);
+
+
+image.src=
 
 "assets/"
 
@@ -1425,21 +2129,24 @@ word
 ".png";
 
 
-optionImage.alt =
+image.alt=
 
 word;
 
 
+
 optionButton.appendChild(
 
-optionImage
+image
 
 );
 
 
-optionButton.onclick =
+
+optionButton.onclick=
 
 function(){
+
 
 checkAnswer(
 
@@ -1447,11 +2154,13 @@ optionButton,
 
 word,
 
-correctWord
+question
 
 );
 
+
 };
+
 
 
 optionsArea.appendChild(
@@ -1460,66 +2169,77 @@ optionButton
 
 );
 
+
 }
 
 
-/* ==================================
-   CHECK THE SELECTED ANSWER
-================================== */
+
+/* ==============================
+   CHECK ANSWER
+============================== */
 
 function checkAnswer(
 
-selectedOption,
+selectedButton,
 
 selectedWord,
 
-correctWord
+question
 
 ){
+
 
 if(
+
 answerLocked
+
 ){
 
+
 return;
+
 
 }
 
 
-/* ------------------------------
-   CORRECT ANSWER
------------------------------- */
+
+/* CORRECT ANSWER */
 
 if(
 
 selectedWord
+
 ===
 
-correctWord
+question.correct
 
 ){
+
 
 answerLocked=true;
 
 
-removeHintGlow();
+removeGlow();
 
 
-selectedOption.className =
+selectedButton.className=
 
 "option correct";
 
 
-var tick =
+
+var tick=
 
 document.createElement(
+
 "div"
+
 );
 
 
 tick.className=
 
-"tick";
+"greenTick";
 
 
 tick.innerHTML=
@@ -1527,11 +2247,12 @@ tick.innerHTML=
 "✓";
 
 
-selectedOption.appendChild(
+selectedButton.appendChild(
 
 tick
 
 );
+
 
 
 feedback.innerHTML=
@@ -1539,18 +2260,18 @@ feedback.innerHTML=
 "Good Job!";
 
 
-playSound(
+playAudio(
 
 clapsSound
 
 );
 
 
-/* Move to the next question */
 
 setTimeout(
 
 function(){
+
 
 currentQuestion++;
 
@@ -1558,21 +2279,28 @@ currentQuestion++;
 if(
 
 currentQuestion
+
 <
 
-shuffledQuestions.length
+gameQuestions.length
 
 ){
 
+
 showQuestion();
 
+
 }
+
 
 else{
 
-showEndScreen();
+
+showFinalScreen();
+
 
 }
+
 
 },
 
@@ -1580,39 +2308,38 @@ showEndScreen();
 
 );
 
+
 }
 
 
-/* ------------------------------
-   WRONG ANSWER
------------------------------- */
+
+/* WRONG ANSWER */
 
 else{
+
 
 wrongAttempts++;
 
 
-playSound(
+playAudio(
 
 wrongSound
 
 );
 
 
-/* Restart the wiggle
-animation every time */
 
-selectedOption.className =
+selectedButton.className=
 
 "option";
 
 
 void
 
-selectedOption.offsetWidth;
+selectedButton.offsetWidth;
 
 
-selectedOption.className =
+selectedButton.className=
 
 "option wiggle";
 
@@ -1622,24 +2349,30 @@ feedback.innerHTML=
 "Try Again!";
 
 
+
 setTimeout(
 
 function(){
 
+
 if(
 
-selectedOption.className
+selectedButton.className
+
 ===
 
 "option wiggle"
 
 ){
 
-selectedOption.className=
+
+selectedButton.className=
 
 "option";
 
+
 }
+
 
 },
 
@@ -1648,8 +2381,6 @@ selectedOption.className=
 );
 
 
-/* After two wrong attempts,
-show the correct option glowing */
 
 if(
 
@@ -1657,22 +2388,27 @@ wrongAttempts>=2
 
 ){
 
+
 showCorrectGlow(
 
-correctWord
+question.correct
 
 );
 
-}
 
 }
 
+
 }
 
 
-/* ==================================
-   MAKE CORRECT OPTION GLOW
-================================== */
+}
+
+
+
+/* ==============================
+   CORRECT IMAGE GLOW
+============================== */
 
 function showCorrectGlow(
 
@@ -1680,7 +2416,8 @@ correctWord
 
 ){
 
-var allOptions =
+
+var buttons=
 
 optionsArea.getElementsByClassName(
 
@@ -1696,16 +2433,19 @@ for(
 
 i=0;
 
-i<allOptions.length;
+i<buttons.length;
 
 i++
 
 ){
 
+
 if(
 
-allOptions[i].getAttribute(
+buttons[i].getAttribute(
+
 "data-word"
+
 )
 
 ===
@@ -1714,24 +2454,30 @@ correctWord
 
 ){
 
-allOptions[i].className =
+
+buttons[i].className=
 
 "option hintGlow";
 
-}
 
 }
 
+
 }
 
 
-/* ==================================
+}
+
+
+
+/* ==============================
    REMOVE GLOW
-================================== */
+============================== */
 
-function removeHintGlow(){
+function removeGlow(){
 
-var allOptions =
+
+var buttons=
 
 optionsArea.getElementsByClassName(
 
@@ -1747,16 +2493,16 @@ for(
 
 i=0;
 
-i<allOptions.length;
+i<buttons.length;
 
 i++
 
 ){
 
+
 if(
 
-allOptions[i].className
-.indexOf(
+buttons[i].className.indexOf(
 
 "hintGlow"
 
@@ -1768,22 +2514,28 @@ allOptions[i].className
 
 ){
 
-allOptions[i].className=
+
+buttons[i].className=
 
 "option";
 
-}
 
 }
 
+
 }
 
 
-/* ==================================
-   END SCREEN
-================================== */
+}
 
-function showEndScreen(){
+
+
+/* ==============================
+   FINAL SCREEN
+============================== */
+
+function showFinalScreen(){
+
 
 showScreen(
 
@@ -1791,34 +2543,41 @@ endScreen
 
 );
 
+
 startConfetti();
+
 
 }
 
 
-/* ==================================
-   PLAY AGAIN
-================================== */
 
-playAgainButton.onclick =
+/* ==============================
+   PLAY AGAIN
+============================== */
+
+playAgainButton.onclick=
 
 function(){
 
+
 startGame();
+
 
 };
 
 
-/* ==================================
+
+/* ==============================
    CONFETTI
-================================== */
+============================== */
 
 function startConfetti(){
+
 
 stopConfetti();
 
 
-var canvas =
+var canvas=
 
 document.getElementById(
 
@@ -1827,7 +2586,7 @@ document.getElementById(
 );
 
 
-var context =
+var context=
 
 canvas.getContext(
 
@@ -1836,42 +2595,37 @@ canvas.getContext(
 );
 
 
-var pieces=[];
-
-
-var colours=[
-
-"#ff5252",
-
-"#ffd740",
-
-"#40c4ff",
-
-"#69f0ae",
-
-"#e040fb",
-
-"#ff9100",
-
-"#7c4dff"
-
-];
-
-
-function resizeCanvas(){
-
 canvas.width=
 
 window.innerWidth;
+
 
 canvas.height=
 
 window.innerHeight;
 
-}
 
 
-resizeCanvas();
+var colours=[
+
+"#ff4d5a",
+
+"#ffd633",
+
+"#3fc8ff",
+
+"#51e08b",
+
+"#dc49f5",
+
+"#ff9838",
+
+"#7956ef"
+
+];
+
+
+var pieces=[];
 
 
 var i;
@@ -1881,78 +2635,125 @@ for(
 
 i=0;
 
-i<120;
+i<130;
 
 i++
 
 ){
 
+
 pieces.push({
 
+
 x:
+
 Math.random()
+
 *
+
 canvas.width,
 
+
 y:
+
 Math.random()
+
 *
+
 canvas.height
+
 -
+
 canvas.height,
 
+
 size:
+
 5
+
 +
+
 Math.random()
+
 *
+
 8,
 
-speed:
-2
-+
-Math.random()
-*
-4,
 
-drift:
--1.5
+speed:
+
+2
+
 +
+
 Math.random()
+
 *
+
+5,
+
+
+sideSpeed:
+
+-1.5
+
++
+
+Math.random()
+
+*
+
 3,
 
+
 rotation:
+
 Math.random()
+
 *
+
 360,
 
+
 rotationSpeed:
+
 -5
+
 +
+
 Math.random()
+
 *
+
 10,
 
+
 colour:
+
 colours[
+
 Math.floor(
+
 Math.random()
+
 *
+
 colours.length
+
 )
+
 ]
 
+
 });
+
 
 }
 
 
-confettiTimer=
 
-setInterval(
+function drawConfetti(){
 
-function(){
 
 context.clearRect(
 
@@ -1977,36 +2778,38 @@ i++
 
 ){
 
+
 var piece=
 
 pieces[i];
 
 
-piece.y +=
+piece.y+=
 
 piece.speed;
 
 
-piece.x +=
+piece.x+=
 
-piece.drift;
+piece.sideSpeed;
 
 
-piece.rotation +=
+piece.rotation+=
 
 piece.rotationSpeed;
+
 
 
 if(
 
 piece.y
+
 >
 
-canvas.height
-+
-20
+canvas.height+20
 
 ){
+
 
 piece.y=
 
@@ -2016,10 +2819,14 @@ piece.y=
 piece.x=
 
 Math.random()
+
 *
+
 canvas.width;
 
+
 }
+
 
 
 context.save();
@@ -2062,53 +2869,70 @@ context.fillRect(
 
 piece.size,
 
-piece.size*0.55
+piece.size*0.6
 
 );
 
 
 context.restore();
 
+
 }
 
-},
 
-33
+confettiAnimation=
+
+requestAnimationFrame(
+
+drawConfetti
 
 );
 
+
 }
 
 
-/* ==================================
+drawConfetti();
+
+
+}
+
+
+
+/* ==============================
    STOP CONFETTI
-================================== */
+============================== */
 
 function stopConfetti(){
 
+
 if(
 
-confettiTimer
+confettiAnimation
 
 ){
 
-clearInterval(
 
-confettiTimer
+cancelAnimationFrame(
+
+confettiAnimation
 
 );
 
 
-confettiTimer=null;
+confettiAnimation=null;
+
 
 }
 
+
 }
 
 
-/* ==================================
-   LOGO SCREEN FOR TWO SECONDS
-================================== */
+
+/* ==============================
+   LOGO FOR TWO SECONDS
+============================== */
 
 preloadImages();
 
@@ -2117,7 +2941,9 @@ setTimeout(
 
 function(){
 
+
 startGame();
+
 
 },
 
@@ -2125,7 +2951,10 @@ startGame();
 
 );
 
+
 </script>
 
+
 </body>
+
 </html>
