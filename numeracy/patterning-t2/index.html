@@ -1,0 +1,5919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
+  user-scalable=no, viewport-fit=cover"
+>
+
+<meta name="theme-color" content="#fff7df">
+
+<title>Pattern Treasure Hunt</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+
+  font-family:
+  "Trebuchet MS",
+  Arial,
+  sans-serif;
+
+  background: #fff7df;
+  color: #3f2c20;
+}
+
+button {
+  font: inherit;
+}
+
+
+/* ==================================================
+   LOGO SCREEN
+================================================== */
+
+#splashScreen {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: white;
+
+}
+
+
+#splashLogo {
+
+  max-width: 58vw;
+
+  max-height: 38vh;
+
+  object-fit: contain;
+
+}
+
+
+/* ==================================================
+   GAME SCREEN
+================================================== */
+
+#gameScreen {
+
+  position: relative;
+
+  width: 100%;
+
+  height: 100vh;
+
+  height: 100dvh;
+
+  min-height: 100%;
+
+  padding:
+
+  max(
+  8px,
+  env(safe-area-inset-top)
+  )
+
+  max(
+  10px,
+  env(safe-area-inset-right)
+  )
+
+  max(
+  8px,
+  env(safe-area-inset-bottom)
+  )
+
+  max(
+  10px,
+  env(safe-area-inset-left)
+  );
+
+
+  display: none;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  overflow: hidden;
+
+
+  background:
+
+  radial-gradient(
+
+  circle at 12% 15%,
+
+  rgba(255,255,255,.85)
+
+  0 3%,
+
+  transparent 3.2%
+
+  ),
+
+  radial-gradient(
+
+  circle at 88% 12%,
+
+  rgba(255,255,255,.8)
+
+  0 2.6%,
+
+  transparent 2.8%
+
+  ),
+
+  linear-gradient(
+
+  #9de2ff 0 31%,
+
+  #dff5c2 31% 100%
+
+  );
+
+}
+
+
+/* HILL */
+
+#gameScreen::before {
+
+  content: "";
+
+  position: absolute;
+
+  left: -5%;
+
+  right: -5%;
+
+  bottom: -12%;
+
+  height: 49%;
+
+  border-radius:
+
+  50% 50% 0 0;
+
+  background:
+
+  linear-gradient(
+
+  #87cf65,
+
+  #5fa94b
+
+  );
+
+  z-index: 0;
+
+}
+
+
+/* ==================================================
+   CLOUDS
+================================================== */
+
+.cloud {
+
+  position: absolute;
+
+  width: 88px;
+
+  height: 32px;
+
+  border-radius: 30px;
+
+  background:
+
+  rgba(
+  255,
+  255,
+  255,
+  .86
+  );
+
+  z-index: 0;
+
+}
+
+
+.cloud::before,
+
+.cloud::after {
+
+  content: "";
+
+  position: absolute;
+
+  background: inherit;
+
+  border-radius: 50%;
+
+}
+
+
+.cloud::before {
+
+  width: 36px;
+
+  height: 36px;
+
+  left: 15px;
+
+  top: -18px;
+
+}
+
+
+.cloud::after {
+
+  width: 45px;
+
+  height: 45px;
+
+  right: 9px;
+
+  top: -25px;
+
+}
+
+
+.cloud.one {
+
+  left: 5%;
+
+  top: 12%;
+
+  transform: scale(.8);
+
+}
+
+
+.cloud.two {
+
+  right: 5%;
+
+  top: 16%;
+
+  transform: scale(.65);
+
+}
+
+
+/* ==================================================
+   GAME CONTENT
+================================================== */
+
+.topBar,
+
+.gameCard,
+
+.keyTrail {
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+
+/* ==================================================
+   TITLE
+================================================== */
+
+.topBar {
+
+  width: min(
+  980px,
+  98%
+  );
+
+  min-height: 12%;
+
+  display: grid;
+
+  grid-template-columns:
+
+  1fr auto 1fr;
+
+  align-items: center;
+
+  gap: 8px;
+
+}
+
+
+.titleWrap {
+
+  grid-column: 2;
+
+  text-align: center;
+
+}
+
+
+h1 {
+
+  margin: 0;
+
+  font-size:
+
+  clamp(
+
+  25px,
+
+  4.5vw,
+
+  48px
+
+  );
+
+  line-height: 1;
+
+  color: #7a3e16;
+
+  text-shadow:
+
+  0 3px 0
+
+  rgba(
+  255,
+  255,
+  255,
+  .78
+  );
+
+}
+
+
+.subtitle {
+
+  margin-top: 3px;
+
+  font-size:
+
+  clamp(
+
+  13px,
+
+  2vw,
+
+  20px
+
+  );
+
+  font-weight: 800;
+
+  color: #4d4b2a;
+
+}
+
+
+/* ==================================================
+   QUESTION NUMBER
+================================================== */
+
+.progressBox {
+
+  justify-self: end;
+
+  min-width: 78px;
+
+  padding:
+
+  7px 10px;
+
+  border:
+
+  3px solid
+
+  #71411e;
+
+  border-radius: 17px;
+
+  background:
+
+  rgba(
+
+  255,
+
+  255,
+
+  255,
+
+  .92
+
+  );
+
+  text-align: center;
+
+  font-size:
+
+  clamp(
+
+  13px,
+
+  1.9vw,
+
+  18px
+
+  );
+
+  font-weight: 900;
+
+  box-shadow:
+
+  0 4px 0
+
+  rgba(
+
+  88,
+
+  49,
+
+  25,
+
+  .22
+
+  );
+
+}
+
+
+/* ==================================================
+   KEY COLLECTION
+================================================== */
+
+.keyTrail {
+
+  width:
+
+  min(
+
+  900px,
+
+  95%
+
+  );
+
+  height: 8%;
+
+  min-height: 37px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap:
+
+  clamp(
+
+  3px,
+
+  .8vw,
+
+  9px
+
+  );
+
+}
+
+
+.keySlot {
+
+  width:
+
+  clamp(
+
+  25px,
+
+  4.5vw,
+
+  43px
+
+  );
+
+
+  height:
+
+  clamp(
+
+  25px,
+
+  4.5vw,
+
+  43px
+
+  );
+
+
+  display: grid;
+
+  place-items: center;
+
+
+  border:
+
+  2px dashed
+
+  rgba(
+
+  96,
+
+  60,
+
+  27,
+
+  .47
+
+  );
+
+
+  border-radius: 50%;
+
+
+  background:
+
+  rgba(
+
+  255,
+
+  255,
+
+  255,
+
+  .6
+
+  );
+
+
+  font-size:
+
+  clamp(
+
+  17px,
+
+  3.4vw,
+
+  31px
+
+  );
+
+
+  filter:
+
+  grayscale(1);
+
+
+  opacity: .55;
+
+
+  transition:
+
+  transform .35s ease,
+
+  filter .35s ease,
+
+  opacity .35s ease;
+
+}
+
+
+.keySlot.earned {
+
+  filter: none;
+
+  opacity: 1;
+
+  transform:
+
+  scale(1.12)
+
+  rotate(-8deg);
+
+  background:
+
+  #fff6a6;
+
+  border-style:
+
+  solid;
+
+  border-color:
+
+  #d59b12;
+
+}
+
+
+/* ==================================================
+   MAIN QUESTION CARD
+================================================== */
+
+.gameCard {
+
+  width:
+
+  min(
+
+  980px,
+
+  97%
+
+  );
+
+
+  flex: 1;
+
+
+  max-height: 76%;
+
+
+  min-height: 0;
+
+
+  margin-bottom: 1%;
+
+
+  padding:
+
+  clamp(
+
+  10px,
+
+  1.7vh,
+
+  18px
+
+  )
+
+  clamp(
+
+  10px,
+
+  2.2vw,
+
+  24px
+
+  );
+
+
+  border:
+
+  clamp(
+
+  3px,
+
+  .5vw,
+
+  6px
+
+  )
+
+  solid
+
+  #73451f;
+
+
+  border-radius:
+
+  clamp(
+
+  20px,
+
+  3vw,
+
+  34px
+
+  );
+
+
+  background:
+
+  rgba(
+
+  255,
+
+  251,
+
+  236,
+
+  .96
+
+  );
+
+
+  box-shadow:
+
+  0 10px 0
+
+  rgba(
+
+  88,
+
+  52,
+
+  24,
+
+  .23
+
+  ),
+
+  0 16px 28px
+
+  rgba(
+
+  58,
+
+  49,
+
+  25,
+
+  .18
+
+  );
+
+
+  display: grid;
+
+
+  grid-template-rows:
+
+  auto
+
+  minmax(
+
+  110px,
+
+  1fr
+
+  )
+
+  auto
+
+  minmax(
+
+  88px,
+
+  .78fr
+
+  );
+
+
+  gap:
+
+  clamp(
+
+  6px,
+
+  1.2vh,
+
+  12px
+
+  );
+
+
+  align-items: center;
+
+}
+
+
+/* ==================================================
+   INSTRUCTION
+================================================== */
+
+#instruction {
+
+  margin: 0;
+
+  text-align: center;
+
+  font-size:
+
+  clamp(
+
+  18px,
+
+  3vw,
+
+  30px
+
+  );
+
+  line-height: 1.1;
+
+  font-weight: 900;
+
+  color: #4a382c;
+
+}
+
+
+/* ==================================================
+   PATTERN
+================================================== */
+
+.patternArea {
+
+  min-height: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap:
+
+  clamp(
+
+  5px,
+
+  1.2vw,
+
+  13px
+
+  );
+
+  flex-wrap: nowrap;
+
+}
+
+
+.patternToken,
+
+.blankToken {
+
+  width:
+
+  clamp(
+
+  46px,
+
+  9.5vw,
+
+  91px
+
+  );
+
+
+  height:
+
+  clamp(
+
+  46px,
+
+  9.5vw,
+
+  91px
+
+  );
+
+
+  display: grid;
+
+
+  place-items: center;
+
+
+  flex:
+
+  0 0 auto;
+
+
+  border-radius: 22%;
+
+}
+
+
+.patternToken {
+
+  border:
+
+  clamp(
+
+  2px,
+
+  .35vw,
+
+  4px
+
+  )
+
+  solid
+
+  rgba(
+
+  74,
+
+  55,
+
+  37,
+
+  .34
+
+  );
+
+
+  background:
+
+  #ffffff;
+
+
+  box-shadow:
+
+  0 5px 0
+
+  rgba(
+
+  87,
+
+  61,
+
+  38,
+
+  .16
+
+  );
+
+
+  font-size:
+
+  clamp(
+
+  29px,
+
+  6.7vw,
+
+  66px
+
+  );
+
+}
+
+
+.blankToken {
+
+  border:
+
+  clamp(
+
+  3px,
+
+  .45vw,
+
+  5px
+
+  )
+
+  dashed
+
+  #8b5f38;
+
+
+  background:
+
+  #fff4bb;
+
+
+  color:
+
+  #8b5f38;
+
+
+  font-size:
+
+  clamp(
+
+  29px,
+
+  6vw,
+
+  59px
+
+  );
+
+
+  font-weight: 1000;
+
+
+  animation:
+
+  softPulse
+
+  1.4s
+
+  ease-in-out
+
+  infinite;
+
+}
+
+
+/* ==================================================
+   ANSWER LABEL
+================================================== */
+
+.answerLabel {
+
+  text-align: center;
+
+  font-size:
+
+  clamp(
+
+  15px,
+
+  2.25vw,
+
+  22px
+
+  );
+
+
+  font-weight: 900;
+
+
+  color:
+
+  #67492e;
+
+}
+
+
+/* ==================================================
+   OPTIONS
+================================================== */
+
+#options {
+
+  min-height: 0;
+
+
+  display: grid;
+
+
+  grid-template-columns:
+
+  repeat(
+
+  3,
+
+  minmax(
+
+  0,
+
+  1fr
+
+  )
+
+  );
+
+
+  align-items: stretch;
+
+
+  justify-content: center;
+
+
+  gap:
+
+  clamp(
+
+  8px,
+
+  2vw,
+
+  18px
+
+  );
+
+}
+
+
+.optionBtn {
+
+  position: relative;
+
+
+  min-width: 0;
+
+
+  min-height: 72px;
+
+
+  border:
+
+  clamp(
+
+  3px,
+
+  .45vw,
+
+  5px
+
+  )
+
+  solid
+
+  #6d482d;
+
+
+  border-radius:
+
+  clamp(
+
+  16px,
+
+  2.5vw,
+
+  25px
+
+  );
+
+
+  background:
+
+  linear-gradient(
+
+  #ffffff,
+
+  #fff1cf
+
+  );
+
+
+  box-shadow:
+
+  0 7px 0
+
+  #b47b42;
+
+
+  display: grid;
+
+
+  place-items: center;
+
+
+  padding: 4px;
+
+
+  font-size:
+
+  clamp(
+
+  37px,
+
+  7vw,
+
+  68px
+
+  );
+
+
+  cursor: pointer;
+
+
+  touch-action:
+
+  manipulation;
+
+
+  transition:
+
+  transform .12s ease,
+
+  box-shadow .12s ease,
+
+  background .2s ease;
+
+}
+
+
+.optionBtn:active {
+
+  transform:
+
+  translateY(5px)
+
+  scale(.98);
+
+
+  box-shadow:
+
+  0 2px 0
+
+  #b47b42;
+
+}
+
+
+.optionBtn:disabled {
+
+  cursor: default;
+
+}
+
+
+/* WRONG OPTION */
+
+.optionBtn.wrong {
+
+  background:
+
+  #ffe4e4;
+
+
+  border-color:
+
+  #d54b4b;
+
+
+  animation:
+
+  giggle
+
+  .42s ease;
+
+}
+
+
+/* CORRECT OPTION */
+
+.optionBtn.correct {
+
+  background:
+
+  #dff8cc;
+
+
+  border-color:
+
+  #3ba94c;
+
+
+  box-shadow:
+
+  0 7px 0
+
+  #2b873b;
+
+}
+
+
+/* CORRECT OPTION GLOW */
+
+.optionBtn.hintGlow {
+
+  animation:
+
+  answerGlow
+
+  .85s
+
+  ease-in-out
+
+  infinite
+
+  alternate;
+
+
+  border-color:
+
+  #f5a400;
+
+
+  background:
+
+  #fff5a9;
+
+}
+
+
+/* ==================================================
+   GOOD JOB POP-UP
+================================================== */
+
+#feedback {
+
+  position: fixed;
+
+
+  z-index: 30;
+
+
+  left: 50%;
+
+
+  top: 50%;
+
+
+  transform:
+
+  translate(
+
+  -50%,
+
+  -50%
+
+  )
+
+  scale(.6);
+
+
+  opacity: 0;
+
+
+  pointer-events: none;
+
+
+  min-width:
+
+  min(
+
+  80vw,
+
+  320px
+
+  );
+
+
+  padding:
+
+  16px 24px;
+
+
+  border:
+
+  5px solid
+
+  #2f8e3f;
+
+
+  border-radius:
+
+  25px;
+
+
+  background:
+
+  rgba(
+
+  241,
+
+  255,
+
+  234,
+
+  .97
+
+  );
+
+
+  color:
+
+  #237333;
+
+
+  text-align:
+
+  center;
+
+
+  font-size:
+
+  clamp(
+
+  30px,
+
+  6vw,
+
+  54px
+
+  );
+
+
+  font-weight:
+
+  1000;
+
+
+  box-shadow:
+
+  0 10px 28px
+
+  rgba(
+
+  0,
+
+  0,
+
+  0,
+
+  .25
+
+  );
+
+}
+
+
+#feedback.show {
+
+  animation:
+
+  feedbackPop
+
+  1s ease
+
+  forwards;
+
+}
+
+
+/* ==================================================
+   FINAL SCREEN
+================================================== */
+
+#endScreen {
+
+  position: fixed;
+
+
+  inset: 0;
+
+
+  z-index: 100;
+
+
+  display: none;
+
+
+  align-items:
+
+  center;
+
+
+  justify-content:
+
+  center;
+
+
+  padding: 18px;
+
+
+  overflow: hidden;
+
+
+  background:
+
+  linear-gradient(
+
+  #8cddff 0 38%,
+
+  #79c861 38% 100%
+
+  );
+
+}
+
+
+/* FINAL CARD */
+
+.endCard {
+
+  position: relative;
+
+
+  z-index: 3;
+
+
+  width:
+
+  min(
+
+  720px,
+
+  94vw
+
+  );
+
+
+  max-height:
+
+  92vh;
+
+
+  padding:
+
+  clamp(
+
+  18px,
+
+  3vh,
+
+  30px
+
+  );
+
+
+  border:
+
+  6px solid
+
+  #73451f;
+
+
+  border-radius:
+
+  34px;
+
+
+  background:
+
+  rgba(
+
+  255,
+
+  250,
+
+  229,
+
+  .97
+
+  );
+
+
+  text-align:
+
+  center;
+
+
+  box-shadow:
+
+  0 12px 0
+
+  rgba(
+
+  87,
+
+  50,
+
+  22,
+
+  .25
+
+  ),
+
+  0 20px 40px
+
+  rgba(
+
+  0,
+
+  0,
+
+  0,
+
+  .18
+
+  );
+
+}
+
+
+.endCard h2 {
+
+  margin:
+
+  0 0 5px;
+
+
+  color:
+
+  #25843b;
+
+
+  font-size:
+
+  clamp(
+
+  38px,
+
+  8vw,
+
+  72px
+
+  );
+
+
+  line-height:
+
+  1;
+
+}
+
+
+.endCard p {
+
+  margin:
+
+  4px 0 8px;
+
+
+  color:
+
+  #69401f;
+
+
+  font-size:
+
+  clamp(
+
+  18px,
+
+  3vw,
+
+  28px
+
+  );
+
+
+  font-weight:
+
+  900;
+
+}
+
+
+/* ==================================================
+   TREASURE
+================================================== */
+
+.treasureScene {
+
+  height:
+
+  clamp(
+
+  130px,
+
+  27vh,
+
+  220px
+
+  );
+
+
+  display:
+
+  flex;
+
+
+  align-items:
+
+  flex-end;
+
+
+  justify-content:
+
+  center;
+
+
+  perspective:
+
+  500px;
+
+}
+
+
+.chest {
+
+  position:
+
+  relative;
+
+
+  width:
+
+  clamp(
+
+  170px,
+
+  35vw,
+
+  285px
+
+  );
+
+
+  height:
+
+  clamp(
+
+  100px,
+
+  20vw,
+
+  165px
+
+  );
+
+
+  animation:
+
+  chestBounce
+
+  1.25s
+
+  ease-in-out
+
+  infinite
+
+  alternate;
+
+}
+
+
+/* CHEST BODY */
+
+.chestBody {
+
+  position:
+
+  absolute;
+
+
+  left: 0;
+
+
+  right: 0;
+
+
+  bottom: 0;
+
+
+  height: 64%;
+
+
+  border:
+
+  6px solid
+
+  #5f3419;
+
+
+  border-radius:
+
+  8px
+
+  8px
+
+  23px
+
+  23px;
+
+
+  background:
+
+  repeating-linear-gradient(
+
+  90deg,
+
+  #a95b24
+
+  0 32px,
+
+  #c8752d
+
+  32px 63px
+
+  );
+
+
+  box-shadow:
+
+  inset
+
+  0 -12px 0
+
+  rgba(
+
+  99,
+
+  49,
+
+  18,
+
+  .22
+
+  );
+
+}
+
+
+/* CHEST LID */
+
+.chestLid {
+
+  position:
+
+  absolute;
+
+
+  left: 0;
+
+
+  right: 0;
+
+
+  top: 10%;
+
+
+  height:
+
+  43%;
+
+
+  border:
+
+  6px solid
+
+  #5f3419;
+
+
+  border-radius:
+
+  70px
+
+  70px
+
+  8px
+
+  8px;
+
+
+  background:
+
+  repeating-linear-gradient(
+
+  90deg,
+
+  #bd6928
+
+  0 32px,
+
+  #dd8738
+
+  32px 63px
+
+  );
+
+
+  transform-origin:
+
+  center bottom;
+
+
+  animation:
+
+  openLid
+
+  1.2s
+
+  .25s
+
+  ease
+
+  forwards;
+
+}
+
+
+/* GOLD BAND */
+
+.chestBand {
+
+  position:
+
+  absolute;
+
+
+  left: 45%;
+
+
+  top: 4%;
+
+
+  width: 11%;
+
+
+  height: 88%;
+
+
+  z-index: 2;
+
+
+  border:
+
+  3px solid
+
+  #8b6414;
+
+
+  background:
+
+  #f6cd3c;
+
+}
+
+
+/* LOCK */
+
+.chestLock {
+
+  position:
+
+  absolute;
+
+
+  z-index: 4;
+
+
+  left: 42%;
+
+
+  top: 53%;
+
+
+  width: 17%;
+
+
+  height: 25%;
+
+
+  border:
+
+  4px solid
+
+  #8b6414;
+
+
+  border-radius:
+
+  7px;
+
+
+  background:
+
+  #ffd84c;
+
+}
+
+
+/* TREASURE LIGHT */
+
+.treasureGlow {
+
+  position:
+
+  absolute;
+
+
+  left: 50%;
+
+
+  top: 16%;
+
+
+  width: 46%;
+
+
+  height: 50%;
+
+
+  transform:
+
+  translateX(-50%);
+
+
+  border-radius:
+
+  50%;
+
+
+  background:
+
+  radial-gradient(
+
+  circle,
+
+  rgba(
+
+  255,
+
+  246,
+
+  120,
+
+  .95
+
+  ),
+
+  rgba(
+
+  255,
+
+  218,
+
+  49,
+
+  .25
+
+  )
+
+  55%,
+
+  transparent
+
+  70%
+
+  );
+
+
+  filter:
+
+  blur(2px);
+
+
+  animation:
+
+  glowPulse
+
+  .8s
+
+  ease-in-out
+
+  infinite
+
+  alternate;
+
+}
+
+
+/* ==================================================
+   PLAY AGAIN BUTTON
+================================================== */
+
+#playAgainBtn {
+
+  margin-top: 8px;
+
+
+  min-width:
+
+  190px;
+
+
+  padding:
+
+  13px 28px;
+
+
+  border:
+
+  4px solid
+
+  #5c361d;
+
+
+  border-radius:
+
+  22px;
+
+
+  background:
+
+  linear-gradient(
+
+  #ffdb51,
+
+  #f6aa1c
+
+  );
+
+
+  color:
+
+  #5a351c;
+
+
+  font-size:
+
+  clamp(
+
+  21px,
+
+  3.6vw,
+
+  31px
+
+  );
+
+
+  font-weight:
+
+  1000;
+
+
+  box-shadow:
+
+  0 7px 0
+
+  #bd701b;
+
+
+  cursor:
+
+  pointer;
+
+
+  touch-action:
+
+  manipulation;
+
+}
+
+
+#playAgainBtn:active {
+
+  transform:
+
+  translateY(5px);
+
+
+  box-shadow:
+
+  0 2px 0
+
+  #bd701b;
+
+}
+
+
+/* ==================================================
+   CONFETTI
+================================================== */
+
+#confettiCanvas {
+
+  position: fixed;
+
+
+  inset: 0;
+
+
+  z-index: 2;
+
+
+  width: 100%;
+
+
+  height: 100%;
+
+
+  pointer-events:
+
+  none;
+
+}
+
+
+/* ==================================================
+   ANIMATIONS
+================================================== */
+
+
+/* WRONG ANSWER GIGGLE */
+
+@keyframes giggle {
+
+  0%,
+  100% {
+
+    transform:
+
+    translateX(0)
+
+    rotate(0);
+
+  }
+
+
+  20% {
+
+    transform:
+
+    translateX(-8px)
+
+    rotate(-3deg);
+
+  }
+
+
+  40% {
+
+    transform:
+
+    translateX(8px)
+
+    rotate(3deg);
+
+  }
+
+
+  60% {
+
+    transform:
+
+    translateX(-6px)
+
+    rotate(-2deg);
+
+  }
+
+
+  80% {
+
+    transform:
+
+    translateX(6px)
+
+    rotate(2deg);
+
+  }
+
+}
+
+
+/* CORRECT OPTION GLOW */
+
+@keyframes answerGlow {
+
+  from {
+
+    transform:
+
+    scale(1);
+
+
+    box-shadow:
+
+    0 0 0 0
+
+    rgba(
+
+    255,
+
+    184,
+
+    0,
+
+    .35
+
+    ),
+
+    0 7px 0
+
+    #d59a22;
+
+  }
+
+
+  to {
+
+    transform:
+
+    scale(1.04);
+
+
+    box-shadow:
+
+    0 0 0 12px
+
+    rgba(
+
+    255,
+
+    184,
+
+    0,
+
+    .12
+
+    ),
+
+    0 7px 0
+
+    #d59a22;
+
+  }
+
+}
+
+
+/* QUESTION MARK */
+
+@keyframes softPulse {
+
+  0%,
+  100% {
+
+    transform:
+
+    scale(1);
+
+  }
+
+
+  50% {
+
+    transform:
+
+    scale(1.045);
+
+  }
+
+}
+
+
+/* GOOD JOB */
+
+@keyframes feedbackPop {
+
+  0% {
+
+    opacity: 0;
+
+
+    transform:
+
+    translate(
+
+    -50%,
+
+    -50%
+
+    )
+
+    scale(.55);
+
+  }
+
+
+  20%,
+  77% {
+
+    opacity: 1;
+
+
+    transform:
+
+    translate(
+
+    -50%,
+
+    -50%
+
+    )
+
+    scale(1);
+
+  }
+
+
+  100% {
+
+    opacity: 0;
+
+
+    transform:
+
+    translate(
+
+    -50%,
+
+    -50%
+
+    )
+
+    scale(1.12);
+
+  }
+
+}
+
+
+/* TREASURE OPEN */
+
+@keyframes openLid {
+
+  to {
+
+    transform:
+
+    translateY(-44%)
+
+    rotateX(-58deg);
+
+  }
+
+}
+
+
+/* CHEST MOVE */
+
+@keyframes chestBounce {
+
+  from {
+
+    transform:
+
+    translateY(0);
+
+  }
+
+
+  to {
+
+    transform:
+
+    translateY(-7px);
+
+  }
+
+}
+
+
+/* TREASURE LIGHT */
+
+@keyframes glowPulse {
+
+  from {
+
+    opacity: .55;
+
+
+    transform:
+
+    translateX(-50%)
+
+    scale(.9);
+
+  }
+
+
+  to {
+
+    opacity: 1;
+
+
+    transform:
+
+    translateX(-50%)
+
+    scale(1.15);
+
+  }
+
+}
+
+
+/* ==================================================
+   SHORT SCREENS
+================================================== */
+
+@media
+(max-height: 560px) {
+
+  .topBar {
+
+    min-height: 13%;
+
+  }
+
+
+  .keyTrail {
+
+    height: 8%;
+
+    min-height: 30px;
+
+  }
+
+
+  .gameCard {
+
+    max-height: 75%;
+
+
+    grid-template-rows:
+
+    auto
+
+    minmax(
+
+    76px,
+
+    1fr
+
+    )
+
+    auto
+
+    minmax(
+
+    62px,
+
+    .72fr
+
+    );
+
+
+    padding-top:
+
+    7px;
+
+
+    padding-bottom:
+
+    8px;
+
+
+    gap: 4px;
+
+  }
+
+
+  .patternToken,
+
+  .blankToken {
+
+    width:
+
+    clamp(
+
+    41px,
+
+    8.5vw,
+
+    70px
+
+    );
+
+
+    height:
+
+    clamp(
+
+    41px,
+
+    8.5vw,
+
+    70px
+
+    );
+
+
+    border-radius:
+
+    17%;
+
+  }
+
+
+  .optionBtn {
+
+    min-height:
+
+    56px;
+
+  }
+
+
+  .subtitle {
+
+    display:
+
+    none;
+
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE PORTRAIT
+================================================== */
+
+@media
+
+(max-width: 560px)
+
+and
+
+(orientation: portrait) {
+
+  .topBar {
+
+    width: 100%;
+
+
+    grid-template-columns:
+
+    1fr auto;
+
+  }
+
+
+  .titleWrap {
+
+    grid-column: 1;
+
+
+    text-align:
+
+    left;
+
+
+    padding-left:
+
+    4px;
+
+  }
+
+
+  .progressBox {
+
+    grid-column: 2;
+
+  }
+
+
+  h1 {
+
+    font-size:
+
+    clamp(
+
+    25px,
+
+    7.1vw,
+
+    36px
+
+    );
+
+  }
+
+
+  .gameCard {
+
+    width: 98%;
+
+
+    max-height: 77%;
+
+
+    grid-template-rows:
+
+    auto
+
+    minmax(
+
+    120px,
+
+    1fr
+
+    )
+
+    auto
+
+    minmax(
+
+    110px,
+
+    .84fr
+
+    );
+
+  }
+
+
+  .patternArea {
+
+    gap: 4px;
+
+  }
+
+
+  .patternToken,
+
+  .blankToken {
+
+    width:
+
+    clamp(
+
+    43px,
+
+    14vw,
+
+    65px
+
+    );
+
+
+    height:
+
+    clamp(
+
+    43px,
+
+    14vw,
+
+    65px
+
+    );
+
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     WHITE LOGO SCREEN
+================================================== -->
+
+<div
+id="splashScreen"
+aria-label="Logo screen"
+>
+
+<img
+
+id="splashLogo"
+
+src="assets/innovine-logo.png"
+
+alt="Innovine logo"
+
+>
+
+</div>
+
+
+
+<!-- ==================================================
+     GAME
+================================================== -->
+
+<main
+
+id="gameScreen"
+
+aria-live="polite"
+
+>
+
+
+<div class="cloud one"></div>
+
+
+<div class="cloud two"></div>
+
+
+
+<header class="topBar">
+
+
+<div class="titleWrap">
+
+
+<h1>
+
+Pattern Treasure Hunt
+
+</h1>
+
+
+<div class="subtitle">
+
+Complete the ABC pattern and collect the keys!
+
+</div>
+
+
+</div>
+
+
+
+<div class="progressBox">
+
+
+<span id="questionNumber">
+
+1
+
+</span>
+
+
+/
+
+
+<span id="totalQuestions">
+
+10
+
+</span>
+
+
+</div>
+
+
+</header>
+
+
+
+<!-- KEY COLLECTION -->
+
+
+<div
+
+class="keyTrail"
+
+id="keyTrail"
+
+aria-label="Keys collected"
+
+>
+
+</div>
+
+
+
+<!-- QUESTION CARD -->
+
+
+<section class="gameCard">
+
+
+<p id="instruction">
+
+Tap the picture that comes next.
+
+</p>
+
+
+
+<div
+
+class="patternArea"
+
+id="patternArea"
+
+aria-label="Pattern"
+
+>
+
+</div>
+
+
+
+<div class="answerLabel">
+
+Which picture comes next?
+
+</div>
+
+
+
+<div
+
+id="options"
+
+aria-label="Answer choices"
+
+>
+
+</div>
+
+
+</section>
+
+
+</main>
+
+
+
+<!-- ==================================================
+     CORRECT ANSWER POP-UP
+================================================== -->
+
+<div
+
+id="feedback"
+
+role="status"
+
+>
+
+✅ Good Job!
+
+</div>
+
+
+
+<!-- ==================================================
+     FINAL SCREEN
+================================================== -->
+
+<section
+
+id="endScreen"
+
+aria-label="Game complete"
+
+>
+
+
+<canvas id="confettiCanvas">
+
+</canvas>
+
+
+
+<div class="endCard">
+
+
+<h2>
+
+Good Job!
+
+</h2>
+
+
+<p>
+
+You collected all the keys and opened the treasure!
+
+</p>
+
+
+
+<div
+
+class="treasureScene"
+
+aria-hidden="true"
+
+>
+
+
+<div class="treasureGlow">
+
+</div>
+
+
+<div class="chest">
+
+
+<div class="chestLid">
+
+</div>
+
+
+<div class="chestBody">
+
+</div>
+
+
+<div class="chestBand">
+
+</div>
+
+
+<div class="chestLock">
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<button
+
+id="playAgainBtn"
+
+type="button"
+
+>
+
+▶ Play Again
+
+</button>
+
+
+</div>
+
+
+</section>
+
+
+
+<!-- ==================================================
+     AUDIO
+================================================== -->
+
+<audio
+
+id="clapsSound"
+
+src="assets/claps.mp3"
+
+preload="auto"
+
+playsinline
+
+>
+
+</audio>
+
+
+
+<audio
+
+id="wrongSound"
+
+src="assets/wrong.mp3"
+
+preload="auto"
+
+playsinline
+
+>
+
+</audio>
+
+
+
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
+
+<script>
+
+
+(function () {
+
+
+"use strict";
+
+
+
+/* ==================================================
+   GAME SETTINGS
+================================================== */
+
+
+var
+
+QUESTIONS_PER_GAME
+
+=
+
+10;
+
+
+
+var
+
+NEXT_QUESTION_DELAY
+
+=
+
+1050;
+
+
+
+/* ==================================================
+   ABC PATTERN QUESTIONS
+
+   Pattern shown:
+
+   A B C A B ?
+
+================================================== */
+
+
+var
+
+QUESTION_BANK
+
+=
+
+[
+
+
+
+{
+
+
+items:
+
+[
+
+"☀️",
+
+"☁️",
+
+"⭐"
+
+],
+
+
+choices:
+
+[
+
+"⭐",
+
+"🌙",
+
+"☀️"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🍎",
+
+"🍌",
+
+"🍇"
+
+],
+
+
+choices:
+
+[
+
+"🍇",
+
+"🍓",
+
+"🍎"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🔴",
+
+"🟦",
+
+"🔺"
+
+],
+
+
+choices:
+
+[
+
+"🔺",
+
+"🟢",
+
+"🟦"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🐶",
+
+"🐱",
+
+"🐰"
+
+],
+
+
+choices:
+
+[
+
+"🐰",
+
+"🐸",
+
+"🐶"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🚗",
+
+"🚌",
+
+"🚲"
+
+],
+
+
+choices:
+
+[
+
+"🚲",
+
+"🚕",
+
+"🚌"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🌸",
+
+"🌻",
+
+"🌷"
+
+],
+
+
+choices:
+
+[
+
+"🌷",
+
+"🌼",
+
+"🌸"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🍦",
+
+"🧁",
+
+"🍪"
+
+],
+
+
+choices:
+
+[
+
+"🍪",
+
+"🍩",
+
+"🧁"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"⚽",
+
+"🏀",
+
+"🎾"
+
+],
+
+
+choices:
+
+[
+
+"🎾",
+
+"🏈",
+
+"⚽"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🐠",
+
+"🐙",
+
+"🦀"
+
+],
+
+
+choices:
+
+[
+
+"🦀",
+
+"🐳",
+
+"🐠"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"👒",
+
+"👟",
+
+"🎒"
+
+],
+
+
+choices:
+
+[
+
+"🎒",
+
+"🧢",
+
+"👟"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🥕",
+
+"🌽",
+
+"🍅"
+
+],
+
+
+choices:
+
+[
+
+"🍅",
+
+"🥦",
+
+"🥕"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🦋",
+
+"🐞",
+
+"🐝"
+
+],
+
+
+choices:
+
+[
+
+"🐝",
+
+"🦗",
+
+"🦋"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🎈",
+
+"🎁",
+
+"🎂"
+
+],
+
+
+choices:
+
+[
+
+"🎂",
+
+"🎉",
+
+"🎈"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🛶",
+
+"🚂",
+
+"✈️"
+
+],
+
+
+choices:
+
+[
+
+"✈️",
+
+"🚁",
+
+"🚂"
+
+]
+
+
+},
+
+
+
+{
+
+
+items:
+
+[
+
+"🥁",
+
+"🎺",
+
+"🎸"
+
+],
+
+
+choices:
+
+[
+
+"🎸",
+
+"🎹",
+
+"🥁"
+
+]
+
+
+}
+
+
+];
+
+
+
+/* ==================================================
+   HTML ELEMENTS
+================================================== */
+
+
+var
+
+splashScreen
+
+=
+
+document.getElementById(
+
+"splashScreen"
+
+);
+
+
+
+var
+
+gameScreen
+
+=
+
+document.getElementById(
+
+"gameScreen"
+
+);
+
+
+
+var
+
+endScreen
+
+=
+
+document.getElementById(
+
+"endScreen"
+
+);
+
+
+
+var
+
+patternArea
+
+=
+
+document.getElementById(
+
+"patternArea"
+
+);
+
+
+
+var
+
+optionsBox
+
+=
+
+document.getElementById(
+
+"options"
+
+);
+
+
+
+var
+
+questionNumber
+
+=
+
+document.getElementById(
+
+"questionNumber"
+
+);
+
+
+
+var
+
+totalQuestions
+
+=
+
+document.getElementById(
+
+"totalQuestions"
+
+);
+
+
+
+var
+
+keyTrail
+
+=
+
+document.getElementById(
+
+"keyTrail"
+
+);
+
+
+
+var
+
+feedback
+
+=
+
+document.getElementById(
+
+"feedback"
+
+);
+
+
+
+var
+
+playAgainBtn
+
+=
+
+document.getElementById(
+
+"playAgainBtn"
+
+);
+
+
+
+var
+
+clapsSound
+
+=
+
+document.getElementById(
+
+"clapsSound"
+
+);
+
+
+
+var
+
+wrongSound
+
+=
+
+document.getElementById(
+
+"wrongSound"
+
+);
+
+
+
+/* ==================================================
+   GAME VARIABLES
+================================================== */
+
+
+var
+
+currentQuestions
+
+=
+
+[];
+
+
+
+var
+
+currentIndex
+
+=
+
+0;
+
+
+
+var
+
+wrongAttempts
+
+=
+
+0;
+
+
+
+var
+
+answered
+
+=
+
+false;
+
+
+
+var
+
+nextTimer
+
+=
+
+null;
+
+
+
+/* ==================================================
+   RANDOMISE
+================================================== */
+
+
+function
+
+shuffle(
+
+array
+
+) {
+
+
+var
+
+copy
+
+=
+
+array.slice();
+
+
+
+var
+
+i;
+
+
+
+var
+
+j;
+
+
+
+var
+
+temp;
+
+
+
+for (
+
+i
+
+=
+
+copy.length - 1;
+
+i > 0;
+
+i--
+
+) {
+
+
+j
+
+=
+
+Math.floor(
+
+Math.random()
+
+*
+
+(
+
+i + 1
+
+)
+
+);
+
+
+
+temp
+
+=
+
+copy[i];
+
+
+
+copy[i]
+
+=
+
+copy[j];
+
+
+
+copy[j]
+
+=
+
+temp;
+
+
+}
+
+
+
+return
+
+copy;
+
+
+}
+
+
+
+/* ==================================================
+   PLAY AUDIO
+================================================== */
+
+
+function
+
+safePlay(
+
+audioElement
+
+) {
+
+
+try {
+
+
+audioElement.pause();
+
+
+
+audioElement.currentTime
+
+=
+
+0;
+
+
+
+var
+
+playPromise
+
+=
+
+audioElement.play();
+
+
+
+if (
+
+playPromise
+
+&&
+
+typeof
+
+playPromise.catch
+
+===
+
+"function"
+
+) {
+
+
+playPromise.catch(
+
+function () {
+
+}
+
+);
+
+
+}
+
+
+}
+
+
+catch (
+
+error
+
+) {
+
+}
+
+
+}
+
+
+
+/* ==================================================
+   CREATE EMPTY KEY SLOTS
+================================================== */
+
+
+function
+
+createKeyTrail() {
+
+
+var
+
+i;
+
+
+
+keyTrail.innerHTML
+
+=
+
+"";
+
+
+
+for (
+
+i = 0;
+
+i < QUESTIONS_PER_GAME;
+
+i++
+
+) {
+
+
+var
+
+slot
+
+=
+
+document.createElement(
+
+"div"
+
+);
+
+
+
+slot.className
+
+=
+
+"keySlot";
+
+
+
+slot.textContent
+
+=
+
+"🗝️";
+
+
+
+slot.setAttribute(
+
+"aria-label",
+
+"Key "
+
++
+
+(
+
+i + 1
+
+)
+
+);
+
+
+
+keyTrail.appendChild(
+
+slot
+
+);
+
+
+}
+
+
+}
+
+
+
+/* ==================================================
+   COLLECT KEY
+================================================== */
+
+
+function
+
+earnKey(
+
+index
+
+) {
+
+
+var
+
+slots
+
+=
+
+keyTrail.getElementsByClassName(
+
+"keySlot"
+
+);
+
+
+
+if (
+
+slots[index]
+
+) {
+
+
+slots[index].className
+
+=
+
+"keySlot earned";
+
+
+}
+
+
+}
+
+
+
+/* ==================================================
+   CREATE PATTERN
+================================================== */
+
+
+function
+
+buildPattern(
+
+question
+
+) {
+
+
+var
+
+sequence
+
+=
+
+[
+
+
+question.items[0],
+
+
+question.items[1],
+
+
+question.items[2],
+
+
+question.items[0],
+
+
+question.items[1]
+
+
+];
+
+
+
+patternArea.innerHTML
+
+=
+
+"";
+
+
+
+sequence.forEach(
+
+function (
+
+symbol
+
+) {
+
+
+var
+
+token
+
+=
+
+document.createElement(
+
+"div"
+
+);
+
+
+
+token.className
+
+=
+
+"patternToken";
+
+
+
+token.textContent
+
+=
+
+symbol;
+
+
+
+patternArea.appendChild(
+
+token
+
+);
+
+
+}
+
+);
+
+
+
+var
+
+blank
+
+=
+
+document.createElement(
+
+"div"
+
+);
+
+
+
+blank.className
+
+=
+
+"blankToken";
+
+
+
+blank.textContent
+
+=
+
+"?";
+
+
+
+patternArea.appendChild(
+
+blank
+
+);
+
+
+}
+
+
+
+/* ==================================================
+   CREATE OPTIONS
+================================================== */
+
+
+function
+
+buildOptions(
+
+question
+
+) {
+
+
+var
+
+shuffledChoices
+
+=
+
+shuffle(
+
+question.choices
+
+);
+
+
+
+var
+
+correctAnswer
+
+=
+
+question.items[2];
+
+
+
+optionsBox.innerHTML
+
+=
+
+"";
+
+
+
+shuffledChoices.forEach(
+
+function (
+
+choice
+
+) {
+
+
+var
+
+button
+
+=
+
+document.createElement(
+
+"button"
+
+);
+
+
+
+button.type
+
+=
+
+"button";
+
+
+
+button.className
+
+=
+
+"optionBtn";
+
+
+
+button.textContent
+
+=
+
+choice;
+
+
+
+button.setAttribute(
+
+"aria-label",
+
+"Choose "
+
++
+
+choice
+
+);
+
+
+
+button.setAttribute(
+
+"data-answer",
+
+choice
+
+);
+
+
+
+button.onclick
+
+=
+
+function () {
+
+
+checkAnswer(
+
+button,
+
+choice,
+
+correctAnswer
+
+);
+
+
+};
+
+
+
+optionsBox.appendChild(
+
+button
+
+);
+
+
+}
+
+);
+
+
+}
+
+
+
+/* ==================================================
+   SHOW QUESTION
+================================================== */
+
+
+function
+
+showQuestion() {
+
+
+var
+
+question
+
+=
+
+currentQuestions[
+
+currentIndex
+
+];
+
+
+
+wrongAttempts
+
+=
+
+0;
+
+
+
+answered
+
+=
+
+false;
+
+
+
+questionNumber.textContent
+
+=
+
+currentIndex
+
++
+
+1;
+
+
+
+buildPattern(
+
+question
+
+);
+
+
+
+buildOptions(
+
+question
+
+);
+
+
+}
+
+
+
+/* ==================================================
+   REMOVE RED WRONG EFFECT
+================================================== */
+
+
+function
+
+removeWrongClass(
+
+button
+
+) {
+
+
+window.setTimeout(
+
+function () {
+
+
+button.className
+
+=
+
+button.className.replace(
+
+/\s?wrong/g,
+
+""
+
+);
+
+
+},
+
+450
+
+);
+
+
+}
+
+
+
+/* ==================================================
+   GLOW CORRECT OPTION
+================================================== */
+
+
+function
+
+glowCorrectAnswer(
+
+correctAnswer
+
+) {
+
+
+var
+
+buttons
+
+=
+
+optionsBox.getElementsByClassName(
+
+"optionBtn"
+
+);
+
+
+
+var
+
+i;
+
+
+
+for (
+
+i = 0;
+
+i < buttons.length;
+
+i++
+
+) {
+
+
+if (
+
+buttons[i].getAttribute(
+
+"data-answer"
+
+)
+
+===
+
+correctAnswer
+
+) {
+
+
+if (
+
+buttons[i].className.indexOf(
+
+"hintGlow"
+
+)
+
+===
+
+-1
+
+) {
+
+
+buttons[i].className
+
++=
+
+" hintGlow";
+
+
+}
+
+
+}
+
+
+}
+
+
+}
+
+
+
+/* ==================================================
+   DISABLE ANSWERS
+================================================== */
+
+
+function
+
+disableOptions() {
+
+
+var
+
+buttons
+
+=
+
+optionsBox.getElementsByClassName(
+
+"optionBtn"
+
+);
+
+
+
+var
+
+i;
+
+
+
+for (
+
+i = 0;
+
+i < buttons.length;
+
+i++
+
+) {
+
+
+buttons[i].disabled
+
+=
+
+true;
+
+
+}
+
+
+}
+
+
+
+/* ==================================================
+   GOOD JOB MESSAGE
+================================================== */
+
+
+function
+
+showGoodJob() {
+
+
+feedback.className
+
+=
+
+"";
+
+
+
+void
+
+feedback.offsetWidth;
+
+
+
+feedback.className
+
+=
+
+"show";
+
+
+}
+
+
+
+/* ==================================================
+   CHECK ANSWER
+================================================== */
+
+
+function
+
+checkAnswer(
+
+button,
+
+selectedAnswer,
+
+correctAnswer
+
+) {
+
+
+if (
+
+answered
+
+)
+
+return;
+
+
+
+/* CORRECT */
+
+
+if (
+
+selectedAnswer
+
+===
+
+correctAnswer
+
+) {
+
+
+answered
+
+=
+
+true;
+
+
+
+disableOptions();
+
+
+
+button.className
+
+=
+
+"optionBtn correct";
+
+
+
+earnKey(
+
+currentIndex
+
+);
+
+
+
+showGoodJob();
+
+
+
+safePlay(
+
+clapsSound
+
+);
+
+
+
+nextTimer
+
+=
+
+window.setTimeout(
+
+function () {
+
+
+currentIndex++;
+
+
+
+if (
+
+currentIndex
+
+<
+
+currentQuestions.length
+
+) {
+
+
+showQuestion();
+
+
+}
+
+
+else {
+
+
+showEndScreen();
+
+
+}
+
+
+},
+
+NEXT_QUESTION_DELAY
+
+);
+
+
+}
+
+
+/* WRONG */
+
+
+else {
+
+
+wrongAttempts++;
+
+
+
+safePlay(
+
+wrongSound
+
+);
+
+
+
+button.className
+
+=
+
+button.className.replace(
+
+/\s?wrong/g,
+
+""
+
+)
+
++
+
+" wrong";
+
+
+
+removeWrongClass(
+
+button
+
+);
+
+
+
+if (
+
+wrongAttempts
+
+>=
+
+2
+
+) {
+
+
+glowCorrectAnswer(
+
+correctAnswer
+
+);
+
+
+}
+
+
+}
+
+
+}
+
+
+
+/* ==================================================
+   START GAME
+================================================== */
+
+
+function
+
+startGame() {
+
+
+if (
+
+nextTimer
+
+) {
+
+
+window.clearTimeout(
+
+nextTimer
+
+);
+
+
+
+nextTimer
+
+=
+
+null;
+
+
+}
+
+
+
+stopConfetti();
+
+
+
+endScreen.style.display
+
+=
+
+"none";
+
+
+
+gameScreen.style.display
+
+=
+
+"flex";
+
+
+
+currentQuestions
+
+=
+
+shuffle(
+
+QUESTION_BANK
+
+)
+
+.slice(
+
+0,
+
+QUESTIONS_PER_GAME
+
+);
+
+
+
+currentIndex
+
+=
+
+0;
+
+
+
+wrongAttempts
+
+=
+
+0;
+
+
+
+answered
+
+=
+
+false;
+
+
+
+totalQuestions.textContent
+
+=
+
+QUESTIONS_PER_GAME;
+
+
+
+createKeyTrail();
+
+
+
+showQuestion();
+
+
+}
+
+
+
+/* ==================================================
+   FINAL SCREEN
+================================================== */
+
+
+function
+
+showEndScreen() {
+
+
+gameScreen.style.display
+
+=
+
+"none";
+
+
+
+endScreen.style.display
+
+=
+
+"flex";
+
+
+
+safePlay(
+
+clapsSound
+
+);
+
+
+
+startConfetti();
+
+
+}
+
+
+
+/* ==================================================
+   PLAY AGAIN
+================================================== */
+
+
+playAgainBtn.onclick
+
+=
+
+function () {
+
+
+startGame();
+
+
+};
+
+
+
+/* ==================================================
+   CONFETTI
+================================================== */
+
+
+var
+
+canvas
+
+=
+
+document.getElementById(
+
+"confettiCanvas"
+
+);
+
+
+
+var
+
+ctx
+
+=
+
+canvas.getContext(
+
+"2d"
+
+);
+
+
+
+var
+
+confettiPieces
+
+=
+
+[];
+
+
+
+var
+
+confettiFrame
+
+=
+
+null;
+
+
+
+var
+
+confettiRunning
+
+=
+
+false;
+
+
+
+var
+
+confettiColors
+
+=
+
+[
+
+"#ffcf2f",
+
+"#ff6b6b",
+
+"#4ecdc4",
+
+"#7a77ff",
+
+"#ff8fd8",
+
+"#59c75b"
+
+];
+
+
+
+/* CANVAS SIZE */
+
+
+function
+
+resizeCanvas() {
+
+
+var
+
+ratio
+
+=
+
+window.devicePixelRatio
+
+||
+
+1;
+
+
+
+canvas.width
+
+=
+
+Math.floor(
+
+window.innerWidth
+
+*
+
+ratio
+
+);
+
+
+
+canvas.height
+
+=
+
+Math.floor(
+
+window.innerHeight
+
+*
+
+ratio
+
+);
+
+
+
+canvas.style.width
+
+=
+
+window.innerWidth
+
++
+
+"px";
+
+
+
+canvas.style.height
+
+=
+
+window.innerHeight
+
++
+
+"px";
+
+
+
+ctx.setTransform(
+
+ratio,
+
+0,
+
+0,
+
+ratio,
+
+0,
+
+0
+
+);
+
+
+}
+
+
+
+/* CREATE CONFETTI */
+
+
+function
+
+makeConfettiPiece() {
+
+
+return {
+
+
+x:
+
+Math.random()
+
+*
+
+window.innerWidth,
+
+
+y:
+
+-20
+
+-
+
+Math.random()
+
+*
+
+window.innerHeight,
+
+
+w:
+
+6
+
++
+
+Math.random()
+
+*
+
+7,
+
+
+h:
+
+8
+
++
+
+Math.random()
+
+*
+
+10,
+
+
+speed:
+
+2.2
+
++
+
+Math.random()
+
+*
+
+3.3,
+
+
+drift:
+
+-1.2
+
++
+
+Math.random()
+
+*
+
+2.4,
+
+
+rotation:
+
+Math.random()
+
+*
+
+Math.PI,
+
+
+spin:
+
+-.12
+
++
+
+Math.random()
+
+*
+
+.24,
+
+
+color:
+
+confettiColors[
+
+Math.floor(
+
+Math.random()
+
+*
+
+confettiColors.length
+
+)
+
+]
+
+
+};
+
+
+}
+
+
+
+/* DRAW CONFETTI */
+
+
+function
+
+drawConfetti() {
+
+
+var
+
+i;
+
+
+
+var
+
+piece;
+
+
+
+if (
+
+!confettiRunning
+
+)
+
+return;
+
+
+
+ctx.clearRect(
+
+0,
+
+0,
+
+window.innerWidth,
+
+window.innerHeight
+
+);
+
+
+
+for (
+
+i = 0;
+
+i < confettiPieces.length;
+
+i++
+
+) {
+
+
+piece
+
+=
+
+confettiPieces[i];
+
+
+
+piece.y
+
++=
+
+piece.speed;
+
+
+
+piece.x
+
++=
+
+piece.drift;
+
+
+
+piece.rotation
+
++=
+
+piece.spin;
+
+
+
+if (
+
+piece.y
+
+>
+
+window.innerHeight
+
++
+
+25
+
+) {
+
+
+confettiPieces[i]
+
+=
+
+makeConfettiPiece();
+
+
+
+confettiPieces[i].y
+
+=
+
+-20;
+
+
+
+piece
+
+=
+
+confettiPieces[i];
+
+
+}
+
+
+
+ctx.save();
+
+
+
+ctx.translate(
+
+piece.x,
+
+piece.y
+
+);
+
+
+
+ctx.rotate(
+
+piece.rotation
+
+);
+
+
+
+ctx.fillStyle
+
+=
+
+piece.color;
+
+
+
+ctx.fillRect(
+
+-piece.w / 2,
+
+-piece.h / 2,
+
+piece.w,
+
+piece.h
+
+);
+
+
+
+ctx.restore();
+
+
+}
+
+
+
+confettiFrame
+
+=
+
+window.requestAnimationFrame(
+
+drawConfetti
+
+);
+
+
+}
+
+
+
+/* START CONFETTI */
+
+
+function
+
+startConfetti() {
+
+
+var
+
+i;
+
+
+
+resizeCanvas();
+
+
+
+confettiPieces
+
+=
+
+[];
+
+
+
+for (
+
+i = 0;
+
+i < 90;
+
+i++
+
+) {
+
+
+confettiPieces.push(
+
+makeConfettiPiece()
+
+);
+
+
+}
+
+
+
+confettiRunning
+
+=
+
+true;
+
+
+
+drawConfetti();
+
+
+}
+
+
+
+/* STOP CONFETTI */
+
+
+function
+
+stopConfetti() {
+
+
+confettiRunning
+
+=
+
+false;
+
+
+
+if (
+
+confettiFrame
+
+) {
+
+
+window.cancelAnimationFrame(
+
+confettiFrame
+
+);
+
+
+
+confettiFrame
+
+=
+
+null;
+
+
+}
+
+
+
+ctx.clearRect(
+
+0,
+
+0,
+
+canvas.width,
+
+canvas.height
+
+);
+
+
+}
+
+
+
+/* ==================================================
+   RESIZE
+================================================== */
+
+
+window.addEventListener(
+
+"resize",
+
+function () {
+
+
+if (
+
+confettiRunning
+
+) {
+
+
+resizeCanvas();
+
+
+}
+
+
+}
+
+);
+
+
+
+/* ==================================================
+   START AFTER TWO-SECOND LOGO SCREEN
+================================================== */
+
+
+window.setTimeout(
+
+function () {
+
+
+splashScreen.style.display
+
+=
+
+"none";
+
+
+
+startGame();
+
+
+},
+
+2000
+
+);
+
+
+})();
+
+
+</script>
+
+
+</body>
+
+</html>
