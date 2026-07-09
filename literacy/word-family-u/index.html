@@ -14,7 +14,6 @@ user-scalable=no">
 
 <title>Word Family U</title>
 
-
 <style>
 
 /* ==============================
@@ -139,7 +138,7 @@ position:relative;
 
 width:100%;
 
-min-height:75px;
+min-height:100px;
 
 display:flex;
 
@@ -151,36 +150,40 @@ justify-content:center;
 
 
 /* ==============================
-   CENTRE TITLE
+   WORD FAMILY U TITLE
+
+   SAME STYLE AS
+   INSTRUCTION BOX
 ============================== */
 
 .gameTitle{
 
-background:#365ec0;
+background:
+rgba(255,255,255,0.97);
 
-color:#ffffff;
+color:#3e317e;
 
 font-size:40px;
 
 font-weight:bold;
 
-padding:7px 28px;
+padding:9px 38px;
 
-border-radius:5px;
+border:
+
+5px solid
+
+#ffad33;
+
+border-radius:30px;
 
 text-align:center;
 
 box-shadow:
 
-0 6px 0
+0 9px 0
 
-rgba(73,40,130,0.25);
-
-text-shadow:
-
-2px 2px 0
-
-rgba(0,0,0,0.15);
+rgba(170,85,110,0.20);
 
 }
 
@@ -195,13 +198,17 @@ position:absolute;
 
 right:25px;
 
-top:7px;
+top:12px;
 
 background:#ffffff;
 
 color:#5937a4;
 
-border:4px solid #b587e8;
+border:
+
+4px solid
+
+#b587e8;
 
 border-radius:28px;
 
@@ -221,7 +228,7 @@ rgba(100,57,150,0.18);
 
 
 /* ==============================
-   INSTRUCTION
+   INSTRUCTION BOX
 ============================== */
 
 .instructionBox{
@@ -277,7 +284,7 @@ text-align:center;
 
 
 /* ==============================
-   OPTION AREA
+   OPTIONS AREA
 ============================== */
 
 #optionsArea{
@@ -387,7 +394,7 @@ user-select:none;
 
 
 /* ==============================
-   WRONG WIGGLE
+   WRONG ANSWER WIGGLE
 ============================== */
 
 .option.wiggle{
@@ -461,7 +468,7 @@ translateX(0);
 
 
 /* ==============================
-   CORRECT HINT GLOW
+   CORRECT ANSWER GLOW
 ============================== */
 
 .option.hintGlow{
@@ -560,7 +567,11 @@ border-radius:50%;
 
 background:#21c76a;
 
-border:5px solid white;
+border:
+
+5px solid
+
+white;
 
 color:white;
 
@@ -849,7 +860,7 @@ pointer-events:none;
 
 
 /* ==============================
-   TABLETS
+   TABLET
 ============================== */
 
 @media(max-width:1100px){
@@ -903,17 +914,21 @@ padding:7px;
 
 .topArea{
 
-min-height:58px;
+min-height:72px;
 
 }
 
 .gameTitle{
 
-font-size:24px;
+font-size:23px;
 
 padding:
 
-7px 15px;
+7px 18px;
+
+border-width:4px;
+
+border-radius:22px;
 
 }
 
@@ -927,7 +942,7 @@ padding:
 
 right:3px;
 
-top:5px;
+top:7px;
 
 border-width:3px;
 
@@ -1020,17 +1035,19 @@ padding:5px;
 
 .topArea{
 
-min-height:48px;
+min-height:64px;
 
 }
 
 .gameTitle{
 
-font-size:24px;
+font-size:23px;
 
 padding:
 
-4px 18px;
+5px 20px;
+
+border-width:4px;
 
 }
 
@@ -1097,7 +1114,7 @@ font-size:20px;
 
 
 <!-- ==============================
-     SLIDE 1
+     LOGO SCREEN
 ============================== -->
 
 <section
@@ -1282,7 +1299,7 @@ type="audio/mpeg">
 
 
 /* ==============================
-   ALL WORD FAMILIES
+   WORD FAMILIES
 ============================== */
 
 var familyWords={
@@ -1338,8 +1355,6 @@ var familyWords={
 
 /* ==============================
    12 QUESTIONS
-
-   3 FOR EACH FAMILY
 ============================== */
 
 var questionBank=[
@@ -1461,7 +1476,7 @@ correct:"tub"
 
 
 /* ==============================
-   VARIABLES
+   GAME VARIABLES
 ============================== */
 
 var gameQuestions=[];
@@ -1477,7 +1492,7 @@ var confettiAnimation=null;
 
 
 /* ==============================
-   ELEMENTS
+   PAGE ELEMENTS
 ============================== */
 
 var splashScreen=
@@ -1640,7 +1655,7 @@ return array;
 
 
 /* ==============================
-   CHANGE SCREEN
+   SHOW SCREEN
 ============================== */
 
 function showScreen(
@@ -1850,10 +1865,7 @@ showQuestion();
 
 
 /* ==============================
-   CREATE FOUR OPTIONS
-
-   ONLY ONE IMAGE BELONGS
-   TO THE TARGET FAMILY
+   MAKE FOUR OPTIONS
 ============================== */
 
 function makeOptions(
@@ -2057,7 +2069,7 @@ question
 
 
 /* ==============================
-   CREATE IMAGE BUTTON
+   CREATE OPTION
 ============================== */
 
 function createOption(
@@ -2407,7 +2419,7 @@ question.correct
 
 
 /* ==============================
-   CORRECT IMAGE GLOW
+   CORRECT OPTION GLOW
 ============================== */
 
 function showCorrectGlow(
