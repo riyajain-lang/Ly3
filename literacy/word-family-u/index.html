@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<title>Word Family -un</title>
+
+<style>
+
+/* ------------------------------
+   BASIC PAGE SETTINGS
+------------------------------ */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+body{
+    font-family:"Arial Rounded MT Bold",
+    "Comic Sans MS",
+    Arial,
+    sans-serif;
+
+    background:#ffffff;
+    touch-action:manipulation;
+}
+
+/* ------------------------------
+   COMMON SCREEN
+------------------------------ */
+
+.screen{
+    position:absolute;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    display:none;
+}
+
+.screen.active{
+    display:flex;
+}
+
+/* ------------------------------
+   SLIDE 1 - LOGO
+------------------------------ */
+
+#splashScreen{
+
+    background:#ffffff;
+
+    align-items:center;
+    justify-content:center;
+}
+
+#splashLogo{
+
+    width:250px;
+    max-width:65%;
+
+    height:auto;
+}
+
+/* ------------------------------
+   GAME SCREEN
+------------------------------ */
+
+#gameScreen{
+
+    flex-direction:column;
+
+    align-items:center;
+
+    background:
+    url("assets/background-word-family-u.png")
+    center center / cover no-repeat;
+
+    padding:
+    max(8px,2vh)
+    max(10px,2vw);
+
+}
+
+/* ------------------------------
+   TOP BAR
+------------------------------ */
+
+.topBar{
+
+    width:100%;
+    max-width:1100px;
+
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    min-height:45px;
+
+    padding:5px 12px;
+
+}
+
+.gameTitle{
+
+    color:#7b42bb;
+
+    font-size:
+    clamp(19px,3.5vw,31px);
+
+    text-shadow:
+    2px 2px 0 #ffffff;
+
+}
+
+.progressBox{
+
+    background:#ffffff;
+
+    color:#6542a8;
+
+    border:3px solid #bd91e9;
+
+    border-radius:20px;
+
+    padding:5px 14px;
+
+    font-size:
+    clamp(14px,2.5vw,20px);
+
+    box-shadow:
+    0 4px 0 rgba(93,56,132,0.18);
+
+}
+
+/* ------------------------------
+   INSTRUCTION
+------------------------------ */
+
+.instructionBox{
+
+    width:min(94%,850px);
+
+    background:
+    rgba(255,255,255,0.96);
+
+    border:4px solid #ffb547;
+
+    border-radius:22px;
+
+    text-align:center;
+
+    padding:
+    clamp(8px,1.6vh,15px)
+    10px;
+
+    margin:
+    clamp(3px,1vh,10px)
+    auto;
+
+    box-shadow:
+    0 6px 0 rgba(177,107,21,0.17);
+
+}
+
+.instruction{
+
+    color:#4c347b;
+
+    font-size:
+    clamp(18px,3.3vw,29px);
+
+    line-height:1.25;
+
+}
+
+/* ------------------------------
+   OPTIONS AREA
+------------------------------ */
+
+.optionsArea{
+
+    width:min(96%,1000px);
+
+    flex:1;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:
+    clamp(8px,2vw,20px);
+
+    align-items:center;
+
+    justify-items:center;
+
+    padding:
+    clamp(5px,1.3vh,13px)
+    0;
+
+}
+
+/* ------------------------------
+   IMAGE OPTION
+------------------------------ */
+
+.option{
+
+    position:relative;
+
+    width:100%;
+
+    max-width:210px;
+
+    height:
+    min(31vh,230px);
+
+    min-height:125px;
+
+    border:5px solid #ffffff;
+
+    border-radius:25px;
+
+    background:
+    rgba(255,255,255,0.96);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+
+    box-shadow:
+    0 8px 0
+    rgba(76,52,123,0.20);
+
+    transition:
+    transform 0.15s ease,
+    border 0.15s ease;
+
+    overflow:hidden;
+
+}
+
+.option:active{
+
+    transform:
+    translateY(5px);
+
+    box-shadow:
+    0 3px 0
+    rgba(76,52,123,0.20);
+
+}
+
+.option img{
+
+    width:82%;
+    height:82%;
+
+    object-fit:contain;
+
+    pointer-events:none;
+
+    user-select:none;
+
+    -webkit-user-drag:none;
+
+}
+
+/* ------------------------------
+   WRONG ANIMATION
+------------------------------ */
+
+.option.wiggle{
+
+    border-color:#ff6c73;
+
+    animation:
+    wiggleAnimation 0.45s ease;
+
+}
+
+@keyframes wiggleAnimation{
+
+    0%{
+        transform:
+        translateX(0);
+    }
+
+    20%{
+        transform:
+        translateX(-10px)
+        rotate(-2deg);
+    }
+
+    40%{
+        transform:
+        translateX(10px)
+        rotate(2deg);
+    }
+
+    60%{
+        transform:
+        translateX(-7px)
+        rotate(-1deg);
+    }
+
+    80%{
+        transform:
+        translateX(7px)
+        rotate(1deg);
+    }
+
+    100%{
+        transform:
+        translateX(0);
+    }
+
+}
+
+/* ------------------------------
+   CORRECT GLOW AFTER
+   TWO WRONG ATTEMPTS
+------------------------------ */
+
+.option.hintGlow{
+
+    border-color:#ffd52e;
+
+    animation:
+    glowAnimation
+    0.8s infinite alternate;
+
+}
+
+@keyframes glowAnimation{
+
+    from{
+
+        transform:
+        scale(1);
+
+        box-shadow:
+        0 0 10px
+        5px rgba(255,220,42,0.65);
+
+    }
+
+    to{
+
+        transform:
+        scale(1.05);
+
+        box-shadow:
+        0 0 25px
+        12px rgba(255,220,42,0.95);
+
+    }
+
+}
+
+/* ------------------------------
+   CORRECT ANSWER
+------------------------------ */
+
+.option.correct{
+
+    border-color:#26c76f;
+
+    background:#eafff2;
+
+    transform:
+    scale(1.04);
+
+    box-shadow:
+    0 0 22px
+    9px rgba(38,199,111,0.55);
+
+}
+
+/* ------------------------------
+   GREEN TICK
+------------------------------ */
+
+.tick{
+
+    position:absolute;
+
+    top:8px;
+    right:8px;
+
+    width:
+    clamp(38px,6vw,58px);
+
+    height:
+    clamp(38px,6vw,58px);
+
+    border-radius:50%;
+
+    background:#24c76f;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    font-size:
+    clamp(25px,4vw,40px);
+
+    border:4px solid white;
+
+    box-shadow:
+    0 3px 8px
+    rgba(0,0,0,0.25);
+
+    animation:
+    tickPop
+    0.4s ease;
+
+}
+
+@keyframes tickPop{
+
+    0%{
+
+        transform:
+        scale(0)
+        rotate(-180deg);
+
+    }
+
+    100%{
+
+        transform:
+        scale(1)
+        rotate(0);
+
+    }
+
+}
+
+/* ------------------------------
+   FEEDBACK
+------------------------------ */
+
+.feedback{
+
+    height:
+    clamp(34px,6vh,55px);
+
+    width:100%;
+
+    text-align:center;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    font-size:
+    clamp(20px,3.7vw,31px);
+
+    font-weight:bold;
+
+    color:#1ca65c;
+
+    text-shadow:
+    2px 2px 0 white;
+
+}
+
+/* ------------------------------
+   LAST SCREEN
+------------------------------ */
+
+#endScreen{
+
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    background:
+    url("assets/background-word-family-u.png")
+    center center / cover no-repeat;
+
+    padding:20px;
+
+    overflow:hidden;
+
+}
+
+.endCard{
+
+    position:relative;
+
+    z-index:5;
+
+    width:min(88%,600px);
+
+    background:
+    rgba(255,255,255,0.97);
+
+    border:7px solid #ffc839;
+
+    border-radius:35px;
+
+    padding:
+    clamp(25px,5vh,50px)
+    20px;
+
+    box-shadow:
+    0 10px 0
+    rgba(161,96,20,0.20);
+
+}
+
+.endStar{
+
+    font-size:
+    clamp(55px,12vw,100px);
+
+    animation:
+    starBounce
+    1s infinite alternate;
+
+}
+
+@keyframes starBounce{
+
+    from{
+
+        transform:
+        translateY(0)
+        rotate(-5deg);
+
+    }
+
+    to{
+
+        transform:
+        translateY(-10px)
+        rotate(5deg);
+
+    }
+
+}
+
+.goodJob{
+
+    color:#7140ad;
+
+    font-size:
+    clamp(42px,8vw,75px);
+
+    margin:
+    8px 0 13px;
+
+    text-shadow:
+    3px 3px 0 #ffe563;
+
+}
+
+.completedText{
+
+    color:#525252;
+
+    font-size:
+    clamp(18px,3.4vw,27px);
+
+    margin-bottom:
+    clamp(20px,4vh,35px);
+
+}
+
+.playAgainButton{
+
+    border:none;
+
+    border-radius:30px;
+
+    background:#24bf69;
+
+    color:white;
+
+    padding:
+    14px 36px;
+
+    font-family:inherit;
+
+    font-size:
+    clamp(20px,4vw,30px);
+
+    cursor:pointer;
+
+    box-shadow:
+    0 7px 0 #12864a;
+
+}
+
+.playAgainButton:active{
+
+    transform:
+    translateY(5px);
+
+    box-shadow:
+    0 2px 0 #12864a;
+
+}
+
+/* ------------------------------
+   CONFETTI CANVAS
+------------------------------ */
+
+#confettiCanvas{
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    pointer-events:none;
+
+    z-index:2;
+
+}
+
+/* ------------------------------
+   MOBILE PORTRAIT
+------------------------------ */
+
+@media
+(max-width:700px){
+
+    .optionsArea{
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+        gap:10px;
+
+        width:94%;
+
+    }
+
+    .option{
+
+        height:
+        min(25vh,190px);
+
+        min-height:110px;
+
+        border-radius:19px;
+
+    }
+
+    .topBar{
+
+        min-height:38px;
+
+        padding:
+        2px 6px;
+
+    }
+
+}
+
+/* ------------------------------
+   SHORT LANDSCAPE SCREENS
+------------------------------ */
+
+@media
+(max-height:500px){
+
+    .topBar{
+
+        min-height:30px;
+
+    }
+
+    .instructionBox{
+
+        padding:5px;
+
+        margin:2px;
+
+    }
+
+    .optionsArea{
+
+        padding:3px 0;
+
+    }
+
+    .option{
+
+        height:
+        min(48vh,175px);
+
+        min-height:90px;
+
+    }
+
+    .feedback{
+
+        height:28px;
+
+    }
+
+}
+
+/* ------------------------------
+   VERY SMALL PHONES
+------------------------------ */
+
+@media
+(max-width:360px){
+
+    .option{
+
+        min-height:95px;
+
+    }
+
+    .instruction{
+
+        font-size:17px;
+
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =================================
+     SLIDE 1
+     WHITE LOGO SCREEN
+================================= -->
+
+<section
+id="splashScreen"
+class="screen active">
+
+<img
+id="splashLogo"
+src="assets/innovine-logo.png"
+alt="Innovine Logo">
+
+</section>
+
+
+<!-- =================================
+     GAME SCREEN
+================================= -->
+
+<section
+id="gameScreen"
+class="screen">
+
+<div class="topBar">
+
+<div class="gameTitle">
+
+Word Family -un
+
+</div>
+
+<div
+id="progressBox"
+class="progressBox">
+
+1 / 9
+
+</div>
+
+</div>
+
+
+<div class="instructionBox">
+
+<div class="instruction">
+
+Tap on the images ending with
+<strong>"un"</strong>
+
+</div>
+
+</div>
+
+
+<div
+id="optionsArea"
+class="optionsArea">
+
+</div>
+
+
+<div
+id="feedback"
+class="feedback">
+
+</div>
+
+</section>
+
+
+<!-- =================================
+     FINAL SCREEN
+================================= -->
+
+<section
+id="endScreen"
+class="screen">
+
+<canvas
+id="confettiCanvas">
+
+</canvas>
+
+<div class="endCard">
+
+<div class="endStar">
+
+🌟
+
+</div>
+
+<div class="goodJob">
+
+Good Job!
+
+</div>
+
+<div class="completedText">
+
+You completed the
+<strong>-un</strong>
+word family game!
+
+</div>
+
+<button
+id="playAgainButton"
+class="playAgainButton"
+type="button">
+
+Play Again
+
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =================================
+     LOCAL AUDIO FILES
+================================= -->
+
+<audio
+id="clapsSound"
+preload="auto">
+
+<source
+src="assets/claps.mp3"
+type="audio/mpeg">
+
+</audio>
+
+
+<audio
+id="wrongSound"
+preload="auto">
+
+<source
+src="assets/wrong.mp3"
+type="audio/mpeg">
+
+</audio>
+
+
+<script>
+
+/* ==================================
+   QUESTION BANK
+
+   The correct answer is written
+   first inside every question.
+
+   The images are automatically
+   shuffled before being displayed.
+================================== */
+
+var questionBank = [
+
+{
+
+correct:"sun",
+
+options:[
+"sun",
+"cub",
+"hut",
+"mug"
+]
+
+},
+
+{
+
+correct:"bun",
+
+options:[
+"bun",
+"cut",
+"rug",
+"tub"
+]
+
+},
+
+{
+
+correct:"gun",
+
+options:[
+"gun",
+"nut",
+"rub",
+"tug"
+]
+
+},
+
+{
+
+correct:"sun",
+
+options:[
+"sun",
+"cut",
+"tub",
+"cub"
+]
+
+},
+
+{
+
+correct:"bun",
+
+options:[
+"bun",
+"mug",
+"hut",
+"rug"
+]
+
+},
+
+{
+
+correct:"gun",
+
+options:[
+"gun",
+"tug",
+"nut",
+"cub"
+]
+
+},
+
+{
+
+correct:"sun",
+
+options:[
+"sun",
+"rub",
+"mug",
+"hut"
+]
+
+},
+
+{
+
+correct:"bun",
+
+options:[
+"bun",
+"tub",
+"cut",
+"tug"
+]
+
+},
+
+{
+
+correct:"gun",
+
+options:[
+"gun",
+"rug",
+"cub",
+"nut"
+]
+
+}
+
+];
+
+
+/* ==================================
+   GAME VARIABLES
+================================== */
+
+var shuffledQuestions = [];
+
+var currentQuestion = 0;
+
+var wrongAttempts = 0;
+
+var answerLocked = false;
+
+var confettiTimer = null;
+
+
+/* ==================================
+   PAGE ELEMENTS
+================================== */
+
+var splashScreen =
+document.getElementById(
+"splashScreen"
+);
+
+var gameScreen =
+document.getElementById(
+"gameScreen"
+);
+
+var endScreen =
+document.getElementById(
+"endScreen"
+);
+
+var optionsArea =
+document.getElementById(
+"optionsArea"
+);
+
+var progressBox =
+document.getElementById(
+"progressBox"
+);
+
+var feedback =
+document.getElementById(
+"feedback"
+);
+
+var clapsSound =
+document.getElementById(
+"clapsSound"
+);
+
+var wrongSound =
+document.getElementById(
+"wrongSound"
+);
+
+var playAgainButton =
+document.getElementById(
+"playAgainButton"
+);
+
+
+/* ==================================
+   SHUFFLE FUNCTION
+================================== */
+
+function shuffleArray(array){
+
+var copiedArray =
+array.slice();
+
+var i;
+
+var randomIndex;
+
+var temporaryValue;
+
+for(
+
+i=copiedArray.length-1;
+
+i>0;
+
+i--
+
+){
+
+randomIndex =
+Math.floor(
+Math.random()*(i+1)
+);
+
+temporaryValue =
+copiedArray[i];
+
+copiedArray[i] =
+copiedArray[randomIndex];
+
+copiedArray[randomIndex] =
+temporaryValue;
+
+}
+
+return copiedArray;
+
+}
+
+
+/* ==================================
+   SHOW ONLY ONE SCREEN
+================================== */
+
+function showScreen(
+screenToShow
+){
+
+splashScreen.className =
+"screen";
+
+gameScreen.className =
+"screen";
+
+endScreen.className =
+"screen";
+
+screenToShow.className =
+"screen active";
+
+}
+
+
+/* ==================================
+   AUDIO
+================================== */
+
+function playSound(
+sound
+){
+
+try{
+
+sound.pause();
+
+sound.currentTime=0;
+
+var soundPromise =
+sound.play();
+
+if(
+soundPromise
+){
+
+soundPromise.catch(
+function(){}
+);
+
+}
+
+}
+
+catch(error){
+
+/* Game continues silently
+if audio is unavailable */
+
+}
+
+}
+
+
+/* ==================================
+   PRELOAD ALL IMAGES
+================================== */
+
+function preloadImages(){
+
+var imageNames = [
+
+"bun",
+"cub",
+"cut",
+"gun",
+"hut",
+"mug",
+"nut",
+"rub",
+"rug",
+"sun",
+"tub",
+"tug"
+
+];
+
+var i;
+
+for(
+i=0;
+i<imageNames.length;
+i++
+){
+
+var image =
+new Image();
+
+image.src =
+"assets/" +
+imageNames[i] +
+".png";
+
+}
+
+}
+
+
+/* ==================================
+   START THE GAME
+================================== */
+
+function startGame(){
+
+stopConfetti();
+
+shuffledQuestions =
+shuffleArray(
+questionBank
+);
+
+currentQuestion=0;
+
+wrongAttempts=0;
+
+answerLocked=false;
+
+feedback.innerHTML="";
+
+showScreen(
+gameScreen
+);
+
+showQuestion();
+
+}
+
+
+/* ==================================
+   SHOW ONE QUESTION
+================================== */
+
+function showQuestion(){
+
+answerLocked=false;
+
+wrongAttempts=0;
+
+feedback.innerHTML="";
+
+optionsArea.innerHTML="";
+
+progressBox.innerHTML =
+
+(currentQuestion+1)
+
++
+
+" / "
+
++
+
+shuffledQuestions.length;
+
+
+var question =
+
+shuffledQuestions[
+currentQuestion
+];
+
+
+var shuffledOptions =
+
+shuffleArray(
+question.options
+);
+
+
+var i;
+
+
+for(
+
+i=0;
+
+i<shuffledOptions.length;
+
+i++
+
+){
+
+createOption(
+
+shuffledOptions[i],
+
+question.correct
+
+);
+
+}
+
+}
+
+
+/* ==================================
+   CREATE IMAGE OPTION
+================================== */
+
+function createOption(
+
+word,
+
+correctWord
+
+){
+
+var optionButton =
+
+document.createElement(
+"button"
+);
+
+
+optionButton.type =
+"button";
+
+
+optionButton.className =
+"option";
+
+
+optionButton.setAttribute(
+
+"aria-label",
+
+word
+
+);
+
+
+optionButton.setAttribute(
+
+"data-word",
+
+word
+
+);
+
+
+var optionImage =
+
+document.createElement(
+"img"
+);
+
+
+optionImage.src =
+
+"assets/"
+
++
+
+word
+
++
+
+".png";
+
+
+optionImage.alt =
+
+word;
+
+
+optionButton.appendChild(
+
+optionImage
+
+);
+
+
+optionButton.onclick =
+
+function(){
+
+checkAnswer(
+
+optionButton,
+
+word,
+
+correctWord
+
+);
+
+};
+
+
+optionsArea.appendChild(
+
+optionButton
+
+);
+
+}
+
+
+/* ==================================
+   CHECK THE SELECTED ANSWER
+================================== */
+
+function checkAnswer(
+
+selectedOption,
+
+selectedWord,
+
+correctWord
+
+){
+
+if(
+answerLocked
+){
+
+return;
+
+}
+
+
+/* ------------------------------
+   CORRECT ANSWER
+------------------------------ */
+
+if(
+
+selectedWord
+===
+
+correctWord
+
+){
+
+answerLocked=true;
+
+
+removeHintGlow();
+
+
+selectedOption.className =
+
+"option correct";
+
+
+var tick =
+
+document.createElement(
+"div"
+);
+
+
+tick.className=
+
+"tick";
+
+
+tick.innerHTML=
+
+"✓";
+
+
+selectedOption.appendChild(
+
+tick
+
+);
+
+
+feedback.innerHTML=
+
+"Good Job!";
+
+
+playSound(
+
+clapsSound
+
+);
+
+
+/* Move to the next question */
+
+setTimeout(
+
+function(){
+
+currentQuestion++;
+
+
+if(
+
+currentQuestion
+<
+
+shuffledQuestions.length
+
+){
+
+showQuestion();
+
+}
+
+else{
+
+showEndScreen();
+
+}
+
+},
+
+1300
+
+);
+
+}
+
+
+/* ------------------------------
+   WRONG ANSWER
+------------------------------ */
+
+else{
+
+wrongAttempts++;
+
+
+playSound(
+
+wrongSound
+
+);
+
+
+/* Restart the wiggle
+animation every time */
+
+selectedOption.className =
+
+"option";
+
+
+void
+
+selectedOption.offsetWidth;
+
+
+selectedOption.className =
+
+"option wiggle";
+
+
+feedback.innerHTML=
+
+"Try Again!";
+
+
+setTimeout(
+
+function(){
+
+if(
+
+selectedOption.className
+===
+
+"option wiggle"
+
+){
+
+selectedOption.className=
+
+"option";
+
+}
+
+},
+
+500
+
+);
+
+
+/* After two wrong attempts,
+show the correct option glowing */
+
+if(
+
+wrongAttempts>=2
+
+){
+
+showCorrectGlow(
+
+correctWord
+
+);
+
+}
+
+}
+
+}
+
+
+/* ==================================
+   MAKE CORRECT OPTION GLOW
+================================== */
+
+function showCorrectGlow(
+
+correctWord
+
+){
+
+var allOptions =
+
+optionsArea.getElementsByClassName(
+
+"option"
+
+);
+
+
+var i;
+
+
+for(
+
+i=0;
+
+i<allOptions.length;
+
+i++
+
+){
+
+if(
+
+allOptions[i].getAttribute(
+"data-word"
+)
+
+===
+
+correctWord
+
+){
+
+allOptions[i].className =
+
+"option hintGlow";
+
+}
+
+}
+
+}
+
+
+/* ==================================
+   REMOVE GLOW
+================================== */
+
+function removeHintGlow(){
+
+var allOptions =
+
+optionsArea.getElementsByClassName(
+
+"option"
+
+);
+
+
+var i;
+
+
+for(
+
+i=0;
+
+i<allOptions.length;
+
+i++
+
+){
+
+if(
+
+allOptions[i].className
+.indexOf(
+
+"hintGlow"
+
+)
+
+!==
+
+-1
+
+){
+
+allOptions[i].className=
+
+"option";
+
+}
+
+}
+
+}
+
+
+/* ==================================
+   END SCREEN
+================================== */
+
+function showEndScreen(){
+
+showScreen(
+
+endScreen
+
+);
+
+startConfetti();
+
+}
+
+
+/* ==================================
+   PLAY AGAIN
+================================== */
+
+playAgainButton.onclick =
+
+function(){
+
+startGame();
+
+};
+
+
+/* ==================================
+   CONFETTI
+================================== */
+
+function startConfetti(){
+
+stopConfetti();
+
+
+var canvas =
+
+document.getElementById(
+
+"confettiCanvas"
+
+);
+
+
+var context =
+
+canvas.getContext(
+
+"2d"
+
+);
+
+
+var pieces=[];
+
+
+var colours=[
+
+"#ff5252",
+
+"#ffd740",
+
+"#40c4ff",
+
+"#69f0ae",
+
+"#e040fb",
+
+"#ff9100",
+
+"#7c4dff"
+
+];
+
+
+function resizeCanvas(){
+
+canvas.width=
+
+window.innerWidth;
+
+canvas.height=
+
+window.innerHeight;
+
+}
+
+
+resizeCanvas();
+
+
+var i;
+
+
+for(
+
+i=0;
+
+i<120;
+
+i++
+
+){
+
+pieces.push({
+
+x:
+Math.random()
+*
+canvas.width,
+
+y:
+Math.random()
+*
+canvas.height
+-
+canvas.height,
+
+size:
+5
++
+Math.random()
+*
+8,
+
+speed:
+2
++
+Math.random()
+*
+4,
+
+drift:
+-1.5
++
+Math.random()
+*
+3,
+
+rotation:
+Math.random()
+*
+360,
+
+rotationSpeed:
+-5
++
+Math.random()
+*
+10,
+
+colour:
+colours[
+Math.floor(
+Math.random()
+*
+colours.length
+)
+]
+
+});
+
+}
+
+
+confettiTimer=
+
+setInterval(
+
+function(){
+
+context.clearRect(
+
+0,
+
+0,
+
+canvas.width,
+
+canvas.height
+
+);
+
+
+for(
+
+i=0;
+
+i<pieces.length;
+
+i++
+
+){
+
+var piece=
+
+pieces[i];
+
+
+piece.y +=
+
+piece.speed;
+
+
+piece.x +=
+
+piece.drift;
+
+
+piece.rotation +=
+
+piece.rotationSpeed;
+
+
+if(
+
+piece.y
+>
+
+canvas.height
++
+20
+
+){
+
+piece.y=
+
+-20;
+
+
+piece.x=
+
+Math.random()
+*
+canvas.width;
+
+}
+
+
+context.save();
+
+
+context.translate(
+
+piece.x,
+
+piece.y
+
+);
+
+
+context.rotate(
+
+piece.rotation
+
+*
+
+Math.PI
+
+/
+
+180
+
+);
+
+
+context.fillStyle=
+
+piece.colour;
+
+
+context.fillRect(
+
+-piece.size/2,
+
+-piece.size/2,
+
+piece.size,
+
+piece.size*0.55
+
+);
+
+
+context.restore();
+
+}
+
+},
+
+33
+
+);
+
+}
+
+
+/* ==================================
+   STOP CONFETTI
+================================== */
+
+function stopConfetti(){
+
+if(
+
+confettiTimer
+
+){
+
+clearInterval(
+
+confettiTimer
+
+);
+
+
+confettiTimer=null;
+
+}
+
+}
+
+
+/* ==================================
+   LOGO SCREEN FOR TWO SECONDS
+================================== */
+
+preloadImages();
+
+
+setTimeout(
+
+function(){
+
+startGame();
+
+},
+
+2000
+
+);
+
+</script>
+
+</body>
+</html>
